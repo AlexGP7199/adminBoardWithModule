@@ -11,13 +11,15 @@ import { LinealChartComponent } from './shared/components/lineal-chart/lineal-ch
 import { ListWithImgComponent } from './shared/components/list-with-img/list-with-img.component';
 import { CircularChartComponent } from './shared/components/circular-chart/circular-chart.component';
 import { BarChartComponent } from './shared/components/bar-chart/bar-chart.component';
+import { FormsPageModule } from './pages/forms/forms-page.module';
+import { TablesModule } from './pages/tables/tables.module';
 
 
 
 
 
 @NgModule({
-  declarations: [  
+  declarations: [
     HeaderComponent,
     SidenavComponent,
     ContentComponent,
@@ -30,7 +32,9 @@ import { BarChartComponent } from './shared/components/bar-chart/bar-chart.compo
   imports: [
     CommonModule,
     DasboardRoutingModule,
-    
+    FormsPageModule,
+    TablesModule
+
   ], exports : [
     SidenavComponent,
     HeaderComponent,
