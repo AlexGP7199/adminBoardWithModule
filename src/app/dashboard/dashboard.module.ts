@@ -8,6 +8,8 @@ import { ListWithImgComponent } from './components/list-with-img/list-with-img.c
 import { LinealChartComponent } from './components/lineal-chart/lineal-chart.component';
 import { CircularChartComponent } from './components/circular-chart/circular-chart.component';
 import { BartChartComponent } from './components/bart-chart/bart-chart.component';
+import { GraphicCardsComponent } from './pages/graphic-cards/graphic-cards.component';
+import { GraphicChartsComponent } from './pages/graphic-charts/graphic-charts.component';
 
 
 @NgModule({
@@ -17,7 +19,9 @@ import { BartChartComponent } from './components/bart-chart/bart-chart.component
     ListWithImgComponent,
     LinealChartComponent,
     CircularChartComponent,
-    BartChartComponent
+    BartChartComponent,
+    GraphicCardsComponent,
+    GraphicChartsComponent
   ],
   imports: [
     CommonModule,
