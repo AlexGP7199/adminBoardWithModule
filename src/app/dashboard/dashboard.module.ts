@@ -26,6 +26,15 @@ import { GraphicChartsComponent } from './pages/graphic-charts/graphic-charts.co
   imports: [
     CommonModule,
     DashboardRoutingModule
+  ], exports :[
+    SimpleCardComponent,
+    RadarChartComponent,
+    ListWithImgComponent,
+    LinealChartComponent,
+    CircularChartComponent,
+    BartChartComponent,
+    GraphicCardsComponent,
+    GraphicChartsComponent
   ]
 })
 export class DashboardModule { }

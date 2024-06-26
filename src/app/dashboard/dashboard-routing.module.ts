@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { GraphicCardsComponent } from './pages/graphic-cards/graphic-cards.component';
 
 const routes: Routes = [
-  {path:'', redirectTo: 'cards'},
+  {path:'', redirectTo: 'cards', pathMatch: 'full'},
   {path:'cards', component:GraphicCardsComponent}
 ];
 

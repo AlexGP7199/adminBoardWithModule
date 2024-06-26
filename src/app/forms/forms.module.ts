@@ -14,6 +14,9 @@ import { FormStandarComponent } from './components/form-standar/form-standar.com
   imports: [
     CommonModule,
     FormsRoutingModule
+  ], exports :[
+    FormsFancyComponent,
+    FormStandarComponent
   ]
 })
 export class FormsModule { }
