@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { DasboardRoutingModule } from './dasboard-routing.module';
 import { HeaderComponent } from './components/header/header.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
 import { ContentComponent } from './components/content/content.component';
@@ -13,6 +12,8 @@ import { CircularChartComponent } from './shared/components/circular-chart/circu
 import { BarChartComponent } from './shared/components/bar-chart/bar-chart.component';
 import { FormsPageModule } from './pages/forms/forms-page.module';
 import { TablesModule } from './pages/tables/tables.module';
+import { HorariosComponent } from '../horarios/horarios.component';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -28,12 +29,13 @@ import { TablesModule } from './pages/tables/tables.module';
     LinealChartComponent,
     ListWithImgComponent,
     CircularChartComponent,
+    HorariosComponent,
     BarChartComponent],
   imports: [
     CommonModule,
-    DasboardRoutingModule,
     FormsPageModule,
-    TablesModule
+    TablesModule,
+    RouterModule // Asegúrate de importar RouterModule aquí
 
   ], exports : [
     SidenavComponent,
@@ -44,7 +46,8 @@ import { TablesModule } from './pages/tables/tables.module';
     LinealChartComponent,
     ListWithImgComponent,
     CircularChartComponent,
-    BarChartComponent
+    BarChartComponent,
+    HorariosComponent
   ]
 })
 export class DasboardModule { }

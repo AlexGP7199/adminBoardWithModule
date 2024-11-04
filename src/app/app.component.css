@@ -1,0 +1,32 @@
+/* Asegura que el contenedor principal tome toda la altura de la ventana */
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Fija el header en la parte superior */
+app-header {
+  flex-shrink: 0;
+}
+
+/* El contenedor principal toma el resto del espacio vertical */
+.main-container {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Sidebar */
+app-sidenav {
+  width: 250px; /* Ajusta el ancho del sidebar */
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+/* Contenedor de contenido */
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px; /* Añade espacio alrededor del contenido */
+}

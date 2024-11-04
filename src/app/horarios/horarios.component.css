@@ -1,0 +1,26 @@
+/* Aplicar color de fondo y centrar el componente */
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #F3F4F6; /* Color de fondo para todo el componente */
+  min-height: calc(100vh - 60px); /* Ajusta 60px según la altura de tu encabezado */
+  width: 100%;
+  margin-top: 20px; /* Ajuste adicional de margen superior */
+  padding: 20px; /* Añadir espacio alrededor del contenido */
+}
+
+/* Fondo del body puede ser opcional si solo quieres el fondo en el componente */
+body {
+  background-color: #d3d3d3; /* Fondo gris claro para el resto de la página */
+}
+
+/* Ajuste del contenedor interno del componente */
+.max-w-lg {
+  max-width: 600px; /* Ajusta el ancho máximo */
+  width: 100%;
+  background-color: white; /* Fondo blanco para el contenedor principal */
+  padding: 20px; /* Espaciado interno */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  border-radius: 8px; /* Bordes redondeados */
+}

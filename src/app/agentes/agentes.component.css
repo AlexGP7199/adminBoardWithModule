@@ -1,0 +1,14 @@
+/* Para centrar el componente y darle un fondo claro a toda la página */
+body {
+  background-color: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.max-w-7xl {
+  max-width: 100%;
+}

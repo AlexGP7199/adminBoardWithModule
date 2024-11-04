@@ -1,0 +1,50 @@
+<div class="max-w-lg mx-auto my-8 p-6 bg-white rounded-lg shadow-md">
+  <h2 class="text-2xl font-bold text-gray-900 mb-4 text-center">Cargar Ausencias</h2>
+  <p class="text-gray-600 text-sm mb-6 text-center">Seleccione un archivo de Excel con los datos de ausencias (primera columna: día de ausencia, segunda columna: descripción).</p>
+
+  <form (submit)="onSubmit($event)" class="space-y-6">
+    <div class="flex flex-col items-center">
+      <label class="w-full text-center cursor-pointer border border-dashed border-gray-400 p-4 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        <input type="file" (change)="onFileSelected($event)" accept=".xls,.xlsx" class="hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-500 mx-auto mb-2" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M16.293 9.293a1 1 0 011.414 0l1 1a1 1 0 010 1.414l-9 9a1 1 0 01-1.414 0l-5-5a1 1 0 010-1.414l1-1a1 1 0 011.414 0l3.586 3.586 7.586-7.586z" />
+        </svg>
+        <span class="text-gray-700">
+          <span *ngIf="fileName; else noFile">{{ fileName }}</span>
+          <ng-template #noFile>Haz clic para seleccionar un archivo de Excel</ng-template>
+        </span>
+      </label>
+    </div>
+
+    <div class="text-center">
+      <button (click)="onSubmit($event)" class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+        Cargar Archivo
+      </button>
+    </div>
+  </form>
+
+  <!-- Tabla para mostrar los datos cargados -->
+  <div *ngIf="fileLoaded" class="mt-8">
+    <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">Datos del Archivo</h3>
+    <div class="overflow-auto rounded-lg shadow">
+      <table class="table-auto w-full border-collapse">
+        <thead>
+          <tr class="bg-gray-100">
+            <th *ngFor="let header of tableData[0]" class="px-4 py-2 border-b border-gray-300 text-left text-gray-700 font-semibold">{{ header }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of tableData.slice(1)" class="odd:bg-white even:bg-gray-50">
+            <td *ngFor="let cell of row" class="px-4 py-2 border-b border-gray-200 text-left">{{ cell }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="text-center mt-4">
+      <button (click)="confirmData()" class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+        Confirmar
+      </button>
+    </div>
+  </div>
+</div>

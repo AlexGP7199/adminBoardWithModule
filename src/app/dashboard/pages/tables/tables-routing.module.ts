@@ -3,8 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ContentTableComponent } from './content-table/content-table.component';
 
 const routes: Routes = [
-  {path: '', redirectTo: 'content', pathMatch: 'full'},
-  {path: 'content', component: ContentTableComponent}];
+  {path: '', component: ContentTableComponent}];
 
 
 @NgModule({
