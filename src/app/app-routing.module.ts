@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { ContentComponent } from './dashboard/components/content/content.component';
 import { HorariosComponent } from './horarios/horarios.component';
 import { AgentesComponent } from './agentes/agentes.component';
+import { PersonaDetalleComponent } from './persona-detalle/persona-detalle.component';
 const routes: Routes = [
   // Redirección inicial a Dashboard
   { path: '', redirectTo: 'Dashboard', pathMatch: 'full' },
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'Dashboard', component: ContentComponent },
   { path: 'CargarHorario', component: HorariosComponent },
   {path: 'Colaboradores', component: AgentesComponent},
+  { path: 'detalle/:cedula', component: PersonaDetalleComponent }, // Ruta para el detalle
 
   // Carga perezosa de módulos de características
   {

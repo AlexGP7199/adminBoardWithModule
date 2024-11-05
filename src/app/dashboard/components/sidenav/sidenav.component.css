@@ -1,0 +1,57 @@
+/* Sidenav estilos */
+#logo-sidebar {
+  background-color: #1d3b6f;
+}
+
+hr {
+  border-color: #e5e7eb; /* Color gris claro */
+  opacity: 0.5; /* Hace que el separador sea sutil */
+}
+
+aside #logo-sidebar .flex img {
+  width: 100px; /* Ajuste del ancho de la imagen */
+  height: 100px; /* Ajuste de la altura de la imagen */
+}
+
+
+#logo-sidebar {
+  padding-top: 96px; /* Ajusta este valor según la altura del encabezado */
+}
+
+#logo-sidebar img {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+#logo-sidebar h2 {
+  color: #ffffff;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+#logo-sidebar p {
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  margin-top: 2px;
+}
+
+/* Links de las opciones */
+#logo-sidebar a {
+  display: flex;
+  align-items: center;
+  color: #f3f4f6;
+  padding: 12px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+#logo-sidebar a:hover {
+  background-color: #d32f2f;
+}
+
+#logo-sidebar svg {
+  margin-right: 8px;
+}

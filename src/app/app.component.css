@@ -30,3 +30,7 @@ app-sidenav {
   overflow-y: auto;
   padding: 16px; /* Añade espacio alrededor del contenido */
 }
+
+.fondo{
+  background-color: white;
+}

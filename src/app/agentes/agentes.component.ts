@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-agentes',
@@ -19,6 +20,12 @@ export class AgentesComponent implements OnInit {
       { cedula: '004-5678901-2', nombre: 'María Rodríguez', provincia: 'Puerto Plata' },
       { cedula: '005-6789012-3', nombre: 'Pedro Martínez', provincia: 'San Cristóbal' }
     ];
+  }
+
+  constructor(private router: Router) {}
+
+  verDetalles(cedula: string): void {
+    this.router.navigate(['/detalle', cedula]); // Navegar a la página de detalle
   }
 
 
