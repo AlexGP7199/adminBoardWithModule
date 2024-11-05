@@ -1,0 +1,60 @@
+<div class="max-w-7xl mx-auto py-8 px-6 bg-white rounded-lg shadow-lg">
+  <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Listado de Personas</h2>
+
+  <!-- Section title with separator -->
+  <div class="text-center mb-6">
+    <h3 class="text-2xl font-semibold text-gray-800">Conflictos de horarios</h3>
+    <div class="border-t-2 border-blue-500 mx-auto mt-2 w-full"></div>
+  </div>
+
+  <!-- Search filters aligned to the left -->
+  <div class="flex flex-wrap space-x-4 justify-start mb-6">
+    <input
+      type="text"
+      [(ngModel)]="searchCedula"
+      placeholder="Buscar por cédula..."
+      class="border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm w-full sm:w-1/3 md:w-1/4 lg:w-1/5"
+    >
+    <input
+      type="text"
+      [(ngModel)]="searchNombre"
+      placeholder="Buscar por nombre..."
+      class="border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm w-full sm:w-1/3 md:w-1/4 lg:w-1/5"
+    >
+    <select
+      [(ngModel)]="selectedProvince"
+      class="border border-gray-300 rounded-lg px-4 py-2 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm w-full sm:w-1/3 md:w-1/4 lg:w-1/5"
+    >
+      <option value="">Todos</option> <!-- Option to reset the filter -->
+      <option *ngFor="let province of provinces" [value]="province">{{ province }}</option>
+    </select>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-auto rounded-lg shadow-lg">
+    <table class="min-w-full bg-white border rounded-lg">
+      <thead>
+        <tr class="bg-blue-100 text-gray-700 uppercase text-sm leading-normal">
+          <th class="py-3 px-6 text-left font-semibold">Cédula</th>
+          <th class="py-3 px-6 text-left font-semibold">Nombre</th>
+          <th class="py-3 px-6 text-left font-semibold">Provincia</th>
+          <th class="py-3 px-6 text-center font-semibold">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let persona of filterPersons()" class="hover:bg-gray-50 border-b border-gray-200">
+          <td class="py-4 px-6 text-gray-700">{{ persona.cedula }}</td>
+          <td class="py-4 px-6 text-gray-700">{{ persona.nombre }}</td>
+          <td class="py-4 px-6 text-gray-700">{{ persona.provincia }}</td>
+          <td class="py-4 px-6 text-center">
+            <button (click)="verDetalles(persona.cedula)" class="text-blue-500 hover:text-blue-700 focus:outline-none">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 inline-block" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12l-4-4m0 8l4-4m5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

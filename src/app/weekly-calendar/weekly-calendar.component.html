@@ -1,0 +1,14 @@
+<div class="calendar">
+  <div class="day-header" *ngFor="let day of daysOfWeek">
+    <span>{{ day }}</span>
+  </div>
+  <div class="day" *ngFor="let day of weekDates">
+    <span class="date">{{ day.date | date: 'MMMM d, yyyy' }}</span>
+    <div class="status" [ngClass]="day.status.toLowerCase()">
+      {{ day.status }}
+    </div>
+    <div *ngIf="day.status === 'Occupied'" class="reason">
+      Reason: {{ day.reason }}
+    </div>
+  </div>
+</div>

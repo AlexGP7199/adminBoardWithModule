@@ -1,0 +1,51 @@
+/* Body styling for background and alignment */
+body {
+  background-color: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Container for the main component with increased max-width */
+.container {
+  max-width: 1200px; /* Set a wider maximum width */
+  width: 100%; /* Ensures it takes the full width up to max-width */
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Filter group styling */
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+/* Filter input styling */
+.filter-input {
+  flex: 1 1 240px; /* Wider minimum width to fill space better */
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  color: #333;
+  background-color: #fff;
+  transition: border-color 0.2s;
+}
+
+.filter-input:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+/* Ensures the main content section fills the viewport */
+.max-w-7xl {
+  max-width: 100%;
+}

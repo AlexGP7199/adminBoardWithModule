@@ -1,0 +1,41 @@
+/* Centered container with expanded max-width */
+.max-w-7xl {
+  max-width: 100%;
+}
+
+/* Filter group styling */
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+  justify-content: start;
+}
+
+/* Filter input styling */
+.filter-input {
+  flex: 1 1 220px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+  color: #333;
+  background-color: #fff;
+  transition: border-color 0.2s;
+}
+
+.filter-input:focus {
+  border-color: #4a90e2;
+  outline: none;
+}
+
+/* Body styling for background and alignment */
+body {
+  background-color: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}

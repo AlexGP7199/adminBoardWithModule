@@ -11,7 +11,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { CedulaFilterPipe } from './pipes/cedula-filter.pipe';
 import { NombreFilterPipe } from './pipes/nombre-filter.pipe';
 import { FormsModule } from '@angular/forms';
-import { PersonaDetalleComponent } from './persona-detalle/persona-detalle.component'; // Importa FormsModule aquí
+import { PersonaDetalleComponent } from './persona-detalle/persona-detalle.component';
+import { WeeklyCalendarComponent } from './weekly-calendar/weekly-calendar.component';
+import { AgentesRegionalesComponent } from './agentes-regionales/agentes-regionales.component';
+import { AgentesNacionalesComponent } from './agentes-nacionales/agentes-nacionales.component'; // Importa FormsModule aquí
 
 @NgModule({
   declarations: [
@@ -21,6 +24,9 @@ import { PersonaDetalleComponent } from './persona-detalle/persona-detalle.compo
     CedulaFilterPipe,
     NombreFilterPipe,
     PersonaDetalleComponent,
+    WeeklyCalendarComponent,
+    AgentesRegionalesComponent,
+    AgentesNacionalesComponent,
 
   ],
   imports: [

@@ -4,6 +4,9 @@ import { ContentComponent } from './dashboard/components/content/content.compone
 import { HorariosComponent } from './horarios/horarios.component';
 import { AgentesComponent } from './agentes/agentes.component';
 import { PersonaDetalleComponent } from './persona-detalle/persona-detalle.component';
+import { WeeklyCalendarComponent } from './weekly-calendar/weekly-calendar.component';
+import { AgentesRegionalesComponent } from './agentes-regionales/agentes-regionales.component';
+import { AgentesNacionalesComponent } from './agentes-nacionales/agentes-nacionales.component';
 const routes: Routes = [
   // Redirección inicial a Dashboard
   { path: '', redirectTo: 'Dashboard', pathMatch: 'full' },
@@ -13,6 +16,9 @@ const routes: Routes = [
   { path: 'CargarHorario', component: HorariosComponent },
   {path: 'Colaboradores', component: AgentesComponent},
   { path: 'detalle/:cedula', component: PersonaDetalleComponent }, // Ruta para el detalle
+  {path: 'horarioSemanal', component: WeeklyCalendarComponent},
+  {path: 'ColaboradoresProvinciales', component: AgentesRegionalesComponent},
+  {path: 'AgentesNacionalesComponent', component : AgentesNacionalesComponent },
 
   // Carga perezosa de módulos de características
   {
