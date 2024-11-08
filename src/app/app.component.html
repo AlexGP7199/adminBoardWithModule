@@ -1,4 +1,8 @@
-<div class="fondo">
+<!-- Mostrar solo el login si el usuario no está autenticado -->
+<app-login *ngIf="!authService.isLoggedIn()"></app-login>
+
+<!-- Mostrar el contenido de la aplicación solo si el usuario está autenticado -->
+<div class="fondo" *ngIf="authService.isLoggedIn()">
   <app-header></app-header>
   <div class="main-container">
     <app-sidenav></app-sidenav>
@@ -7,7 +11,3 @@
     </div>
   </div>
 </div>
-
-
-
-<!-- <app-login></app-login> -->

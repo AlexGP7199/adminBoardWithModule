@@ -14,7 +14,9 @@ import { FormsModule } from '@angular/forms';
 import { PersonaDetalleComponent } from './persona-detalle/persona-detalle.component';
 import { WeeklyCalendarComponent } from './weekly-calendar/weekly-calendar.component';
 import { AgentesRegionalesComponent } from './agentes-regionales/agentes-regionales.component';
-import { AgentesNacionalesComponent } from './agentes-nacionales/agentes-nacionales.component'; // Importa FormsModule aquí
+import { AgentesNacionalesComponent } from './agentes-nacionales/agentes-nacionales.component';
+import { SolicitudPermisosColaboradoresComponent } from './solicitud-permisos-colaboradores/solicitud-permisos-colaboradores.component'; // Importa FormsModule aquí
+import { ReactiveFormsModule } from '@angular/forms'; // Importa ReactiveFormsModule
 
 @NgModule({
   declarations: [
@@ -27,6 +29,7 @@ import { AgentesNacionalesComponent } from './agentes-nacionales/agentes-naciona
     WeeklyCalendarComponent,
     AgentesRegionalesComponent,
     AgentesNacionalesComponent,
+    SolicitudPermisosColaboradoresComponent,
 
   ],
   imports: [
@@ -34,7 +37,8 @@ import { AgentesNacionalesComponent } from './agentes-nacionales/agentes-naciona
     AppRoutingModule,
     DasboardModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
 
   ],
   providers: [],

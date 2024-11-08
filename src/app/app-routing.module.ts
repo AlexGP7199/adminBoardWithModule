@@ -7,28 +7,27 @@ import { PersonaDetalleComponent } from './persona-detalle/persona-detalle.compo
 import { WeeklyCalendarComponent } from './weekly-calendar/weekly-calendar.component';
 import { AgentesRegionalesComponent } from './agentes-regionales/agentes-regionales.component';
 import { AgentesNacionalesComponent } from './agentes-nacionales/agentes-nacionales.component';
+import { SolicitudPermisosColaboradoresComponent } from './solicitud-permisos-colaboradores/solicitud-permisos-colaboradores.component';
+import { AuthGuard } from './services/Guard/auth.guard';
+import { LoginComponent } from './login/login.component';
+import { loginAuthGuard } from './services/Guard/login-auth.guard';
+
 const routes: Routes = [
-  // Redirección inicial a Dashboard
+  // Ruta de login
+  { path: 'login', component: LoginComponent, canActivate: [loginAuthGuard] },
+
+  // Redirección inicial a Dashboard si el usuario está autenticado
   { path: '', redirectTo: 'Dashboard', pathMatch: 'full' },
 
-  // Rutas de Dashboard y sus subcomponentes
-  { path: 'Dashboard', component: ContentComponent },
-  { path: 'CargarHorario', component: HorariosComponent },
-  {path: 'Colaboradores', component: AgentesComponent},
-  { path: 'detalle/:cedula', component: PersonaDetalleComponent }, // Ruta para el detalle
-  {path: 'horarioSemanal', component: WeeklyCalendarComponent},
-  {path: 'ColaboradoresProvinciales', component: AgentesRegionalesComponent},
-  {path: 'AgentesNacionalesComponent', component : AgentesNacionalesComponent },
-
-  // Carga perezosa de módulos de características
-  {
-    path: 'FormContent',
-    loadChildren: () => import('./dashboard/pages/forms/forms-page.module').then(m => m.FormsPageModule)
-  },
-  {
-    path: 'TablesContent',
-    loadChildren: () => import('./dashboard/pages/tables/tables.module').then(m => m.TablesModule)
-  },
+  // Rutas de Dashboard y sus subcomponentes (protegidas con AuthGuard)
+  { path: 'Dashboard', component: ContentComponent, canActivate: [AuthGuard] },
+  { path: 'CargarHorario', component: HorariosComponent, canActivate: [AuthGuard] },
+  { path: 'Colaboradores', component: AgentesComponent, canActivate: [AuthGuard] },
+  { path: 'detalle/:cedula', component: PersonaDetalleComponent, canActivate: [AuthGuard] },
+  { path: 'horarioSemanal', component: WeeklyCalendarComponent, canActivate: [AuthGuard] },
+  { path: 'ColaboradoresProvinciales', component: AgentesRegionalesComponent, canActivate: [AuthGuard] },
+  { path: 'AgentesNacionalesComponent', component: AgentesNacionalesComponent, canActivate: [AuthGuard] },
+  { path: 'FormularioSolicitud', component: SolicitudPermisosColaboradoresComponent, canActivate: [AuthGuard] },
 
   // Ruta comodín para manejar cualquier URL no encontrada
   { path: '**', redirectTo: 'Dashboard' }

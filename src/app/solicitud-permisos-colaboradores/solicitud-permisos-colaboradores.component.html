@@ -1,0 +1,163 @@
+<form [formGroup]="formulario" (ngSubmit)="onSubmit()" class="max-w-7xl mx-auto py-16 px-6 bg-white rounded-lg shadow-lg mt-16">
+  <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Formulario de Solicitud de Permisos</h2>
+
+  <!-- Sección de Información Personal -->
+  <div class="mb-6">
+    <h3 class="text-2xl font-semibold text-gray-800">Información Personal</h3>
+    <div class="border-t-2 border-blue-500 mx-auto mt-2 mb-6 w-full"></div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Nombre</label>
+        <input formControlName="nombre" type="text" class="input" placeholder="Ingrese su nombre" />
+      </div>
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Teléfono</label>
+        <input formControlName="telefono" type="tel" class="input" placeholder="Ingrese su teléfono" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de Información Laboral -->
+  <div class="mb-6">
+    <h3 class="text-2xl font-semibold text-gray-800">Información Laboral</h3>
+    <div class="border-t-2 border-blue-500 mx-auto mt-2 mb-6 w-full"></div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Cargo Actual</label>
+        <input formControlName="cargoActual" type="text" class="input" placeholder="Ingrese su cargo actual" />
+      </div>
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Provincia</label>
+        <input formControlName="provincia" type="text" class="input" placeholder="Ingrese su provincia" />
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-4">
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Preposición</label>
+        <input formControlName="preposicion" type="text" class="input" placeholder="Ingrese la preposición" />
+      </div>
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Nombre de su Encargado</label>
+        <input formControlName="nombreEncargado" type="text" class="input" placeholder="Nombre del encargado" />
+      </div>
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Teléfono del Encargado</label>
+        <input formControlName="telefonoEncargado" type="tel" class="input" placeholder="Teléfono del encargado" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Sección de Información Académica -->
+  <div class="mb-6">
+    <h3 class="text-2xl font-semibold text-gray-800">Información Académica</h3>
+    <div class="border-t-2 border-blue-500 mx-auto mt-2 mb-6 w-full"></div>
+
+    <div class="mb-4">
+      <label class="block mb-1 text-sm font-medium text-gray-700">¿Tiene otro trabajo?</label>
+      <select formControlName="otroTrabajo" (change)="onTrabajoChange()" class="input">
+        <option value="no">No</option>
+        <option value="si">Sí</option>
+      </select>
+    </div>
+
+    <div *ngIf="formulario.get('otroTrabajo')?.value === 'si'" class="mb-4">
+      <label class="block mb-1 text-sm font-medium text-gray-700">Describa el trabajo y horario</label>
+      <textarea formControlName="descripcionTrabajo" class="input" placeholder="Ingrese la descripción y horario"></textarea>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Programa de Estudio</label>
+        <select formControlName="programaEstudio" class="input">
+          <option value="medicina">Medicina</option>
+          <option value="enfermeria">Enfermería</option>
+          <option value="otros">Otros</option>
+        </select>
+      </div>
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Nivel de la Carrera</label>
+        <select formControlName="nivelCarrera" class="input">
+          <option value="1er">1er año</option>
+          <option value="2do">2do año</option>
+          <option value="3er">3er año</option>
+          <option value="4to">4to año</option>
+          <option value="otros">Otros</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="mb-4 mt-4">
+      <label class="block mb-1 text-sm font-medium text-gray-700">Universidad</label>
+      <input formControlName="universidad" type="text" class="input" placeholder="Ingrese la universidad" />
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 mt-4">
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Nombre del Profesor</label>
+        <input formControlName="nombreProfesor" type="text" class="input" placeholder="Nombre del profesor" />
+      </div>
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Contacto del Profesor</label>
+        <input formControlName="contactoProfesor" type="tel" class="input" placeholder="Contacto del profesor" />
+      </div>
+    </div>
+
+    <div class="mb-4 mt-4">
+      <label class="block mb-1 text-sm font-medium text-gray-700">Cargar una imagen</label>
+      <input formControlName="imagen" type="file" (change)="onFileSelected($event)" class="input" />
+    </div>
+  </div>
+
+  <!-- Sección de Conflictos de Horarios -->
+  <div class="mb-6">
+    <h3 class="text-2xl font-semibold text-gray-800">Conflictos de Horarios</h3>
+    <div class="border-t-2 border-blue-500 mx-auto mt-2 mb-6 w-full"></div>
+
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Inicio del Periodo</label>
+        <input formControlName="inicioPeriodo" type="date" class="input" />
+      </div>
+      <div>
+        <label class="block mb-1 text-sm font-medium text-gray-700">Final del Periodo</label>
+        <input formControlName="finalPeriodo" type="date" class="input" />
+      </div>
+    </div>
+    <div class="mb-4 mt-4">
+      <label class="block mb-1 text-sm font-medium text-gray-700">Días en los que necesita estar libre por clases</label>
+      <div class="grid grid-cols-3 gap-2 mt-2">
+        <div *ngFor="let dia of diasSemana" class="flex items-center">
+          <input
+            type="checkbox"
+            [checked]="formulario.get('diasClase')?.value.includes(dia.valor)"
+            (change)="toggleDiaClase(dia.valor)"
+            class="mr-2"
+          />
+          <span class="text-sm text-gray-700">{{ dia.nombre }}</span>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="mb-4 mt-4">
+      <label class="block mb-1 text-sm font-medium text-gray-700">Días con Conflictos</label>
+      <div class="grid grid-cols-3 gap-2 mt-2">
+        <div *ngFor="let dia of diasConflictos" class="flex items-center">
+          <input
+            type="checkbox"
+            [checked]="formulario.get('diasConflicto')?.value.includes(dia.valor)"
+            (change)="toggleDia(dia.valor)"
+            class="mr-2"
+          />
+          <span class="text-sm text-gray-700">{{ dia.nombre }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón de Envío -->
+  <button type="submit" class="w-full px-4 py-2 text-white bg-blue-600 rounded hover:bg-blue-700">Enviar</button>
+</form>

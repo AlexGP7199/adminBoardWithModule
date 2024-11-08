@@ -1,0 +1,49 @@
+/* Fondo claro para la página y centrado del contenido */
+body {
+  background-color: #f3f4f6;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.max-w-7xl {
+  max-width: 100%;
+}
+
+/* Ancho completo en dispositivos más grandes */
+@media (min-width: 768px) {
+  .max-w-7xl {
+    max-width: 80%; /* Ajusta el ancho aquí según tu preferencia */
+  }
+}
+
+/* Estilos adicionales */
+.input {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 12px;
+  width: 100%;
+  font-size: 1rem;
+  color: #374151;
+  outline: none;
+}
+
+.input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+/* Separadores entre secciones */
+.border-t-2 {
+  border-top-width: 2px;
+}
+
+/* CSS adicional para más padding en la parte superior */
+.formulario-contenedor {
+  padding-top: 4rem; /* Ajusta el valor según tu preferencia */
+  padding-bottom: 2rem; /* Opcional, para un espacio inferior */
+}
+

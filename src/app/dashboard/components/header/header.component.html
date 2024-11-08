@@ -23,17 +23,17 @@
             <button type="button" class="flex items-center text-sm rounded-full focus:ring-4 focus:ring-red-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
               <span class="sr-only">Open user menu</span>
               <img class="w-8 h-8 rounded-full" src="./assets/userStadistic.png" alt="user photo">
-              <a class="text-gray-50 p-2"> Usuario X</a>
+              <span class="text-gray-50 p-2">{{ nombre || 'Usuario' }}</span>
             </button>
           </div>
 
           <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600" id="dropdown-user">
             <div class="px-4 py-3" role="none">
               <p class="text-sm text-gray-900 dark:text-white" role="none">
-                Neil Sims
+                {{ nombre || 'Nombre del Usuario' }}
               </p>
-              <p class="text-sm font-medium text-red-700 truncate" role="none">
-                neil.simsflowbite.com
+              <p class="text-sm font-medium text-gray-700" role="none">
+                {{ rol || 'Rol del Usuario' }}
               </p>
             </div>
             <ul class="py-1" role="none">
@@ -41,13 +41,13 @@
                 <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-red-100" role="menuitem">Dashboard</a>
               </li>
               <li>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-red-100" role="menuitem">Settings</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-red-100" role="menuitem">Configuración</a>
               </li>
               <li>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-red-100" role="menuitem">Earnings</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-red-100" role="menuitem">Ganancias</a>
               </li>
               <li>
-                <a href="#" class="block px-4 py-2 text-sm text-gray-800 hover:bg-red-100" role="menuitem">Sign out</a>
+                <a (click)="logout()" class="block px-4 py-2 text-sm text-gray-800 hover:bg-red-100 cursor-pointer" role="menuitem">Cerrar sesión</a>
               </li>
             </ul>
           </div>

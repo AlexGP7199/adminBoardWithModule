@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { initFlowbite } from 'flowbite';
+import { AuthService } from './services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +11,17 @@ import { initFlowbite } from 'flowbite';
 export class AppComponent implements OnInit {
   title = 'adminBoardWithModule';
 
+  constructor(public authService: AuthService, private router: Router) {}
+
   ngOnInit(): void {
     initFlowbite();
+    this.checkAuthentication();
+  }
+
+  checkAuthentication() {
+    // Verifica si el usuario está autenticado y redirige al login si no lo está
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+    }
   }
 }
