@@ -107,7 +107,13 @@
 
     <div class="mb-4 mt-4">
       <label class="block mb-1 text-sm font-medium text-gray-700">Cargar una imagen</label>
-      <input formControlName="imagen" type="file" (change)="onFileSelected($event)" class="input" />
+      <input formControlName="imagen" type="file" (change)="onFileSelected($event)" accept="image/*" class="input" />
+
+      <!-- Vista previa de la imagen -->
+      <div *ngIf="previewUrl" class="mt-4">
+        <p class="text-sm text-gray-700">Vista previa:</p>
+        <img [src]="previewUrl" alt="Vista previa de la imagen" class="w-32 h-32 rounded-lg shadow-md">
+      </div>
     </div>
   </div>
 
@@ -142,7 +148,7 @@
     </div>
 
 
-    <div class="mb-4 mt-4">
+    <!-- <div class="mb-4 mt-4">
       <label class="block mb-1 text-sm font-medium text-gray-700">Días con Conflictos</label>
       <div class="grid grid-cols-3 gap-2 mt-2">
         <div *ngFor="let dia of diasConflictos" class="flex items-center">
@@ -155,7 +161,7 @@
           <span class="text-sm text-gray-700">{{ dia.nombre }}</span>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 
   <!-- Botón de Envío -->

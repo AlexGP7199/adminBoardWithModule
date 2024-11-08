@@ -9,6 +9,8 @@ import Swal from 'sweetalert2';
 })
 export class SolicitudPermisosColaboradoresComponent {
   formulario: FormGroup;
+  previewUrl: string | ArrayBuffer | null = null; // Propiedad para almacenar la URL de vista previa de la imagen
+
   diasConflictos: { nombre: string, valor: number }[] = [
     { nombre: 'Domingo', valor: 0 },
     { nombre: 'Lunes', valor: 1 },
@@ -62,7 +64,16 @@ export class SolicitudPermisosColaboradoresComponent {
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
-    this.formulario.patchValue({ imagen: file });
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result; // Almacena la URL para la vista previa
+      };
+      reader.readAsDataURL(file);
+      this.formulario.patchValue({ imagen: file });
+    } else {
+      alert('Por favor, seleccione un archivo de imagen válido.');
+    }
   }
 
   toggleDia(dia: number) {
@@ -97,7 +108,6 @@ export class SolicitudPermisosColaboradoresComponent {
       const jsonFormData = JSON.stringify(formData, null, 2);
       console.log("Información a enviar (JSON):", jsonFormData);
 
-      // Mostrar un mensaje de éxito con SweetAlert2
       Swal.fire({
         title: 'Formulario enviado',
         text: 'La información ha sido enviada exitosamente.',
@@ -105,7 +115,6 @@ export class SolicitudPermisosColaboradoresComponent {
         confirmButtonText: 'Aceptar'
       });
     } else {
-      // Mostrar un mensaje de error con SweetAlert2
       Swal.fire({
         title: 'Formulario incompleto',
         text: 'Por favor, completa todos los campos requeridos.',
