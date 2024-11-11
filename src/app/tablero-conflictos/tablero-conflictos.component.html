@@ -24,11 +24,21 @@
     </div>
   </div>
 
+  <div class="flex justify-between mb-6">
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Buscar por Nombre</label>
+      <input type="text" [(ngModel)]="searchNombre" placeholder="Buscar por nombre" class="input" />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Buscar por Fecha de Solicitud</label>
+      <input type="date" [(ngModel)]="searchFecha" class="input" />
+    </div>
+  </div>
+
   <!-- Tabla de Conflictos -->
   <div *ngIf="!mostrarDetalle" class="overflow-auto rounded-lg shadow-lg">
     <table class="min-w-full bg-white border rounded-lg">
       <thead>
-
         <tr class="bg-blue-100 text-gray-700 uppercase text-sm leading-normal">
           <th class="py-3 px-6 text-left font-semibold">Usuario</th>
           <th class="py-3 px-6 text-left font-semibold">Fecha de Generación</th>
@@ -37,9 +47,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let conflicto of conflictos" class="hover:bg-gray-50 border-b border-gray-200">
+        <tr *ngFor="let conflicto of conflictos | filtroConflictos: searchNombre : searchFecha" class="hover:bg-gray-50 border-b border-gray-200">
           <td class="py-4 px-6 text-gray-700">{{ conflicto.usuarioNombre }}</td>
-          <td class="py-4 px-6 text-gray-700">{{ conflicto.fechaGeneracion | date: 'yyyy-MM-dd' }}</td>
+          <td class="py-4 px-6 text-gray-700">{{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}</td>
           <td class="py-4 px-6 text-gray-700">{{ conflicto.estatus }}</td>
           <td class="py-4 px-6 text-gray-700">
             <button (click)="verDetalle(conflicto.usuarioId)">
@@ -47,7 +57,6 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.5 4.5M19.5 14.5L15 19m-3-7a4 4 0 11-8 0 4 4 0 018 0z"></path>
               </svg>
             </button>
-
           </td>
         </tr>
       </tbody>
@@ -57,11 +66,25 @@
   <!-- Detalle del Usuario Seleccionado -->
   <div *ngIf="mostrarDetalle" class="mt-10 space-y-8">
     <!-- Información Personal -->
-    <div class="p-6 bg-gray-100 rounded-lg shadow-md">
+    <div class="p-6 bg-gray-100 rounded-lg shadow-md relative">
       <h3 class="text-2xl font-bold mb-4">Información del Usuario</h3>
       <p><strong>Nombre:</strong> {{ detalleUsuario?.usuarioNombre }}</p>
       <p><strong>Rol:</strong> {{ detalleUsuario?.usuarioRol }}</p>
       <p><strong>Provincia:</strong> {{ detalleUsuario?.usuarioProvincia }}</p>
+
+      <!-- Cambiar Estatus -->
+      <div class="absolute bottom-4 right-4 flex items-center space-x-2">
+        <label class="block text-sm font-medium text-gray-700">Cambiar Estatus:</label>
+        <select [(ngModel)]="detalleUsuario.estatus" class="input bg-gray-200 border border-gray-300 text-gray-700 rounded focus:ring-blue-500 focus:border-blue-500">
+          <option *ngFor="let estado of estatusList" [value]="estado">{{ estado }}</option>
+        </select>
+        <button
+          (click)="cambiarEstatus(detalleUsuario.id, detalleUsuario.estatus)"
+          class="bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-150"
+        >
+          Cambiar
+        </button>
+      </div>
     </div>
 
     <!-- Detalles de Conflictos -->
@@ -73,7 +96,6 @@
             <th class="py-3 px-6 text-left font-semibold">Fecha de Conflicto</th>
             <th class="py-3 px-6 text-left font-semibold">Equipo</th>
             <th class="py-3 px-6 text-left font-semibold">Motivo</th>
-
           </tr>
         </thead>
         <tbody>
@@ -81,7 +103,6 @@
             <td class="py-4 px-6 text-gray-700">{{ detalle.fechaConflicto | date: 'yyyy-MM-dd' }}</td>
             <td class="py-4 px-6 text-gray-700">{{ detalle.teamName }}</td>
             <td class="py-4 px-6 text-gray-700">{{ detalle.motivo }}</td>
-
           </tr>
         </tbody>
       </table>

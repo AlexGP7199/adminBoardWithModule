@@ -9,6 +9,9 @@ import Swal from 'sweetalert2';
   styleUrl: './tablero-conflictos.component.css'
 })
 export class TableroConflictosComponent implements OnInit {
+  searchNombre: string = '';
+searchFecha: string = '';
+
   conflictos: Conflicto[] = [];
   detalleUsuario: any = null;
   mostrarDetalle = false;
@@ -118,15 +121,46 @@ export class TableroConflictosComponent implements OnInit {
       return;
     }
 
-    this.conflictosService.actualizarEstatus(conflictoId, nuevoEstatus).subscribe(
+    this.conflictosService.actualizarEstatus(conflictoId, JSON.stringify(nuevoEstatus)).subscribe(
       (response: any) => {
-        Swal.fire('Éxito', response.Message, 'success');
-        this.obtenerConflictos(); // Actualizar lista de conflictos después de cambiar el estatus
+        Swal.fire({
+          title: 'Éxito',
+          text: 'El estatus ha sido actualizado correctamente.',
+          icon: 'success',
+          confirmButtonText: 'Aceptar'
+        }).then(() => {
+          // Cerrar el detalle y mostrar la tabla después de actualizar el estatus
+          this.mostrarDetalle = false;
+          this.detalleUsuario = null;
+          this.obtenerConflictos(); // Recargar la lista de conflictos para reflejar los cambios
+        });
       },
       (error) => {
-        Swal.fire('Error', 'No se pudo actualizar el estatus.', 'error');
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo actualizar el estatus. Inténtelo de nuevo más tarde.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar'
+        });
       }
     );
+  }
+
+
+
+  getEstatusClass(estatus: string): string {
+    switch (estatus) {
+      case 'Pendiente':
+        return 'bg-yellow-200 text-yellow-800 px-2 py-1 rounded';
+      case 'En Proceso':
+        return 'bg-blue-200 text-blue-800 px-2 py-1 rounded';
+      case 'Aprobado':
+        return 'bg-green-200 text-green-800 px-2 py-1 rounded';
+      case 'Rechazado':
+        return 'bg-red-200 text-red-800 px-2 py-1 rounded';
+      default:
+        return '';
+    }
   }
 
   private formatDate(date: Date): string {
