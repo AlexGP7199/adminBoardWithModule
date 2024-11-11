@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {apiURL} from '../../../ENV/env-variable'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -10,6 +11,10 @@ export class UsuarioService {
 
   obtenerRegiones(): Observable<any[]> {
     return this.http.get<any[]>(`${apiURL}/Region/all-regions`);
+  }
+
+  validarFechasEstudio(request: any): Observable<any> {
+    return this.http.post(`${apiURL}/User/validarConflictos`, request);
   }
 
   obtenerProvincias(regionId: number): Observable<any[]> {

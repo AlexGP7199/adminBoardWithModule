@@ -1,10 +1,11 @@
 <div class="max-w-7xl mx-auto py-16 px-6 bg-white rounded-lg shadow-lg mt-16">
-  <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Tablero de Usuarios</h2>
+  <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center" *ngIf="!mostrarFormulario">Tablero de Usuarios</h2>
 
-  <!-- Contenedor de Filtros -->
-  <div class="container filter-container">
-    <!-- Filtro de Región -->
-    <div>
+  <!-- Tablero de Usuarios -->
+  <div *ngIf="!mostrarFormulario" class="container filter-container">
+
+    <!-- Filtro de Región (solo visible para nivel 3) -->
+    <div *ngIf="nivelUsuario === 3">
       <label class="block text-sm font-medium text-gray-700">Región</label>
       <select [(ngModel)]="selectedRegion" (change)="onRegionChange()" class="input">
         <option value="" disabled selected>Seleccione una región</option>
@@ -12,27 +13,45 @@
       </select>
     </div>
 
-    <!-- Filtro de Provincia -->
-    <div>
+    <!-- Filtro de Provincia (visible para niveles 2 y 3) -->
+    <div *ngIf="nivelUsuario === 2 || nivelUsuario === 3">
       <label class="block text-sm font-medium text-gray-700">Provincia</label>
-      <select [(ngModel)]="selectedProvincia" (change)="onProvinciaChange()" class="input" [disabled]="!selectedRegion">
+      <select [(ngModel)]="selectedProvincia" (change)="onProvinciaChange()" class="input" [disabled]="nivelUsuario === 2 && !selectedRegion">
         <option value="" disabled selected>Seleccione una provincia</option>
         <option *ngFor="let provincia of provinciasFiltradas" [value]="provincia.provinciaId">{{ provincia.nombre }}</option>
       </select>
     </div>
 
-    <!-- Filtro de Equipo -->
-    <div>
+    <!-- Filtro de Equipo (solo visible para nivel 3) -->
+    <div *ngIf="nivelUsuario === 3">
       <label class="block text-sm font-medium text-gray-700">Equipo</label>
       <select [(ngModel)]="selectedTeam" (change)="onTeamChange()" class="input">
         <option value="" disabled selected>Seleccione un equipo</option>
         <option *ngFor="let team of equipos" [value]="team.teamId">{{ team.nombre }}</option>
       </select>
     </div>
+
+    <!-- Campos de búsqueda siempre habilitados -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Buscar por Cédula</label>
+      <input type="text" [(ngModel)]="searchCedula" placeholder="Ingrese cédula" class="input">
+    </div>
+
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Buscar por Nombre</label>
+      <input type="text" [(ngModel)]="searchNombre" placeholder="Ingrese nombre" class="input">
+    </div>
+
+    <!-- Botón de Filtrar para aplicar los filtros -->
+    <div class="mt-4">
+      <button (click)="filtrarUsuarios()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+        Filtrar
+      </button>
+    </div>
   </div>
 
   <!-- Tabla de Usuarios Filtrados -->
-  <div class="overflow-auto rounded-lg shadow-lg">
+  <div *ngIf="!mostrarFormulario" class="overflow-auto rounded-lg shadow-lg">
     <table class="table">
       <thead>
         <tr class="bg-blue-100 text-gray-700 uppercase text-sm leading-normal">
@@ -40,16 +59,69 @@
           <th class="py-3 px-6 text-left font-semibold">Cédula</th>
           <th class="py-3 px-6 text-left font-semibold">Cargo</th>
           <th class="py-3 px-6 text-left font-semibold">Equipo</th>
+          <th class="py-3 px-6 text-left font-semibold">Acción</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let usuario of usuariosFiltrados" class="hover:bg-gray-50 border-b border-gray-200">
+        <tr *ngFor="let usuario of usuariosFiltrados | filtroUsuario: searchCedula : searchNombre" class="hover:bg-gray-50 border-b border-gray-200">
           <td class="py-4 px-6 text-gray-700">{{ usuario.nombre }}</td>
           <td class="py-4 px-6 text-gray-700">{{ usuario.cedula }}</td>
           <td class="py-4 px-6 text-gray-700">{{ usuario.cargo }}</td>
           <td class="py-4 px-6 text-gray-700">{{ usuario.teamName }}</td>
+          <td class="py-4 px-6 text-gray-700">
+            <button (click)="abrirFormulario(usuario)" class="text-blue-600 hover:text-blue-800">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.5 4.5M19.5 14.5L15 19m-3-7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+              </svg>
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
+  </div>
+
+  <!-- Formulario de Validación de Fechas de Estudio -->
+  <div *ngIf="mostrarFormulario">
+    <!-- Información del Usuario Seleccionado -->
+    <div class="container mb-6">
+      <h3 class="text-2xl font-bold mb-4">Información del Usuario</h3>
+      <p><strong>Nombre:</strong> {{ usuarioSeleccionado?.nombre }}</p>
+      <p><strong>Cédula:</strong> {{ usuarioSeleccionado?.cedula }}</p>
+      <p><strong>Cargo:</strong> {{ usuarioSeleccionado?.cargo }}</p>
+      <p><strong>Equipo:</strong> {{ usuarioSeleccionado?.teamName }}</p>
+    </div>
+
+    <!-- Formulario de Fechas de Estudio -->
+    <div class="container">
+      <h3 class="text-2xl font-bold mb-4">Formulario de Validación de Fechas de Estudio</h3>
+
+      <label class="block text-sm font-medium text-gray-700 mb-2">Inicio de Estudios</label>
+      <input type="date" [(ngModel)]="validarFechasEstudioRequest.inicioEstudios" (change)="onInicioEstudiosChange()" [min]="today" class="input mb-4" />
+
+      <label class="block text-sm font-medium text-gray-700 mb-2">Fin de Estudios</label>
+      <input type="date" [(ngModel)]="validarFechasEstudioRequest.finEstudios" (change)="onFinEstudiosChange()" class="input mb-4" />
+
+      <label class="block text-sm font-medium text-gray-700 mb-2">Días de Estudio</label>
+      <div class="flex flex-wrap gap-2 mb-4">
+        <div *ngFor="let dia of diasSemana" class="flex items-center">
+          <input type="checkbox" [value]="dia.value" (change)="onDiaEstudioChange($event)" />
+          <span class="ml-2">{{ dia.label }}</span>
+        </div>
+      </div>
+
+      <label class="block text-sm font-medium text-gray-700 mb-2">Motivo</label>
+      <textarea [(ngModel)]="validarFechasEstudioRequest.motivo" class="input mb-4" rows="3"></textarea>
+
+      <!-- Campo de Carga de Imagen y Previsualización -->
+      <label class="block text-sm font-medium text-gray-700 mb-2">Cargar Imagen</label>
+      <input type="file" (change)="onImageSelected($event)" accept="image/*" class="input mb-4" />
+      <div *ngIf="imagenUrl" class="mt-4">
+        <p class="text-sm font-medium text-gray-700">Previsualización:</p>
+        <img [src]="imagenUrl" alt="Previsualización de la imagen" class="w-32 h-32 object-cover mt-2 rounded-lg shadow-md" />
+      </div>
+
+      <button (click)="enviarFormulario()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">Enviar</button>
+      <button (click)="cerrarFormulario()" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 ml-2 mt-4">Cancelar</button>
+    </div>
   </div>
 </div>

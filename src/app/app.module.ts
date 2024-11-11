@@ -19,7 +19,8 @@ import { SolicitudPermisosColaboradoresComponent } from './solicitud-permisos-co
 import { ReactiveFormsModule } from '@angular/forms';
 import { TableroConflictosComponent } from './tablero-conflictos/tablero-conflictos.component';
 import { FiltroConflictosPipe } from './tablero-conflictos/pipes/filtro-conflictos.pipe';
-import { TableroUsuariosComponent } from './tablero-usuarios/tablero-usuarios.component'; // Importa ReactiveFormsModule
+import { TableroUsuariosComponent } from './tablero-usuarios/tablero-usuarios.component';
+import { FiltroUsuarioPipe  } from './tablero-usuarios/pipes/filtro-cedula.pipe'; // Importa ReactiveFormsModule
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { TableroUsuariosComponent } from './tablero-usuarios/tablero-usuarios.co
     TableroConflictosComponent,
     FiltroConflictosPipe,
     TableroUsuariosComponent,
+    FiltroUsuarioPipe ,
 
   ],
   imports: [

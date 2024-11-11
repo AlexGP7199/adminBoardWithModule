@@ -18,13 +18,16 @@ export class AuthService {
       tap((response) => {
         if (response && response.token) {
           // Guarda el token y los demás datos en localStorage
+          localStorage.setItem('usuarioId', response.usuarioId.toString());
           localStorage.setItem('token', response.token);
           localStorage.setItem('nombre', response.nombre);
           localStorage.setItem('cedula', response.cedula);
           localStorage.setItem('role', response.role);
           localStorage.setItem('nivel', response.nivel.toString());
           localStorage.setItem('provincia', response.provincia);
+          localStorage.setItem('provinciaId', response.provinciaId.toString());
           localStorage.setItem('region', response.region);
+          localStorage.setItem('regionId', response.regionId.toString());
           localStorage.setItem('teamId',response.teamId.toString());
           localStorage.setItem('teamName', response.teamName);
         }
@@ -40,9 +43,12 @@ export class AuthService {
     localStorage.removeItem('role');
     localStorage.removeItem('nivel');
     localStorage.removeItem('provincia');
+    localStorage.removeItem('provinciaId');
     localStorage.removeItem('region');
+    localStorage.removeItem('regionId');
     localStorage.removeItem('teamId');
     localStorage.removeItem('teamName');
+    localStorage.removeItem('usuarioId');
     this.router.navigate(['/login']);
   }
 

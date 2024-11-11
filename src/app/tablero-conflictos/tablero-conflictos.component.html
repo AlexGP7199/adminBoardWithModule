@@ -23,15 +23,28 @@
       </div>
     </div>
 
-    <!-- Filtros de Búsqueda -->
+    <!-- Filtros específicos de región, provincia y equipo según el nivel de usuario -->
     <div class="flex flex-col md:flex-row md:space-x-6 mb-4">
-      <div class="w-full md:w-1/2">
-        <label class="block text-sm font-medium text-gray-700">Buscar por Nombre</label>
-        <input type="text" [(ngModel)]="searchNombre" placeholder="Buscar por nombre" class="input w-full mt-1" />
+      <div *ngIf="nivelUsuario === 3" class="w-full md:w-1/3">
+        <label class="block text-sm font-medium text-gray-700">Región</label>
+        <select [(ngModel)]="selectedRegion" (change)="onRegionChange()" class="input w-full mt-1">
+          <option value="" disabled selected>Seleccione una región</option>
+          <option *ngFor="let region of regiones" [value]="region.regionId">{{ region.nombre }}</option>
+        </select>
       </div>
-      <div class="w-full md:w-1/2">
-        <label class="block text-sm font-medium text-gray-700">Buscar por Fecha de Solicitud</label>
-        <input type="date" [(ngModel)]="searchFecha" class="input w-full mt-1" />
+      <div *ngIf="nivelUsuario >= 2" class="w-full md:w-1/3">
+        <label class="block text-sm font-medium text-gray-700">Provincia</label>
+        <select [(ngModel)]="selectedProvincia" (change)="onProvinciaChange()" class="input w-full mt-1" [disabled]="nivelUsuario === 2 && !selectedRegion">
+          <option value="" disabled selected>Seleccione una provincia</option>
+          <option *ngFor="let provincia of provinciasFiltradas" [value]="provincia.provinciaId">{{ provincia.nombre }}</option>
+        </select>
+      </div>
+      <div *ngIf="nivelUsuario === 3" class="w-full md:w-1/3">
+        <label class="block text-sm font-medium text-gray-700">Equipo</label>
+        <select [(ngModel)]="selectedTeam" (change)="onTeamChange()" class="input w-full mt-1">
+          <option value="" disabled selected>Seleccione un equipo</option>
+          <option *ngFor="let team of equipos" [value]="team.teamId">{{ team.nombre }}</option>
+        </select>
       </div>
     </div>
 
@@ -46,6 +59,9 @@
       <thead>
         <tr class="bg-blue-100 text-gray-700 uppercase text-sm leading-normal">
           <th class="py-3 px-6 text-left font-semibold">Usuario</th>
+          <th class="py-3 px-6 text-left font-semibold">Cédula</th>
+          <th class="py-3 px-6 text-left font-semibold">Provincia</th>
+          <th class="py-3 px-6 text-left font-semibold">Región</th>
           <th class="py-3 px-6 text-left font-semibold">Fecha de Generación</th>
           <th class="py-3 px-6 text-left font-semibold">Estatus</th>
           <th class="py-3 px-6 text-left font-semibold">Acciones</th>
@@ -54,6 +70,9 @@
       <tbody>
         <tr *ngFor="let conflicto of conflictos | filtroConflictos: searchNombre : searchFecha" class="hover:bg-gray-50 border-b border-gray-200">
           <td class="py-4 px-6 text-gray-700">{{ conflicto.usuarioNombre }}</td>
+          <td class="py-4 px-6 text-gray-700">{{ conflicto.cedula }}</td>
+          <td class="py-4 px-6 text-gray-700">{{ conflicto.provinciaNombre }}</td>
+          <td class="py-4 px-6 text-gray-700">{{ conflicto.regionNombre }}</td>
           <td class="py-4 px-6 text-gray-700">{{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}</td>
           <td class="py-4 px-6 text-gray-700">{{ conflicto.estatus }}</td>
           <td class="py-4 px-6 text-gray-700">

@@ -19,22 +19,23 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [loginAuthGuard] },
 
   // Redirección inicial a Dashboard si el usuario está autenticado
-  { path: '', redirectTo: 'Dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: 'Conflictos', pathMatch: 'full' },
 
   // Rutas de Dashboard y sus subcomponentes (protegidas con AuthGuard)
   { path: 'Dashboard', component: ContentComponent, canActivate: [AuthGuard] },
   {path: 'Conflictos', component: TableroConflictosComponent, canActivate: [AuthGuard]},
   {path: 'TableroUsuarios', component: TableroUsuariosComponent, canActivate: [AuthGuard]},
-  { path: 'CargarHorario', component: HorariosComponent, canActivate: [AuthGuard] },
+  { path: 'horario', component: HorariosComponent, canActivate: [AuthGuard] },
+  //{ path: 'CargarHorario', component: HorariosComponent, canActivate: [AuthGuard] },
   { path: 'Colaboradores', component: AgentesComponent, canActivate: [AuthGuard] },
   { path: 'detalle/:cedula', component: PersonaDetalleComponent, canActivate: [AuthGuard] },
-  { path: 'horarioSemanal', component: WeeklyCalendarComponent, canActivate: [AuthGuard] },
+
   { path: 'ColaboradoresProvinciales', component: AgentesRegionalesComponent, canActivate: [AuthGuard] },
   { path: 'AgentesNacionalesComponent', component: AgentesNacionalesComponent, canActivate: [AuthGuard] },
   { path: 'FormularioSolicitud', component: SolicitudPermisosColaboradoresComponent, canActivate: [AuthGuard] },
 
   // Ruta comodín para manejar cualquier URL no encontrada
-  { path: '**', redirectTo: 'Dashboard' }
+  { path: '**', redirectTo: 'Conflictos' }
 ];
 
 

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
+import { ConflictoService } from '../tablero-conflictos/services/conflicto.service';
 
 @Component({
   selector: 'app-horarios',
@@ -8,99 +9,63 @@ import * as XLSX from 'xlsx';
   styleUrl: './horarios.component.css'
 })
 export class HorariosComponent {
-  selectedFile: File | null = null;
-  fileName: string = '';
-  tableData: any[][] = [];
-  fileLoaded: boolean = false;
+  conflictosPendientes: any[] = [];
+  conflictosEnProceso: any[] = [];
+  conflictosAprobados: any[] = [];
+  conflictosRechazados: any[] = [];
 
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.selectedFile = input.files[0];
-      this.fileName = this.selectedFile.name;
-      this.tableData = [];
-      this.fileLoaded = false;
-    }
+  // Variables para información del usuario
+  cedula: string = '';
+  usuarioNombre: string = '';
+  usuarioProvincia: string = '';
+  usuarioRegion: string = '';
+  usuarioRol: string = '';
+  usuarioTeam: string = '';
+  usuarioId: number = 0;
+
+  constructor(private conflictoService: ConflictoService) {}
+
+  ngOnInit(): void {
+    this.obtenerInformacionUsuario();
+    this.cargarConflictos();
   }
 
-  onSubmit(event: Event): void {
-    event.preventDefault();
-
-    if (this.selectedFile) {
-      const fileReader = new FileReader();
-      fileReader.onload = () => {
-        try {
-          const data = new Uint8Array(fileReader.result as ArrayBuffer);
-          const workbook = XLSX.read(data, { type: 'array' });
-          const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
-          const jsonData: any[][] = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
-          this.validateExcelFormat(jsonData);
-        } catch (error) {
-          Swal.fire({
-            icon: 'error',
-            title: 'Error al leer el archivo',
-            text: 'Hubo un problema al leer el archivo. Asegúrese de que el archivo esté en formato Excel válido.'
-          });
-          this.fileLoaded = false;
-        }
-      };
-      fileReader.readAsArrayBuffer(this.selectedFile);
-    } else {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Archivo no seleccionado',
-        text: 'Por favor, seleccione un archivo antes de continuar.'
-      });
-    }
+  obtenerInformacionUsuario(): void {
+    this.cedula = localStorage.getItem('cedula') || '';
+    this.usuarioNombre = localStorage.getItem('nombre') || '';
+    this.usuarioProvincia = localStorage.getItem('provincia') || '';
+    this.usuarioRegion = localStorage.getItem('region') || '';
+    this.usuarioRol = localStorage.getItem('role') || '';
+    this.usuarioTeam = localStorage.getItem('teamName') || '';
+    this.usuarioId = parseInt(localStorage.getItem('usuarioId') || '0', 10);
   }
 
-  validateExcelFormat(data: any[][]): void {
-    if (data.length < 2 || data[0][0]?.toLowerCase() !== 'fecha' || data[0][1]?.toLowerCase() !== 'descripcion') {
-      Swal.fire({
-        icon: 'error',
-        title: 'Formato de archivo no válido',
-        text: 'El formato del archivo de Excel no es válido. Asegúrese de que las columnas sean "fecha" y "descripcion".'
-      });
-      this.fileLoaded = false;
-      this.tableData = [];
-    } else {
-      this.fileLoaded = true;
-      this.tableData = data;
-
-    }
-  }
-
-  confirmData(): void {
-    if (!this.tableData || this.tableData.length < 2) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'No hay datos para enviar',
-        text: 'Por favor, carga un archivo válido antes de confirmar.'
-      });
+  cargarConflictos(): void {
+    if (this.usuarioId === 0) {
+      Swal.fire('Error', 'Usuario no encontrado en el sistema.', 'error');
       return;
     }
 
-    // Itera sobre cada fila, excluyendo el encabezado, y muestra los datos en la consola
-    const dataToLog = this.tableData.slice(1).map(row => ({
-      fecha: row[0],
-      descripcion: row[1]
-    }));
-
-    console.log("Datos que se enviarían:", dataToLog);
-
-    Swal.fire({
-      icon: 'success',
-      title: 'Datos listos para enviar',
-      text: `Se han preparado ${dataToLog.length} registros para enviarlos. Revisa la consola para ver el detalle.`
-    });
-
-    this.resetData();
+    this.conflictoService.obtenerConflictosUsuario(this.usuarioId).subscribe(
+      (data) => {
+        if (data && typeof data === 'object' && 'Message' in data) {
+          Swal.fire('Información', data.Message, 'info');
+        } else if (Array.isArray(data)) {
+          // Procesar cada conflicto y agrupar según el estatus
+          this.conflictosPendientes = data.filter((c: any) => c.estatus === 'Pendiente');
+          this.conflictosEnProceso = data.filter((c: any) => c.estatus === 'En Proceso');
+          this.conflictosAprobados = data.filter((c: any) => c.estatus === 'Aprobado');
+          this.conflictosRechazados = data.filter((c: any) => c.estatus === 'Rechazado');
+        } else {
+          Swal.fire('Advertencia', 'La respuesta del servidor no tiene el formato esperado.', 'warning');
+        }
+      },
+      (error) => {
+        console.error('Error al cargar conflictos:', error);
+        Swal.fire('Error', 'Ocurrió un error al cargar los conflictos.', 'error');
+      }
+    );
   }
 
-  resetData(): void {
-    this.selectedFile = null;
-    this.fileName = '';
-    this.tableData = [];
-    this.fileLoaded = false;
-  }
+
 }
