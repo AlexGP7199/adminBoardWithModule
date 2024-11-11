@@ -1,0 +1,11 @@
+.max-w-7xl {
+  max-width: 100%;
+}
+
+.mt-8 {
+  margin-top: 2rem;
+}
+
+.overflow-auto {
+  overflow-x: auto;
+}
