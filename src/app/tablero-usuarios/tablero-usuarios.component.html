@@ -1,0 +1,55 @@
+<div class="max-w-7xl mx-auto py-16 px-6 bg-white rounded-lg shadow-lg mt-16">
+  <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Tablero de Usuarios</h2>
+
+  <!-- Contenedor de Filtros -->
+  <div class="container filter-container">
+    <!-- Filtro de Región -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Región</label>
+      <select [(ngModel)]="selectedRegion" (change)="onRegionChange()" class="input">
+        <option value="" disabled selected>Seleccione una región</option>
+        <option *ngFor="let region of regiones" [value]="region.regionId">{{ region.nombre }}</option>
+      </select>
+    </div>
+
+    <!-- Filtro de Provincia -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Provincia</label>
+      <select [(ngModel)]="selectedProvincia" (change)="onProvinciaChange()" class="input" [disabled]="!selectedRegion">
+        <option value="" disabled selected>Seleccione una provincia</option>
+        <option *ngFor="let provincia of provinciasFiltradas" [value]="provincia.provinciaId">{{ provincia.nombre }}</option>
+      </select>
+    </div>
+
+    <!-- Filtro de Equipo -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Equipo</label>
+      <select [(ngModel)]="selectedTeam" (change)="onTeamChange()" class="input">
+        <option value="" disabled selected>Seleccione un equipo</option>
+        <option *ngFor="let team of equipos" [value]="team.teamId">{{ team.nombre }}</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Tabla de Usuarios Filtrados -->
+  <div class="overflow-auto rounded-lg shadow-lg">
+    <table class="table">
+      <thead>
+        <tr class="bg-blue-100 text-gray-700 uppercase text-sm leading-normal">
+          <th class="py-3 px-6 text-left font-semibold">Nombre</th>
+          <th class="py-3 px-6 text-left font-semibold">Cédula</th>
+          <th class="py-3 px-6 text-left font-semibold">Cargo</th>
+          <th class="py-3 px-6 text-left font-semibold">Equipo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let usuario of usuariosFiltrados" class="hover:bg-gray-50 border-b border-gray-200">
+          <td class="py-4 px-6 text-gray-700">{{ usuario.nombre }}</td>
+          <td class="py-4 px-6 text-gray-700">{{ usuario.cedula }}</td>
+          <td class="py-4 px-6 text-gray-700">{{ usuario.cargo }}</td>
+          <td class="py-4 px-6 text-gray-700">{{ usuario.teamName }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

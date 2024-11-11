@@ -6,4 +6,6 @@ export interface LoginResponse {
   nivel: string;
   provincia: string;
   region: string;
+  teamId: number;
+  teamName:string;
 }

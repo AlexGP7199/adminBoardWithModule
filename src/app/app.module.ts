@@ -18,7 +18,8 @@ import { AgentesNacionalesComponent } from './agentes-nacionales/agentes-naciona
 import { SolicitudPermisosColaboradoresComponent } from './solicitud-permisos-colaboradores/solicitud-permisos-colaboradores.component'; // Importa FormsModule aquí
 import { ReactiveFormsModule } from '@angular/forms';
 import { TableroConflictosComponent } from './tablero-conflictos/tablero-conflictos.component';
-import { FiltroConflictosPipe } from './tablero-conflictos/pipes/filtro-conflictos.pipe'; // Importa ReactiveFormsModule
+import { FiltroConflictosPipe } from './tablero-conflictos/pipes/filtro-conflictos.pipe';
+import { TableroUsuariosComponent } from './tablero-usuarios/tablero-usuarios.component'; // Importa ReactiveFormsModule
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { FiltroConflictosPipe } from './tablero-conflictos/pipes/filtro-conflict
     SolicitudPermisosColaboradoresComponent,
     TableroConflictosComponent,
     FiltroConflictosPipe,
+    TableroUsuariosComponent,
 
   ],
   imports: [

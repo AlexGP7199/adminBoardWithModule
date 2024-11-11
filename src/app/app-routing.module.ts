@@ -12,6 +12,7 @@ import { AuthGuard } from './services/Guard/auth.guard';
 import { LoginComponent } from './login/login.component';
 import { loginAuthGuard } from './services/Guard/login-auth.guard';
 import { TableroConflictosComponent } from './tablero-conflictos/tablero-conflictos.component';
+import { TableroUsuariosComponent } from './tablero-usuarios/tablero-usuarios.component';
 
 const routes: Routes = [
   // Ruta de login
@@ -23,6 +24,7 @@ const routes: Routes = [
   // Rutas de Dashboard y sus subcomponentes (protegidas con AuthGuard)
   { path: 'Dashboard', component: ContentComponent, canActivate: [AuthGuard] },
   {path: 'Conflictos', component: TableroConflictosComponent, canActivate: [AuthGuard]},
+  {path: 'TableroUsuarios', component: TableroUsuariosComponent, canActivate: [AuthGuard]},
   { path: 'CargarHorario', component: HorariosComponent, canActivate: [AuthGuard] },
   { path: 'Colaboradores', component: AgentesComponent, canActivate: [AuthGuard] },
   { path: 'detalle/:cedula', component: PersonaDetalleComponent, canActivate: [AuthGuard] },

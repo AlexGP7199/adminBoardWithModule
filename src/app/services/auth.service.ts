@@ -25,6 +25,8 @@ export class AuthService {
           localStorage.setItem('nivel', response.nivel.toString());
           localStorage.setItem('provincia', response.provincia);
           localStorage.setItem('region', response.region);
+          localStorage.setItem('teamId',response.teamId.toString());
+          localStorage.setItem('teamName', response.teamName);
         }
       })
     );
@@ -39,6 +41,8 @@ export class AuthService {
     localStorage.removeItem('nivel');
     localStorage.removeItem('provincia');
     localStorage.removeItem('region');
+    localStorage.removeItem('teamId');
+    localStorage.removeItem('teamName');
     this.router.navigate(['/login']);
   }
 

@@ -1,37 +1,42 @@
 <div class="max-w-7xl mx-auto py-16 px-6 bg-white rounded-lg shadow-lg mt-16">
-  <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Tablero de Conflictos</h2>
+  <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Tablero de Conflictos</h2>
 
-  <!-- Filtros de Fechas y Estatus -->
-  <div *ngIf="!mostrarDetalle" class="flex justify-between mb-6">
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Fecha de inicio</label>
-      <input type="date" [(ngModel)]="startDate" (change)="onFechaChange()" class="input" />
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Fecha de fin</label>
-      <input type="date" [(ngModel)]="endDate" (change)="onFechaChange()" class="input" />
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Estatus</label>
-      <select [(ngModel)]="estatus" (change)="onEstatusChange($event)" class="input">
-        <option *ngFor="let estado of estatusList" [value]="estado">{{ estado }}</option>
-      </select>
-    </div>
-    <div class="flex items-end">
-      <button (click)="obtenerConflictos()" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
-        Buscar
-      </button>
-    </div>
-  </div>
+  <!-- Contenedor de Filtros -->
+  <div *ngIf="!mostrarDetalle" class="p-6 bg-gray-50 rounded-lg shadow-md mb-8 space-y-4">
+    <h3 class="text-xl font-semibold text-gray-700 mb-4">Filtros de búsqueda</h3>
 
-  <div class="flex justify-between mb-6">
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Buscar por Nombre</label>
-      <input type="text" [(ngModel)]="searchNombre" placeholder="Buscar por nombre" class="input" />
+    <!-- Filtros de Fechas y Estatus -->
+    <div class="flex flex-col md:flex-row md:space-x-6 mb-4">
+      <div class="w-full md:w-1/3">
+        <label class="block text-sm font-medium text-gray-700">Fecha de inicio</label>
+        <input type="date" [(ngModel)]="startDate" (change)="onFechaChange()" class="input w-full mt-1" />
+      </div>
+      <div class="w-full md:w-1/3">
+        <label class="block text-sm font-medium text-gray-700">Fecha de fin</label>
+        <input type="date" [(ngModel)]="endDate" (change)="onFechaChange()" class="input w-full mt-1" />
+      </div>
+      <div class="w-full md:w-1/3">
+        <label class="block text-sm font-medium text-gray-700">Estatus</label>
+        <select [(ngModel)]="estatus" (change)="onEstatusChange($event)" class="input w-full mt-1">
+          <option *ngFor="let estado of estatusList" [value]="estado">{{ estado }}</option>
+        </select>
+      </div>
     </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700">Buscar por Fecha de Solicitud</label>
-      <input type="date" [(ngModel)]="searchFecha" class="input" />
+
+    <!-- Filtros de Búsqueda -->
+    <div class="flex flex-col md:flex-row md:space-x-6 mb-4">
+      <div class="w-full md:w-1/2">
+        <label class="block text-sm font-medium text-gray-700">Buscar por Nombre</label>
+        <input type="text" [(ngModel)]="searchNombre" placeholder="Buscar por nombre" class="input w-full mt-1" />
+      </div>
+      <div class="w-full md:w-1/2">
+        <label class="block text-sm font-medium text-gray-700">Buscar por Fecha de Solicitud</label>
+        <input type="date" [(ngModel)]="searchFecha" class="input w-full mt-1" />
+      </div>
+    </div>
+
+    <div class="flex justify-end">
+      <button (click)="obtenerConflictos()" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Buscar</button>
     </div>
   </div>
 
@@ -100,7 +105,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let detalle of detalleUsuario?.detalles" class="hover:bg-gray-50 border-b border-gray-200">
-            <td class="py-4 px-6 text-gray-700">{{ detalle.fechaConflicto | date: 'yyyy-MM-dd' }}</td>
+            <td class="py-4 px-6 text-gray-700">{{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</td>
             <td class="py-4 px-6 text-gray-700">{{ detalle.teamName }}</td>
             <td class="py-4 px-6 text-gray-700">{{ detalle.motivo }}</td>
           </tr>
