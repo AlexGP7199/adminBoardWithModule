@@ -9,6 +9,7 @@ import { AuthService } from '../../../services/auth.service';
 export class SidenavComponent {
   nombre: string | null = '';
   rol: string | null = '';
+  nivelUsuario: number = 0;
 
   constructor(private authService: AuthService) {}
 
@@ -16,5 +17,6 @@ export class SidenavComponent {
     // Obtén los valores desde el servicio de autenticación
     this.nombre = this.authService.getNombre();
     this.rol = this.authService.getRole();
+    this.nivelUsuario = parseInt(localStorage.getItem('nivel') || '0', 10);
   }
 }

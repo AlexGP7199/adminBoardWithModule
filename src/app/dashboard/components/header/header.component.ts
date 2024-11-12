@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 
@@ -10,13 +10,17 @@ import { AuthService } from '../../../services/auth.service';
 export class HeaderComponent {
   nombre: string | null = '';
   rol: string | null = '';
+  isDropdownVisible: boolean = false;
 
   constructor(public authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    // Obtiene el nombre y rol del usuario
     this.nombre = this.authService.getNombre();
     this.rol = this.authService.getRole();
+  }
+
+  toggleDropdown() {
+    this.isDropdownVisible = !this.isDropdownVisible;
   }
 
   logout() {

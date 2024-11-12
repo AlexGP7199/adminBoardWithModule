@@ -26,11 +26,12 @@ export class UsuarioService {
     return this.http.get<any[]>(`${apiURL}/Teams/all-teams`);
   }
 
-  listarUsuariosFiltrados(regionId?: number, provinciaId?: number, teamId?: number): Observable<any[]> {
+  listarUsuariosFiltrados(regionId?: number, provinciaId?: number, teamId?: number, nivelUsuario?: number): Observable<any[]> {
     let params = new HttpParams();
     if (regionId) params = params.set('regionId', regionId.toString());
     if (provinciaId) params = params.set('provinciaId', provinciaId.toString());
     if (teamId) params = params.set('teamId', teamId.toString());
+    if (nivelUsuario !== undefined) params = params.set('nivelUsuario', nivelUsuario.toString()); // Añadir el nivel como parámetro
 
     return this.http.get<any[]>(`${apiURL}/User/listar-usuarios-filtrados`, { params });
   }

@@ -10,11 +10,13 @@ export class loginAuthGuard implements CanActivate {
 
   canActivate(): boolean {
     if (this.authService.isLoggedIn()) {
-      // Si el usuario está autenticado, redirige al dashboard
-      this.router.navigate(['/Dashboard']);
+      const nivel = parseInt(localStorage.getItem('nivel') || '0', 10);
+      // Redirigir según el nivel del usuario
+      const ruta = nivel === 0 ? '/horario' : '/Conflictos';
+      this.router.navigate([ruta]);
       return false;
     }
-    // Si no está autenticado, permite el acceso al login
+    // Permitir acceso a login si no está autenticado
     return true;
   }
 }

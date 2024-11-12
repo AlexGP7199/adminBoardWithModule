@@ -1,0 +1,11 @@
+#dropdown-user {
+  position: absolute;
+  right: 0;
+  margin-top: 10px; /* Ajusta la distancia con el botón */
+  z-index: 50; /* Asegura que esté encima del resto del contenido */
+  width: 12rem; /* Ancho adecuado para el menú */
+}
+
+#dropdown-user.hidden {
+  display: none;
+}

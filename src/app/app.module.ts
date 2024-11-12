@@ -21,6 +21,9 @@ import { TableroConflictosComponent } from './tablero-conflictos/tablero-conflic
 import { FiltroConflictosPipe } from './tablero-conflictos/pipes/filtro-conflictos.pipe';
 import { TableroUsuariosComponent } from './tablero-usuarios/tablero-usuarios.component';
 import { FiltroUsuarioPipe  } from './tablero-usuarios/pipes/filtro-cedula.pipe'; // Importa ReactiveFormsModule
+import { loginAuthGuard } from './services/Guard/login-auth.guard';
+import { AuthGuard } from './services/Guard/auth.guard';
+import { PiboteScreenComponent } from './pibote-screen/pibote-screen.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,8 @@ import { FiltroUsuarioPipe  } from './tablero-usuarios/pipes/filtro-cedula.pipe'
     TableroConflictosComponent,
     FiltroConflictosPipe,
     TableroUsuariosComponent,
-    FiltroUsuarioPipe ,
+    FiltroUsuarioPipe,
+    PiboteScreenComponent ,
 
   ],
   imports: [
@@ -49,7 +53,7 @@ import { FiltroUsuarioPipe  } from './tablero-usuarios/pipes/filtro-cedula.pipe'
     ReactiveFormsModule
 
   ],
-  providers: [],
+  providers: [loginAuthGuard, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

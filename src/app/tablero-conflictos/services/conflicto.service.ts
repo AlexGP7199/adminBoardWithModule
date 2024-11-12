@@ -10,10 +10,18 @@ export class ConflictoService {
 
   constructor(private http: HttpClient) {}
 
-  filtrarConflictos(startDate: string, endDate: string, estatus: string, teamId?: number, provinciaId?: number, regionId?: number): Observable<any> {
+  filtrarConflictos(
+    startDate: string,
+    endDate: string,
+    estatus: string,
+    nivel: number,
+    teamId?: number,
+    provinciaId?: number,
+    regionId?: number,
+   ): Observable<any> {
     let params = new HttpParams()
       .set('startDate', startDate)
-      .set('endDate', endDate);
+      .set('endDate', endDate)
 
     if (estatus) {
       params = params.set('estatus', estatus);
@@ -27,6 +35,8 @@ export class ConflictoService {
     if (regionId !== undefined) {
       params = params.set('regionId', regionId.toString());
     }
+
+    params = params.set('nivel', nivel.toString());
 
     return this.http.get(`${apiURL}/User/filtrar-conflictos`, { params });
   }

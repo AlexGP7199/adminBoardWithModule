@@ -112,7 +112,7 @@ export class TableroConflictosComponent implements OnInit {
     const regionId = this.selectedRegion !== null ? this.selectedRegion : undefined;
 
     this.conflictosService
-      .filtrarConflictos(this.startDate, this.endDate, this.estatus, teamId, provinciaId, regionId)
+      .filtrarConflictos(this.startDate, this.endDate, this.estatus,this.nivelUsuario , teamId, provinciaId, regionId)
       .subscribe(
         (data) => {
           if (Array.isArray(data) && data.length > 0) {

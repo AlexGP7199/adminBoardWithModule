@@ -56,6 +56,7 @@ export class TableroUsuariosComponent {
       this.selectedRegion = +this.userData.regionId;
       this.selectedProvincia = +this.userData.provinciaId;
       this.selectedTeam = +this.userData.teamId;
+
       this.filtrarUsuarios(); // Filtra con los valores del usuario
 
     } else if (this.nivelUsuario === 2) {
@@ -218,7 +219,8 @@ export class TableroUsuariosComponent {
     this.usuarioService.listarUsuariosFiltrados(
       this.selectedRegion ?? undefined,
       this.selectedProvincia ?? undefined,
-      this.selectedTeam ?? undefined
+      this.selectedTeam ?? undefined,
+      this.nivelUsuario
     ).subscribe(
       (usuarios) => (this.usuariosFiltrados = usuarios),
       (error) => console.error('Error al filtrar usuarios:', error)
