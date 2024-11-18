@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {apiURL} from '../../../ENV/env-variable'
+import { ConflictosAgrupadosResponse, TipoAmbulancia } from '../interfaces/conflictosInterfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,18 @@ export class ConflictoService {
     return this.http.get(`${apiURL}/User/filtrar-conflictos`, { params });
   }
 
+  filtrarConflictosAgrupados(params: any): Observable<TipoAmbulancia[]> {
+    let httpParams = new HttpParams();
+
+    if (params.regionId) httpParams = httpParams.set('regionId', params.regionId);
+    if (params.provinciaId) httpParams = httpParams.set('provinciaId', params.provinciaId);
+    if (params.estatus) httpParams = httpParams.set('estatus', params.estatus);
+    if (params.startDate) httpParams = httpParams.set('startDate', params.startDate);
+    if (params.endDate) httpParams = httpParams.set('endDate', params.endDate);
+    if (params.nivel) httpParams = httpParams.set('nivel', params.nivel);
+
+    return this.http.get<TipoAmbulancia[]>(`${apiURL}/User/filtrar-conflictos-agrupados`, { params: httpParams });
+  }
 
   obtenerConflictosUsuario(usuarioId: number): Observable<any> {
     return this.http.get<any>(`${apiURL}/User/ver-conflictos-usuario?usuarioId=${usuarioId}`);

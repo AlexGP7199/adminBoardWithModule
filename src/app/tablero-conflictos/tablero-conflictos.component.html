@@ -39,7 +39,8 @@
           <option *ngFor="let provincia of provinciasFiltradas" [value]="provincia.provinciaId">{{ provincia.nombre }}</option>
         </select>
       </div>
-      <div *ngIf="nivelUsuario === 3" class="w-full md:w-1/3">
+      <!-- Equipos *ngIf="nivelUsuario === 3" -->
+      <div *ngIf="nivelUsuario <= 1"class="w-full md:w-1/3">
         <label class="block text-sm font-medium text-gray-700">Equipo</label>
         <select [(ngModel)]="selectedTeam" (change)="onTeamChange()" class="input w-full mt-1">
           <option value="" disabled selected>Seleccione un equipo</option>
@@ -54,7 +55,7 @@
   </div>
 
   <!-- Tabla de Conflictos -->
-  <div *ngIf="!mostrarDetalle" class="overflow-auto rounded-lg shadow-lg">
+  <div *ngIf="!mostrarDetalle && nivelUsuario <= 1" class="overflow-auto rounded-lg shadow-lg">
     <table class="min-w-full bg-white border rounded-lg">
       <thead>
         <tr class="bg-blue-100 text-gray-700 uppercase text-sm leading-normal">
@@ -87,14 +88,65 @@
     </table>
   </div>
 
+  <div *ngIf="!mostrarDetalle && nivelUsuario > 1" class="mt-10">
+    <h3 class="text-3xl font-bold text-gray-900 mb-8 text-center">Conflictos Agrupados</h3>
+    <div *ngFor="let tipo of conflictosAgrupados" class="p-4 bg-gray-50 rounded-lg shadow-md mb-6">
+      <!-- Tipo de Ambulancia -->
+      <div class="flex justify-between items-center">
+        <h4 class="text-xl font-bold text-gray-700">{{ tipo.tipoAmbulanciaNombre }}</h4>
+        <button (click)="alternarExpandir(tipo)" class="text-blue-600 hover:underline">
+          {{ tipo.expanded ? 'Contraer' : 'Expandir' }}
+        </button>
+      </div>
+      <div *ngIf="tipo.expanded" class="mt-4">
+        <!-- Equipos -->
+        <div *ngFor="let team of tipo.teams" class="p-4 bg-white rounded-lg shadow-md mb-4">
+          <div class="flex justify-between items-center">
+            <h5 class="text-lg font-semibold text-gray-600">Equipo: {{ team.teamNombre }}</h5>
+            <button (click)="alternarExpandirEquipo(team)" class="text-blue-600 hover:underline">
+              {{ team.expanded ? 'Contraer' : 'Expandir' }}
+            </button>
+          </div>
+          <div *ngIf="team.expanded" class="mt-2">
+            <!-- Usuarios -->
+            <table class="min-w-full bg-gray-100 border rounded-lg">
+              <thead>
+                <tr class="bg-blue-100 text-gray-700 uppercase text-sm leading-normal">
+                  <th class="py-3 px-6 text-left font-semibold">Nombre</th>
+                  <th class="py-3 px-6 text-left font-semibold">Cédula</th>
+                  <th class="py-3 px-6 text-left font-semibold">Cargo</th>
+                  <th class="py-3 px-6 text-left font-semibold">Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let conflicto of team.conflictos" class="hover:bg-gray-50 border-b border-gray-200">
+                  <td class="py-4 px-6 text-gray-700">{{ conflicto.usuarioNombre }}</td>
+                  <td class="py-4 px-6 text-gray-700">{{ conflicto.cedula }}</td>
+                  <td class="py-4 px-6 text-gray-700">{{ conflicto.cargo }}</td>
+                  <td class="py-4 px-6 text-gray-700">
+                    <button (click)="verDetalle(conflicto)" class="text-blue-600 hover:underline">
+                      Ver Detalle
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
   <!-- Detalle del Usuario Seleccionado -->
   <div *ngIf="mostrarDetalle" class="mt-10 space-y-8">
     <!-- Información Personal -->
     <div class="p-6 bg-gray-100 rounded-lg shadow-md relative">
       <h3 class="text-2xl font-bold mb-4">Información del Usuario</h3>
       <p><strong>Nombre:</strong> {{ detalleUsuario?.usuarioNombre }}</p>
-      <p><strong>Rol:</strong> {{ detalleUsuario?.usuarioRol }}</p>
-      <p><strong>Provincia:</strong> {{ detalleUsuario?.usuarioProvincia }}</p>
+      <p><strong>Rol:</strong> {{ detalleUsuario?.cargo }}</p>
+      <p><strong>Provincia:</strong> {{ detalleUsuario?.provincia }}</p>
 
       <!-- Cambiar Estatus -->
       <div class="absolute bottom-4 right-4 flex items-center space-x-2">
@@ -103,7 +155,7 @@
           <option *ngFor="let estado of estatusList" [value]="estado">{{ estado }}</option>
         </select>
         <button
-          (click)="cambiarEstatus(detalleUsuario.id, detalleUsuario.estatus)"
+          (click)="cambiarEstatus(detalleUsuario.conflictoId, detalleUsuario.estatus)"
           class="bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-150"
         >
           Cambiar

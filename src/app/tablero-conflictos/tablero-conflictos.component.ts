@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConflictoService } from './services/conflicto.service';
-import { Conflicto } from './interfaces/conflictosInterfaces';
+import { Conflicto, ConflictosAgrupadosResponse, Team, TipoAmbulancia } from './interfaces/conflictosInterfaces';
 import Swal from 'sweetalert2';
 import { UsuarioService } from '../tablero-usuarios/services/usuario.service';
 
@@ -13,6 +13,7 @@ export class TableroConflictosComponent implements OnInit {
   searchNombre: string = '';
   searchFecha: string = '';
   conflictos: Conflicto[] = [];
+  conflictosAgrupados: TipoAmbulancia[] = []; // Usar la interfaz para tipar la variable
   detalleUsuario: any = null;
   mostrarDetalle = false;
   startDate: string;
@@ -39,7 +40,12 @@ export class TableroConflictosComponent implements OnInit {
 
   onTeamChange(): void {
     // Llamar a obtenerConflictos() para filtrar la tabla según el equipo seleccionado
-    this.obtenerConflictos();
+    if(this.nivelUsuario <= 1){
+      this.obtenerConflictos();
+    }else{
+      this.obtenerConflictosAgrupados();
+    }
+
   }
 
 
@@ -52,17 +58,22 @@ export class TableroConflictosComponent implements OnInit {
         this.selectedRegion = this.userData.regionId;
         this.selectedProvincia = this.userData.provinciaId;
         this.selectedTeam = this.userData.teamId;
+        this.cargarEquipos();
         this.obtenerConflictos();
+        //this.obtenerConflictosAgrupados();
     } else if (this.nivelUsuario === 2) {
         // Nivel 2: Permitir cambio de provincia y cargar provincias para la región inicial
         this.selectedRegion = this.userData.regionId;
         this.cargarProvincias(this.selectedRegion!); // Cargar provincias con la región inicial
         this.selectedProvincia = this.userData.provinciaId;
-        this.obtenerConflictos();
+        this.selectedTeam = this.userData.teamId;
+        this.cargarEquipos();
+        //this.obtenerConflictos();
+        this.obtenerConflictosAgrupados(); // Llama a esta función si es nivel 2
     } else if (this.nivelUsuario === 3) {
         // Nivel 3: Cargar todas las opciones de región, provincia y equipo
         this.cargarRegiones();
-        this.cargarEquipos();
+        this.cargarEquipos(); // Cargar equipo
         this.selectedRegion = this.userData.regionId;
 
         // Cargar provincias si la región está definida
@@ -72,9 +83,63 @@ export class TableroConflictosComponent implements OnInit {
 
         this.selectedProvincia = this.userData.provinciaId;
         this.selectedTeam = this.userData.teamId;
-        this.obtenerConflictos();
+        //this.obtenerConflictos();
+        this.obtenerConflictosAgrupados(); // Llama a esta función si es nivel 2
     }
 }
+
+obtenerConflictosAgrupados(): void {
+  if (!this.validarFechas()) return;
+
+  const params = {
+    regionId: this.selectedRegion ?? undefined,
+    provinciaId: this.selectedProvincia ?? undefined,
+    estatus: this.estatus ?? undefined,
+    startDate: this.startDate ?? undefined,
+    endDate: this.endDate ?? undefined,
+    nivel: this.nivelUsuario ?? undefined,
+  };
+
+  this.conflictosService.filtrarConflictosAgrupados(params).subscribe(
+    (response: TipoAmbulancia[]) => {
+      console.log('Datos recibidos del backend:', response);
+
+      // Limpiar la lista antes de procesar la nueva respuesta
+      this.conflictosAgrupados = [];
+
+      if (Array.isArray(response) && response.length > 0) {
+        this.conflictosAgrupados = response.map((tipoAmbulancia) => ({
+          ...tipoAmbulancia,
+          expanded: false, // Añade la propiedad 'expanded'
+          teams: tipoAmbulancia.teams.map((team) => ({
+            ...team,
+            expanded: false, // Añade la propiedad 'expanded' a cada equipo
+          })),
+        }));
+        console.log('Datos procesados y guardados en conflictosAgrupados:', this.conflictosAgrupados);
+      } else {
+        Swal.fire('Sin resultados', 'No se encontraron conflictos agrupados.', 'info');
+      }
+    },
+    (error) => {
+      // Limpiar conflictos agrupados en caso de error también
+      this.conflictosAgrupados = [];
+      console.error('Error al obtener conflictos agrupados:', error);
+      Swal.fire('Error', 'Ocurrió un error al obtener los conflictos agrupados.', 'error');
+    }
+  );
+}
+
+
+
+alternarExpandir(tipoAmbulancia: TipoAmbulancia): void {
+  tipoAmbulancia.expanded = !tipoAmbulancia.expanded;
+}
+
+alternarExpandirEquipo(team: Team): void {
+  team.expanded = !team.expanded;
+}
+
 
 
   obtenerDatosLocalStorage(): any {
@@ -105,6 +170,7 @@ export class TableroConflictosComponent implements OnInit {
   }
 
   obtenerConflictos(): void {
+    //console.log(this.validarFechas());
     if (!this.validarFechas()) return;
 
     const teamId = this.selectedTeam !== null ? this.selectedTeam : undefined;
@@ -144,7 +210,8 @@ export class TableroConflictosComponent implements OnInit {
     this.primeraCarga = false;
   }
 
-  verDetalle(usuarioId: number): void {
+  verDetalle(conflicto: any): void {
+    /*
     this.conflictosService.obtenerConflictosUsuario(usuarioId).subscribe(
       (data) => {
         if (Array.isArray(data) && data.length > 0) {
@@ -160,7 +227,10 @@ export class TableroConflictosComponent implements OnInit {
         }
       },
       (error) => console.error('Error al obtener detalle del usuario:', error)
-    );
+    ); */
+    console.log(conflicto);
+  this.detalleUsuario = conflicto; // Asigna directamente el detalle del usuario seleccionado
+  this.mostrarDetalle = true; // Muestra el detalle
   }
 
   volverATabla(): void {
@@ -170,11 +240,19 @@ export class TableroConflictosComponent implements OnInit {
 
   onEstatusChange(event: any): void {
     this.estatus = event.target.value;
-    this.obtenerConflictos();
+    if(this.nivelUsuario <= 1){
+      this.obtenerConflictos();
+    }else{
+      this.obtenerConflictosAgrupados();
+    }
   }
 
   onFechaChange(): void {
-    this.obtenerConflictos();
+    if(this.nivelUsuario <= 1){
+      this.obtenerConflictos();
+    }else{
+      this.obtenerConflictosAgrupados();
+    }
   }
 
   cambiarEstatus(conflictoId: number, nuevoEstatus: string): void {
@@ -193,7 +271,11 @@ export class TableroConflictosComponent implements OnInit {
         }).then(() => {
           this.mostrarDetalle = false;
           this.detalleUsuario = null;
-          this.obtenerConflictos();
+          if(this.nivelUsuario <= 1){
+            this.obtenerConflictos();
+          }else{
+            this.obtenerConflictosAgrupados();
+          }
         });
       },
       (error) => {
@@ -214,11 +296,19 @@ export class TableroConflictosComponent implements OnInit {
       this.provinciasFiltradas = [];
     }
     this.selectedProvincia = null;
-    this.obtenerConflictos();
+    if(this.nivelUsuario <= 1){
+      this.obtenerConflictos();
+    }else{
+      this.obtenerConflictosAgrupados();
+    }
   }
 
   onProvinciaChange(): void {
-    this.obtenerConflictos();
+    if(this.nivelUsuario <= 1){
+      this.obtenerConflictos();
+    }else{
+      this.obtenerConflictosAgrupados();
+    }
   }
 
   cargarRegiones(): void {

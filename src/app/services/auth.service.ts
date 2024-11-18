@@ -82,6 +82,10 @@ export class AuthService {
     return localStorage.getItem('region');
   }
 
+  getTeam(): string | null {
+    return localStorage.getItem('teamName');
+  }
+
   private isTokenExpired(token: string): boolean {
     const payload = JSON.parse(atob(token.split('.')[1]));
     const expirationDate = payload.exp * 1000;

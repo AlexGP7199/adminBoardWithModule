@@ -23,7 +23,8 @@
     </div>
 
     <!-- Filtro de Equipo (solo visible para nivel 3) -->
-    <div *ngIf="nivelUsuario === 3">
+    <!-- *ngIf="nivelUsuario === 3" -->
+    <div >
       <label class="block text-sm font-medium text-gray-700">Equipo</label>
       <select [(ngModel)]="selectedTeam" (change)="onTeamChange()" class="input">
         <option value="" disabled selected>Seleccione un equipo</option>
@@ -113,8 +114,11 @@
       <textarea [(ngModel)]="validarFechasEstudioRequest.motivo" class="input mb-4" rows="3"></textarea>
 
       <!-- Campo de Carga de Imagen y Previsualización -->
-      <label class="block text-sm font-medium text-gray-700 mb-2">Cargar Imagen</label>
+      <label class="block text-sm font-medium text-gray-700 mb-2">Cargar Imagen <span class="text-red-600">*</span></label>
       <input type="file" (change)="onImageSelected($event)" accept="image/*" class="input mb-4" />
+      <div *ngIf="!imagenSeleccionada && mostrarErrorImagen" class="text-red-600 text-sm">
+        Es obligatorio cargar una imagen antes de enviar.
+      </div>
       <div *ngIf="imagenUrl" class="mt-4">
         <p class="text-sm font-medium text-gray-700">Previsualización:</p>
         <img [src]="imagenUrl" alt="Previsualización de la imagen" class="w-32 h-32 object-cover mt-2 rounded-lg shadow-md" />

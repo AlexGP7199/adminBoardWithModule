@@ -17,10 +17,13 @@ export class TableroUsuariosComponent {
   searchNombre: string = '';
   nivelUsuario: number = 0;
 
+  mostrarErrorImagen: boolean = false;
+
+
   selectedRegion: number | null = null;
   selectedProvincia: number | null = null;
   selectedTeam: number | null = null;
-
+  imagenSeleccionada!: File;
   mostrarFormulario = false;
   usuarioSeleccionado: any = null;
   validarFechasEstudioRequest = {
@@ -56,7 +59,7 @@ export class TableroUsuariosComponent {
       this.selectedRegion = +this.userData.regionId;
       this.selectedProvincia = +this.userData.provinciaId;
       this.selectedTeam = +this.userData.teamId;
-
+      this.cargarEquipos();  // Cargar equipo
       this.filtrarUsuarios(); // Filtra con los valores del usuario
 
     } else if (this.nivelUsuario === 2) {
@@ -65,6 +68,7 @@ export class TableroUsuariosComponent {
       this.selectedProvincia = +this.userData.provinciaId;
       this.selectedTeam = +this.userData.teamId;
       this.cargarProvincias(this.selectedRegion); // Cargar provincias para la región específica
+      this.cargarEquipos();  // Cargar Equipo
       this.filtrarUsuarios(); // Filtra con la región y provincia iniciales
 
     } else if (this.nivelUsuario === 3) {
@@ -122,9 +126,10 @@ export class TableroUsuariosComponent {
   onImageSelected(event: Event): void {
     const file = (event.target as HTMLInputElement).files?.[0];
     if (file) {
+      this.imagenSeleccionada = file; // Guardar el archivo seleccionado
       const reader = new FileReader();
       reader.onload = () => {
-        this.imagenUrl = reader.result;
+        this.imagenUrl = reader.result; // Mostrar previsualización
       };
       reader.readAsDataURL(file);
     }
@@ -160,15 +165,66 @@ export class TableroUsuariosComponent {
   }
 
   enviarFormulario(): void {
+
+    if (!this.imagenSeleccionada) {
+      this.mostrarErrorImagen = true;
+      Swal.fire('Error', 'Debe cargar una imagen antes de enviar el formulario.', 'error');
+      return; // Detener el flujo si no hay imagen
+    }
+
+
+    this.mostrarErrorImagen = false; // Ocultar el error si la imagen está presente
     this.usuarioService.validarFechasEstudio(this.validarFechasEstudioRequest).subscribe(
       (response) => {
         Swal.fire('Éxito', response.mensaje, 'success');
+         // Obtener el ID del conflicto desde la respuesta
+      console.log('Respuesta del server');
+      console.log(response);
+      const conflictoId = response.conflictoId;
+      console.log('Aqui el id dle conflico o algo')
+      console.log(conflictoId);
+      if (conflictoId && this.imagenSeleccionada) {
+        // Si hay un archivo seleccionado, subirlo
+        this.subirImagen(conflictoId);
+      } else {
+        // Si no hay imagen, cerrar el formulario
+        this.cerrarFormulario();
+      }
+      },
+      (error) => {
+        // Manejo de errores específicos según el mensaje devuelto por el backend
+         // Manejo de errores en la creación del conflicto
+      this.manejarError(error);
+      }
+    );
+  }
+
+  subirImagen(conflictoId: number): void {
+    // Subir la imagen al backend
+    this.usuarioService.subirImagen(conflictoId, this.imagenSeleccionada).subscribe(
+      () => {
+        Swal.fire('Éxito', 'Imagen cargada exitosamente.', 'success');
         this.cerrarFormulario();
       },
       (error) => {
-        Swal.fire('Error', 'Ocurrió un error al validar las fechas de estudio.', 'error');
+        // Manejo de errores en la carga de la imagen
+        Swal.fire('Error', 'No se pudo cargar la imagen. Por favor, inténtelo más tarde.', 'error');
       }
     );
+  }
+
+  manejarError(error: any): void {
+    if (error.error) {
+      if (typeof error.error === 'string') {
+        Swal.fire('Error', error.error, 'error');
+      } else if (error.error.Message) {
+        Swal.fire('Error', error.error.Message, 'error');
+      } else {
+        Swal.fire('Error', 'Ocurrió un error inesperado al validar las fechas de estudio.', 'error');
+      }
+    } else {
+      Swal.fire('Error', 'No se pudo procesar la solicitud. Por favor, inténtelo más tarde.', 'error');
+    }
   }
 
   cargarRegiones(): void {
@@ -212,6 +268,7 @@ export class TableroUsuariosComponent {
   }
 
   onTeamChange(): void {
+    this.selectedTeam = Number(this.selectedTeam);
     this.filtrarUsuarios();
   }
 
@@ -222,7 +279,8 @@ export class TableroUsuariosComponent {
       this.selectedTeam ?? undefined,
       this.nivelUsuario
     ).subscribe(
-      (usuarios) => (this.usuariosFiltrados = usuarios),
+      (usuarios) =>{(this.usuariosFiltrados = usuarios);
+      console.log(usuarios)},
       (error) => console.error('Error al filtrar usuarios:', error)
     );
   }

@@ -31,8 +31,23 @@ export class UsuarioService {
     if (regionId) params = params.set('regionId', regionId.toString());
     if (provinciaId) params = params.set('provinciaId', provinciaId.toString());
     if (teamId) params = params.set('teamId', teamId.toString());
-    if (nivelUsuario !== undefined) params = params.set('nivelUsuario', nivelUsuario.toString()); // Añadir el nivel como parámetro
-
-    return this.http.get<any[]>(`${apiURL}/User/listar-usuarios-filtrados`, { params });
+    if (nivelUsuario) params = params.set('nivelUser', nivelUsuario.toString()); // Añadir el nivel como parámetro
+    // Log de los parámetros que estamos enviando
+  console.log('Parametros enviados:', {
+    //regionId,
+    //provinciaId,
+    //teamId,
+    //nivelUsuario,
+    params: params.toString()
+  });
+    return this.http.get<any[]>(`${apiURL}/User/listar-usuarios-filtrados?`, { params });
   }
+
+  subirImagen(conflictoId: number, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(`${apiURL}/User/conflicts/${conflictoId}/upload-image`, formData);
+  }
+
 }
