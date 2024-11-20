@@ -24,6 +24,7 @@ import { FiltroUsuarioPipe  } from './tablero-usuarios/pipes/filtro-cedula.pipe'
 import { loginAuthGuard } from './services/Guard/login-auth.guard';
 import { AuthGuard } from './services/Guard/auth.guard';
 import { PiboteScreenComponent } from './pibote-screen/pibote-screen.component';
+import { FormSolicitudValidacionFechasComponent } from './form-solicitud-validacion-fechas/form-solicitud-validacion-fechas.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { PiboteScreenComponent } from './pibote-screen/pibote-screen.component';
     FiltroConflictosPipe,
     TableroUsuariosComponent,
     FiltroUsuarioPipe,
-    PiboteScreenComponent ,
+    PiboteScreenComponent,
+    FormSolicitudValidacionFechasComponent ,
 
   ],
   imports: [

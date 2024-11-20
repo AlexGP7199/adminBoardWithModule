@@ -1,0 +1,48 @@
+<div class="max-w-4xl mx-auto py-12 px-6 bg-white rounded-lg shadow-lg">
+  <!-- Título -->
+  <h1 class="text-3xl font-bold text-center text-gray-900 mb-8">Validación de Fechas de Estudio</h1>
+
+  <!-- Información del Usuario -->
+  <div class="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
+    <h2 class="text-xl font-bold text-gray-700">Información del Usuario</h2>
+    <p><strong>Nombre:</strong> {{ usuario?.nombre }}</p>
+    <p><strong>Cédula:</strong> {{ usuario?.cedula }}</p>
+    <p><strong>Cargo:</strong> {{ usuario?.cargo }}</p>
+    <p><strong>Equipo:</strong> {{ usuario?.teamName }}</p>
+  </div>
+
+  <!-- Formulario -->
+  <div>
+    <label class="block text-sm font-medium text-gray-700 mb-2">Inicio de Estudios</label>
+    <input type="date" [(ngModel)]="validarFechasEstudioRequest.inicioEstudios" [min]="today" class="input mb-4" />
+
+    <label class="block text-sm font-medium text-gray-700 mb-2">Fin de Estudios</label>
+    <input type="date" [(ngModel)]="validarFechasEstudioRequest.finEstudios" class="input mb-4" />
+
+    <label class="block text-sm font-medium text-gray-700 mb-2">Días de Estudio</label>
+    <div class="flex flex-wrap gap-2 mb-4">
+      <div *ngFor="let dia of diasSemana" class="flex items-center">
+        <input type="checkbox" [value]="dia.value" (change)="onDiaEstudioChange($event)" />
+        <span class="ml-2">{{ dia.label }}</span>
+      </div>
+    </div>
+
+    <label class="block text-sm font-medium text-gray-700 mb-2">Motivo</label>
+    <textarea [(ngModel)]="validarFechasEstudioRequest.motivo" class="input mb-4" rows="3"></textarea>
+
+    <!-- Carga de Imagen -->
+    <label class="block text-sm font-medium text-gray-700 mb-2">Cargar Imagen <span class="text-red-600">*</span></label>
+    <input type="file" (change)="onImageSelected($event)" accept="image/*" class="input mb-4" />
+    <div *ngIf="!validarFechasEstudioRequest.imagen && mostrarErrorImagen" class="text-red-600 text-sm">
+      Es obligatorio cargar una imagen antes de enviar.
+    </div>
+    <div *ngIf="imagenUrl" class="mt-4">
+      <p class="text-sm font-medium text-gray-700">Previsualización:</p>
+      <img [src]="imagenUrl" alt="Previsualización de la imagen" class="w-32 h-32 object-cover mt-2 rounded-lg shadow-md" />
+    </div>
+
+    <button (click)="enviarFormulario()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">
+      Enviar
+    </button>
+  </div>
+</div>

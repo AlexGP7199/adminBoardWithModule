@@ -66,4 +66,9 @@ export class ConflictoService {
     });
   }
 
+  obtenerImagenUrl(conflictId: number, cedula: string): Observable<any> {
+    return this.http.get<any>(`${apiURL}/User/conflicts/${conflictId}/user/${cedula}/image-url`);
+  }
+
+
 }

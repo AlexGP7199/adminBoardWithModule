@@ -21,6 +21,7 @@ export class TableroConflictosComponent implements OnInit {
   estatus = 'Aprobado';
   estatusList = ['Pendiente', 'En Proceso', 'Aprobado', 'Rechazado'];
   primeraCarga = true;
+  imageUrlAbal = '';
 
   // Nuevas propiedades
   nivelUsuario: number = 0;
@@ -40,11 +41,11 @@ export class TableroConflictosComponent implements OnInit {
 
   onTeamChange(): void {
     // Llamar a obtenerConflictos() para filtrar la tabla según el equipo seleccionado
-    if(this.nivelUsuario <= 1){
-      this.obtenerConflictos();
-    }else{
+    //if(this.nivelUsuario <= 1){
+    //  this.obtenerConflictos();
+   // }else{
       this.obtenerConflictosAgrupados();
-    }
+    //}
 
   }
 
@@ -59,8 +60,8 @@ export class TableroConflictosComponent implements OnInit {
         this.selectedProvincia = this.userData.provinciaId;
         this.selectedTeam = this.userData.teamId;
         this.cargarEquipos();
-        this.obtenerConflictos();
-        //this.obtenerConflictosAgrupados();
+        //this.obtenerConflictos();
+        this.obtenerConflictosAgrupados();
     } else if (this.nivelUsuario === 2) {
         // Nivel 2: Permitir cambio de provincia y cargar provincias para la región inicial
         this.selectedRegion = this.userData.regionId;
@@ -184,7 +185,8 @@ alternarExpandirEquipo(team: Team): void {
           if (Array.isArray(data) && data.length > 0) {
             this.conflictos = data.map(conflicto => ({
               ...conflicto,
-              nuevoEstatus: conflicto.estatus // Añadir propiedad para nuevo estatus
+              nuevoEstatus: conflicto.estatus, // Añadir propiedad para nuevo estatus
+              teamName: teamId ? this.obtenerNombreEquipo(teamId) : 'Sin Equipo', // Añadimos el nombre del equipo
             }));
             this.primeraCarga = false;
           } else {
@@ -194,6 +196,11 @@ alternarExpandirEquipo(team: Team): void {
         },
         (error) => console.error('Error al obtener conflictos:', error)
       );
+  }
+
+  obtenerNombreEquipo(teamId: number): string {
+    const equipo = this.equipos.find((equipo) => equipo.teamId === teamId);
+    return equipo ? equipo.teamNombre : 'Desconocido';
   }
 
 
@@ -210,7 +217,14 @@ alternarExpandirEquipo(team: Team): void {
     this.primeraCarga = false;
   }
 
-  verDetalle(conflicto: any): void {
+  verDetalle(conflicto: any,teamName: string): void {
+    console.log("Nombre del Team");
+    console.log(teamName);
+    this.detalleUsuario = {
+      ...conflicto,
+      teamName // Añadimos el nombre del equipo al detalle del usuario
+    };
+    console.log(this.detalleUsuario.teamName);
     /*
     this.conflictosService.obtenerConflictosUsuario(usuarioId).subscribe(
       (data) => {
@@ -228,9 +242,25 @@ alternarExpandirEquipo(team: Team): void {
       },
       (error) => console.error('Error al obtener detalle del usuario:', error)
     ); */
-    console.log(conflicto);
-  this.detalleUsuario = conflicto; // Asigna directamente el detalle del usuario seleccionado
+  //console.log('Datos del conflicto');
+  //console.log(conflicto);
+  //this.detalleUsuario = conflicto; // Asigna directamente el detalle del usuario seleccionado
   this.mostrarDetalle = true; // Muestra el detalle
+
+   // Obtener la URL de la imagen desde el backend
+   this.conflictosService.obtenerImagenUrl(conflicto.conflictoId, conflicto.cedula).subscribe(
+    (response: any) => {
+      // Agregar la URL de la imagen al detalle del usuario
+      //console.log('Tu respuesta es: ')
+      //console.log(response.imageUrl);
+      this.imageUrlAbal = response.imageUrl;
+      this.detalleUsuario.imagenUrl = response.ImageUrl;
+    },
+    (error) => {
+      //console.error('Error al obtener la URL de la imagen:', error);
+      Swal.fire('Error', 'No se pudo obtener la URL de la imagen.', 'error');
+    }
+  );
   }
 
   volverATabla(): void {
@@ -240,19 +270,19 @@ alternarExpandirEquipo(team: Team): void {
 
   onEstatusChange(event: any): void {
     this.estatus = event.target.value;
-    if(this.nivelUsuario <= 1){
-      this.obtenerConflictos();
-    }else{
+    //if(this.nivelUsuario <= 1){
+      //this.obtenerConflictos();
+   // }else{
       this.obtenerConflictosAgrupados();
-    }
+    //}
   }
 
   onFechaChange(): void {
-    if(this.nivelUsuario <= 1){
-      this.obtenerConflictos();
-    }else{
+    //if(this.nivelUsuario <= 1){
+    //  this.obtenerConflictos();
+   // }else{
       this.obtenerConflictosAgrupados();
-    }
+    //}
   }
 
   cambiarEstatus(conflictoId: number, nuevoEstatus: string): void {
@@ -271,11 +301,11 @@ alternarExpandirEquipo(team: Team): void {
         }).then(() => {
           this.mostrarDetalle = false;
           this.detalleUsuario = null;
-          if(this.nivelUsuario <= 1){
-            this.obtenerConflictos();
-          }else{
+          //if(this.nivelUsuario <= 1){
+            //this.obtenerConflictos();
+          //}else{
             this.obtenerConflictosAgrupados();
-          }
+          //}
         });
       },
       (error) => {
@@ -296,19 +326,19 @@ alternarExpandirEquipo(team: Team): void {
       this.provinciasFiltradas = [];
     }
     this.selectedProvincia = null;
-    if(this.nivelUsuario <= 1){
-      this.obtenerConflictos();
-    }else{
+   // if(this.nivelUsuario <= 1){
+     // this.obtenerConflictos();
+  //  }else{
       this.obtenerConflictosAgrupados();
-    }
+   // }
   }
 
   onProvinciaChange(): void {
-    if(this.nivelUsuario <= 1){
-      this.obtenerConflictos();
-    }else{
+    //if(this.nivelUsuario <= 1){
+      //this.obtenerConflictos();
+    //}else{
       this.obtenerConflictosAgrupados();
-    }
+    //}
   }
 
   cargarRegiones(): void {

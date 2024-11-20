@@ -18,10 +18,11 @@ export class AuthGuard implements CanActivate {
     const rutaSolicitada = state.url;
 
     // Redirigir según el nivel del usuario
-    if (nivel === 0 && rutaSolicitada !== '/horario') {
+    if (nivel === 0 && !['/horario', '/ValidacionFechas'].includes(rutaSolicitada)) {
       this.router.navigate(['/horario']);
       return false;
-    } else if (nivel > 0 && rutaSolicitada === '/') {
+    }
+     else if (nivel > 0 && rutaSolicitada === '/') {
       // Redirige a la página de Conflictos si es un usuario de nivel mayor a 0
       this.router.navigate(['/Conflictos']);
       return false;

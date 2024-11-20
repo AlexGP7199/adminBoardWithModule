@@ -1,3 +1,4 @@
+/* Contenedor principal */
 .max-w-7xl {
   max-width: 100%;
 }
@@ -6,11 +7,15 @@
   margin-top: 2rem;
 }
 
+.mt-16 {
+  margin-top: 4rem;
+}
+
 .overflow-auto {
   overflow-x: auto;
 }
 
-/* Estilos personalizados para el contenedor de filtros */
+/* Contenedor de Filtros */
 .bg-gray-50 {
   background-color: #f9fafb;
 }
@@ -21,15 +26,128 @@
   margin-bottom: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
 }
 
+/* Estilo para inputs */
 .input {
   border: 1px solid #d1d5db;
   padding: 0.5rem 0.75rem;
   border-radius: 0.375rem;
   outline: none;
   width: 100%;
+  background-color: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .input:focus {
   border-color: #3b82f6;
-  box-shadow: 0 0 0 1px #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Tablas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+}
+
+thead tr {
+  background-color: #e5f3ff;
+  color: #1f2937;
+}
+
+tbody tr:hover {
+  background-color: #f3f4f6;
+}
+
+th,
+td {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 0.875rem;
+  color: #4b5563;
+}
+
+th {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Botones */
+button {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.03);
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Estilo de las imágenes (Aval) */
+.image-preview {
+  width: 100%;
+  max-width: 250px;
+  height: auto;
+  margin: 1rem auto;
+  display: block;
+  border-radius: 0.375rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.image-preview:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Botón de descarga */
+.download-button {
+  background-color: #1d4ed8;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  display: inline-block;
+  margin-top: 1rem;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.download-button:hover {
+  background-color: #2563eb;
+  transform: scale(1.03);
+}
+
+/* Contenedores */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Detalle de usuario */
+.details-container {
+  background: #f8fafc;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.details-container h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.details-container table {
+  margin-top: 1rem;
+}
+
+.details-container td,
+.details-container th {
+  border-bottom: 1px solid #e5e7eb;
 }

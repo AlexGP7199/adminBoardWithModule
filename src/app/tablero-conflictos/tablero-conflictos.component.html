@@ -40,22 +40,22 @@
         </select>
       </div>
       <!-- Equipos *ngIf="nivelUsuario === 3" -->
-      <div *ngIf="nivelUsuario <= 1"class="w-full md:w-1/3">
+      <!--<div *ngIf="nivelUsuario <= 1"class="w-full md:w-1/3">
         <label class="block text-sm font-medium text-gray-700">Equipo</label>
         <select [(ngModel)]="selectedTeam" (change)="onTeamChange()" class="input w-full mt-1">
           <option value="" disabled selected>Seleccione un equipo</option>
           <option *ngFor="let team of equipos" [value]="team.teamId">{{ team.nombre }}</option>
         </select>
-      </div>
+      </div> -->
     </div>
 
     <div class="flex justify-end">
-      <button (click)="obtenerConflictos()" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Buscar</button>
+      <button (click)="obtenerConflictosAgrupados()" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Buscar</button>
     </div>
   </div>
 
   <!-- Tabla de Conflictos -->
-  <div *ngIf="!mostrarDetalle && nivelUsuario <= 1" class="overflow-auto rounded-lg shadow-lg">
+  <!-- <div *ngIf="!mostrarDetalle && nivelUsuario <= 1" class="overflow-auto rounded-lg shadow-lg">
     <table class="min-w-full bg-white border rounded-lg">
       <thead>
         <tr class="bg-blue-100 text-gray-700 uppercase text-sm leading-normal">
@@ -77,7 +77,7 @@
           <td class="py-4 px-6 text-gray-700">{{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}</td>
           <td class="py-4 px-6 text-gray-700">{{ conflicto.estatus }}</td>
           <td class="py-4 px-6 text-gray-700">
-            <button (click)="verDetalle(conflicto.usuarioId)">
+            <button (click)="verDetalle(conflicto.usuarioId, conflicto.teamName)">
               <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.5 4.5M19.5 14.5L15 19m-3-7a4 4 0 11-8 0 4 4 0 018 0z"></path>
               </svg>
@@ -86,9 +86,9 @@
         </tr>
       </tbody>
     </table>
-  </div>
+  </div> -->
 
-  <div *ngIf="!mostrarDetalle && nivelUsuario > 1" class="mt-10">
+  <div *ngIf="!mostrarDetalle" class="mt-10">
     <h3 class="text-3xl font-bold text-gray-900 mb-8 text-center">Conflictos Agrupados</h3>
     <div *ngFor="let tipo of conflictosAgrupados" class="p-4 bg-gray-50 rounded-lg shadow-md mb-6">
       <!-- Tipo de Ambulancia -->
@@ -124,7 +124,7 @@
                   <td class="py-4 px-6 text-gray-700">{{ conflicto.cedula }}</td>
                   <td class="py-4 px-6 text-gray-700">{{ conflicto.cargo }}</td>
                   <td class="py-4 px-6 text-gray-700">
-                    <button (click)="verDetalle(conflicto)" class="text-blue-600 hover:underline">
+                    <button (click)="verDetalle(conflicto, team.teamNombre)" class="text-blue-600 hover:underline">
                       Ver Detalle
                     </button>
                   </td>
@@ -137,10 +137,9 @@
     </div>
   </div>
 
-
-
   <!-- Detalle del Usuario Seleccionado -->
   <div *ngIf="mostrarDetalle" class="mt-10 space-y-8">
+
     <!-- Información Personal -->
     <div class="p-6 bg-gray-100 rounded-lg shadow-md relative">
       <h3 class="text-2xl font-bold mb-4">Información del Usuario</h3>
@@ -161,8 +160,19 @@
           Cambiar
         </button>
       </div>
-    </div>
 
+    </div>
+    <div *ngIf="imageUrlAbal" class="mb-8">
+      <h3 class="text-2xl font-bold text-gray-900 mb-4 text-center">Aval del Conflicto</h3>
+      <div class="flex justify-center">
+        <img [src]="imageUrlAbal" alt="Imagen del conflicto" class="w-64 h-64 object-cover rounded-lg shadow-md" />
+      </div>
+      <div class="flex justify-center mt-4">
+        <a [href]="imageUrlAbal" target="_blank" rel="noopener noreferrer" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+          Ver Imagen
+        </a>
+      </div>
+    </div>
     <!-- Detalles de Conflictos -->
     <div class="p-6 bg-gray-100 rounded-lg shadow-md">
       <h3 class="text-2xl font-bold mb-4">Conflictos Actuales/Futuros</h3>
@@ -177,7 +187,7 @@
         <tbody>
           <tr *ngFor="let detalle of detalleUsuario?.detalles" class="hover:bg-gray-50 border-b border-gray-200">
             <td class="py-4 px-6 text-gray-700">{{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</td>
-            <td class="py-4 px-6 text-gray-700">{{ detalle.teamName }}</td>
+            <td class="py-4 px-6 text-gray-700">{{ detalleUsuario.teamName }}</td>
             <td class="py-4 px-6 text-gray-700">{{ detalle.motivo }}</td>
           </tr>
         </tbody>

@@ -14,6 +14,7 @@ import { loginAuthGuard } from './services/Guard/login-auth.guard';
 import { TableroConflictosComponent } from './tablero-conflictos/tablero-conflictos.component';
 import { TableroUsuariosComponent } from './tablero-usuarios/tablero-usuarios.component';
 import { PiboteScreenComponent } from './pibote-screen/pibote-screen.component';
+import { FormSolicitudValidacionFechasComponent } from './form-solicitud-validacion-fechas/form-solicitud-validacion-fechas.component';
 
 const routes: Routes = [
 
@@ -25,6 +26,7 @@ const routes: Routes = [
 
   // Rutas de Dashboard y sus subcomponentes (protegidas con AuthGuard)
   //{ path: 'Dashboard', component: ContentComponent, canActivate: [AuthGuard] },
+  { path: 'ValidacionFechas', component: FormSolicitudValidacionFechasComponent, canActivate: [AuthGuard] },
   {path: 'Conflictos', component: TableroConflictosComponent, canActivate: [AuthGuard]},
   {path: 'TableroUsuarios', component: TableroUsuariosComponent, canActivate: [AuthGuard]},
   { path: 'horario', component: HorariosComponent, canActivate: [AuthGuard] },
