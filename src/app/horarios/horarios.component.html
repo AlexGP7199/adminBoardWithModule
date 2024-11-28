@@ -1,7 +1,7 @@
-<div class="max-w-7xl mx-auto py-16 px-6 bg-white rounded-lg shadow-lg mt-16">
+<div class="w-full mx-auto py-16 px-6 bg-white rounded-lg shadow-lg mt-16">
   <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">Mi Horario</h2>
 
-  <!-- Contenedor de Información del Usuario -->
+  <!-- Información Personal -->
   <div class="p-6 bg-gray-50 rounded-lg shadow-md mb-8">
     <h3 class="text-xl font-semibold text-gray-700 mb-4">Información Personal</h3>
     <p><strong>Cédula:</strong> {{ cedula }}</p>
@@ -12,78 +12,106 @@
     <p><strong>Equipo:</strong> {{ usuarioTeam }}</p>
   </div>
 
-  <!-- Contenedor de Tableros de Conflictos -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-    <!-- Tablero de Conflictos Pendientes -->
-    <div class="p-4 bg-yellow-100 rounded-lg shadow-md">
-      <h3 class="text-lg font-semibold text-yellow-700">Pendientes</h3>
-      <ul>
-        <li *ngFor="let conflicto of conflictosPendientes" class="bg-white p-2 mb-2 rounded-lg shadow-sm">
-          <h4 class="font-semibold mb-2">Conflicto Generado el: {{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}</h4>
-          <ul>
-            <li *ngFor="let detalle of conflicto.detalles">
-              <p><strong>Fecha de Conflicto:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
-              <p><strong>Motivo:</strong> {{ detalle.motivo }}</p>
-              <p><strong>Detalles:</strong> {{ detalle.detallesAdicionales }}</p>
-              <hr class="my-2">
-            </li>
-          </ul>
-        </li>
-      </ul>
+  <!-- Acordeón de Estados -->
+  <div class="space-y-4">
+    <!-- Estado: Pendientes -->
+    <div class="border rounded-lg shadow-md">
+      <div class="p-4 bg-yellow-100 flex justify-between items-center">
+        <h3 class="text-lg font-semibold text-yellow-700">Pendientes</h3>
+        <button (click)="toggleEstado('pendientes')" class="text-yellow-700 hover:underline">
+          {{ estadosExpandibles.pendientes ? 'Contraer' : 'Expandir' }}
+        </button>
+      </div>
+      <div *ngIf="estadosExpandibles.pendientes" class="p-4 bg-white">
+        <ul>
+          <li *ngFor="let conflicto of conflictosPendientes" class="p-2 mb-2 border-b">
+            <h4 class="font-semibold mb-2">Conflicto Generado el: {{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}</h4>
+            <ul>
+              <li *ngFor="let detalle of conflicto.detalles">
+                <p><strong>Fecha de Conflicto:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
+                <p><strong>Motivo:</strong> {{ detalle.motivo }}</p>
+                <p><strong>Detalles:</strong> {{ detalle.detallesAdicionales }}</p>
+                <hr class="my-2">
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <!-- Tablero de Conflictos En Proceso -->
-    <div class="p-4 bg-blue-100 rounded-lg shadow-md">
-      <h3 class="text-lg font-semibold text-blue-700">En Proceso</h3>
-      <ul>
-        <li *ngFor="let conflicto of conflictosEnProceso" class="bg-white p-2 mb-2 rounded-lg shadow-sm">
-          <h4 class="font-semibold mb-2">Conflicto Generado el: {{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}</h4>
-          <ul>
-            <li *ngFor="let detalle of conflicto.detalles">
-              <p><strong>Fecha de Conflicto:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
-              <p><strong>Motivo:</strong> {{ detalle.motivo }}</p>
-              <p><strong>Detalles:</strong> {{ detalle.detallesAdicionales }}</p>
-              <hr class="my-2">
-            </li>
-          </ul>
-        </li>
-      </ul>
+    <!-- Estado: En Proceso -->
+    <div class="border rounded-lg shadow-md">
+      <div class="p-4 bg-blue-100 flex justify-between items-center">
+        <h3 class="text-lg font-semibold text-blue-700">En Proceso</h3>
+        <button (click)="toggleEstado('enProceso')" class="text-blue-700 hover:underline">
+          {{ estadosExpandibles.enProceso ? 'Contraer' : 'Expandir' }}
+        </button>
+      </div>
+      <div *ngIf="estadosExpandibles.enProceso" class="p-4 bg-white">
+        <ul>
+          <li *ngFor="let conflicto of conflictosEnProceso" class="p-2 mb-2 border-b">
+            <h4 class="font-semibold mb-2">Conflicto Generado el: {{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}</h4>
+            <ul>
+              <li *ngFor="let detalle of conflicto.detalles">
+                <p><strong>Fecha de Conflicto:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
+                <p><strong>Motivo:</strong> {{ detalle.motivo }}</p>
+                <p><strong>Detalles:</strong> {{ detalle.detallesAdicionales }}</p>
+                <hr class="my-2">
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <!-- Tablero de Conflictos Aprobados -->
-    <div class="p-4 bg-green-100 rounded-lg shadow-md">
-      <h3 class="text-lg font-semibold text-green-700">Aprobados</h3>
-      <ul>
-        <li *ngFor="let conflicto of conflictosAprobados" class="bg-white p-2 mb-2 rounded-lg shadow-sm">
-          <h4 class="font-semibold mb-2">Conflicto Generado el: {{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}</h4>
-          <ul>
-            <li *ngFor="let detalle of conflicto.detalles">
-              <p><strong>Fecha de Conflicto:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
-              <p><strong>Motivo:</strong> {{ detalle.motivo }}</p>
-              <p><strong>Detalles:</strong> {{ detalle.detallesAdicionales }}</p>
-              <hr class="my-2">
-            </li>
-          </ul>
-        </li>
-      </ul>
+    <!-- Estado: Aprobados -->
+    <div class="border rounded-lg shadow-md">
+      <div class="p-4 bg-green-100 flex justify-between items-center">
+        <h3 class="text-lg font-semibold text-green-700">Aprobados</h3>
+        <button (click)="toggleEstado('aprobados')" class="text-green-700 hover:underline">
+          {{ estadosExpandibles.aprobados ? 'Contraer' : 'Expandir' }}
+        </button>
+      </div>
+      <div *ngIf="estadosExpandibles.aprobados" class="p-4 bg-white">
+        <ul>
+          <li *ngFor="let conflicto of conflictosAprobados" class="p-2 mb-2 border-b">
+            <h4 class="font-semibold mb-2">Conflicto Generado el: {{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}</h4>
+            <ul>
+              <li *ngFor="let detalle of conflicto.detalles">
+                <p><strong>Fecha de Conflicto:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
+                <p><strong>Motivo:</strong> {{ detalle.motivo }}</p>
+                <p><strong>Detalles:</strong> {{ detalle.detallesAdicionales }}</p>
+                <hr class="my-2">
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
 
-    <!-- Tablero de Conflictos Rechazados -->
-    <div class="p-4 bg-red-100 rounded-lg shadow-md">
-      <h3 class="text-lg font-semibold text-red-700">Rechazados</h3>
-      <ul>
-        <li *ngFor="let conflicto of conflictosRechazados" class="bg-white p-2 mb-2 rounded-lg shadow-sm">
-          <h4 class="font-semibold mb-2">Conflicto Generado el: {{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}</h4>
-          <ul>
-            <li *ngFor="let detalle of conflicto.detalles">
-              <p><strong>Fecha de Conflicto:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
-              <p><strong>Motivo:</strong> {{ detalle.motivo }}</p>
-              <p><strong>Detalles:</strong> {{ detalle.detallesAdicionales }}</p>
-              <hr class="my-2">
-            </li>
-          </ul>
-        </li>
-      </ul>
+    <!-- Estado: Rechazados -->
+    <div class="border rounded-lg shadow-md">
+      <div class="p-4 bg-red-100 flex justify-between items-center">
+        <h3 class="text-lg font-semibold text-red-700">Rechazados</h3>
+        <button (click)="toggleEstado('rechazados')" class="text-red-700 hover:underline">
+          {{ estadosExpandibles.rechazados ? 'Contraer' : 'Expandir' }}
+        </button>
+      </div>
+      <div *ngIf="estadosExpandibles.rechazados" class="p-4 bg-white">
+        <ul>
+          <li *ngFor="let conflicto of conflictosRechazados" class="p-2 mb-2 border-b">
+            <h4 class="font-semibold mb-2">Conflicto Generado el: {{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}</h4>
+            <ul>
+              <li *ngFor="let detalle of conflicto.detalles">
+                <p><strong>Fecha de Conflicto:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
+                <p><strong>Motivo:</strong> {{ detalle.motivo }}</p>
+                <p><strong>Detalles:</strong> {{ detalle.detallesAdicionales }}</p>
+                <hr class="my-2">
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

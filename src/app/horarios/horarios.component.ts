@@ -23,12 +23,24 @@
       usuarioTeam: string = '';
       usuarioId: number = 0;
 
+      estadosExpandibles: { [key in 'pendientes' | 'enProceso' | 'aprobados' | 'rechazados']: boolean } = {
+        pendientes: false,
+        enProceso: false,
+        aprobados: false,
+        rechazados: false
+      };
       constructor(private conflictoService: ConflictoService) {}
 
       ngOnInit(): void {
         this.obtenerInformacionUsuario();
         this.cargarConflictos();
       }
+
+      // La clave `estado` ahora tiene un tipo específico
+  toggleEstado(estado: 'pendientes' | 'enProceso' | 'aprobados' | 'rechazados'): void {
+    this.estadosExpandibles[estado] = !this.estadosExpandibles[estado];
+  }
+
 
       obtenerInformacionUsuario(): void {
         this.cedula = localStorage.getItem('cedula') || '';
