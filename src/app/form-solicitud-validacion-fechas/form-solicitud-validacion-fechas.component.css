@@ -32,3 +32,40 @@ img {
 img:hover {
   transform: scale(1.05);
 }
+
+/* Contenedor principal con mayor ancho */
+.max-w-7xl {
+  max-width: 90%; /* Cambiar el ancho máximo al 90% de la pantalla */
+  margin: 0 auto; /* Mantenerlo centrado horizontalmente */
+}
+
+/* Ajustar los contenedores internos para mayor ocupación */
+.container {
+  padding: 2rem; /* Aumentar el padding interno */
+  margin-bottom: 2rem; /* Más espacio entre contenedores */
+  width: 100%; /* Asegurarse de que ocupe todo el espacio disponible */
+}
+
+/* Filtros de búsqueda ocupando más espacio */
+.filter-container > div {
+  flex: 1 1 45%; /* Cada filtro ocupa más espacio horizontalmente */
+  min-width: 250px; /* Asegurar un tamaño mínimo para pantallas pequeñas */
+}
+
+/* Tabla ocupa el 100% del espacio disponible */
+.table {
+  width: 100%; /* Asegurar que la tabla ocupe todo el ancho disponible */
+}
+
+.table th,
+.table td {
+  padding: 1rem; /* Aumentar el padding en las celdas */
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Botón de búsqueda con mayor separación */
+.button-search {
+  margin-top: 2rem; /* Aumentar el espacio superior */
+  width: 100%; /* Hacer que el botón ocupe todo el ancho */
+}

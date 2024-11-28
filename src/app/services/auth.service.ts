@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {apiURL} from '../../ENV/env-variable'
 import { LoginResponse } from './interface/loginInterfaces';
@@ -12,6 +12,19 @@ import { LoginResponse } from './interface/loginInterfaces';
 export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
+
+  private conflictoAprobadoSubject = new BehaviorSubject<any>(null);
+
+   // Getter para el estado del conflicto
+   getConflictoAprobado$() {
+    return this.conflictoAprobadoSubject.asObservable();
+  }
+
+  // Método para actualizar el conflicto aprobado
+  setConflictoAprobado(data: any) {
+    localStorage.setItem('conflictoAprobado', JSON.stringify(data));
+    this.conflictoAprobadoSubject.next(data);
+  }
 
   login(cedula: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${apiURL}/User/login`, { cedula, password }).pipe(
@@ -49,6 +62,7 @@ export class AuthService {
     localStorage.removeItem('teamId');
     localStorage.removeItem('teamName');
     localStorage.removeItem('usuarioId');
+    localStorage.removeItem('conflictoAprobado');
     this.router.navigate(['/login']);
   }
 
@@ -84,6 +98,10 @@ export class AuthService {
 
   getTeam(): string | null {
     return localStorage.getItem('teamName');
+  }
+
+  getUsuarioId(): number {
+    return parseInt(localStorage.getItem('usuarioId')|| '0');
   }
 
   private isTokenExpired(token: string): boolean {

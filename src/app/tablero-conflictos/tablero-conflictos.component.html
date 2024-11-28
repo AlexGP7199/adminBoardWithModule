@@ -173,26 +173,100 @@
         </a>
       </div>
     </div>
+
     <!-- Detalles de Conflictos -->
-    <div class="p-6 bg-gray-100 rounded-lg shadow-md">
-      <h3 class="text-2xl font-bold mb-4">Conflictos Actuales/Futuros</h3>
-      <table class="min-w-full bg-white border rounded-lg">
-        <thead>
-          <tr class="bg-blue-100 text-gray-700 uppercase text-sm leading-normal">
-            <th class="py-3 px-6 text-left font-semibold">Fecha de Conflicto</th>
-            <th class="py-3 px-6 text-left font-semibold">Equipo</th>
-            <th class="py-3 px-6 text-left font-semibold">Motivo</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let detalle of detalleUsuario?.detalles" class="hover:bg-gray-50 border-b border-gray-200">
-            <td class="py-4 px-6 text-gray-700">{{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</td>
-            <td class="py-4 px-6 text-gray-700">{{ detalleUsuario.teamName }}</td>
-            <td class="py-4 px-6 text-gray-700">{{ detalle.motivo }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  <div *ngIf="!mostrarDetalleSolicitud" class="p-6 bg-gray-100 rounded-lg shadow-md">
+    <h3 class="text-2xl font-bold mb-4">Conflictos Actuales/Futuros</h3>
+    <table class="min-w-full bg-white border rounded-lg">
+      <thead>
+        <tr class="bg-blue-100 text-gray-700 uppercase text-sm leading-normal">
+          <th class="py-3 px-6 text-left font-semibold">Fecha de Conflicto</th>
+          <th class="py-3 px-6 text-left font-semibold">Equipo</th>
+          <th class="py-3 px-6 text-left font-semibold">Motivo</th>
+          <th class="py-3 px-6 text-left font-semibold">Estatus</th>
+          <th class="py-3 px-6 text-left font-semibold">Ver Detalle</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let detalle of detalleUsuario?.detalles" class="hover:bg-gray-50 border-b border-gray-200">
+          <td class="py-4 px-6 text-gray-700">{{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</td>
+          <td class="py-4 px-6 text-gray-700">{{ detalleUsuario.teamName }}</td>
+          <td class="py-4 px-6 text-gray-700">{{ detalle.motivo }}</td>
+          <td class="py-4 px-6">
+            <span
+              class="px-2 py-1 rounded text-white text-sm font-medium"
+              [ngClass]="detalle.asociadoASolicitud ? 'bg-green-500' : 'bg-red-500'"
+            >
+              {{ detalle.asociadoASolicitud ? 'Asociado' : 'No Asociado' }}
+            </span>
+          </td>
+          <td class="py-4 px-6 text-center">
+            <button
+              class="text-blue-600 hover:underline"
+              (click)="verDetalleSolicitud(detalle.solicitudPermisoId)"
+            >
+              Ver Detalle 2
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="mostrarDetalleSolicitud" class="p-6 bg-gray-100 rounded-lg shadow-md">
+    <h3 class="text-2xl font-bold mb-4">Detalle de la Solicitud</h3>
+
+    <!-- Información Personal -->
+    <p><strong>Nombre:</strong> {{ detalleUsuario?.usuarioNombre }}</p>
+    <p><strong>Cédula:</strong> {{ detalleUsuario?.cedula }}</p>
+    <p><strong>Provincia:</strong> {{ detalleUsuario?.provincia }}</p>
+    <p><strong>Team:</strong> {{ detalleUsuario?.teamName }}</p>
+    <p><strong>Descripción Personal:</strong> {{ detalleUsuario?.descripcionPersonal }}</p>
+    <p><strong>Descripción Supervisor:</strong> {{ detalleUsuario?.descripcionSupervisor }}</p>
+    <p><strong>Fecha Inicio:</strong> {{ detalleUsuario?.fechaInicio | date: 'dd-MM-yyyy' }}</p>
+    <p><strong>Fecha Fin:</strong> {{ detalleUsuario?.fechaFin | date: 'dd-MM-yyyy' }}</p>
+    <p><strong>Estado:</strong>
+      <span
+        [ngClass]="{
+          'text-green-600': detalleUsuario?.estatus === 'Aprobado',
+          'text-red-600': detalleUsuario?.estatus !== 'Aprobado'
+        }"
+      >
+        {{ detalleUsuario?.estatus }}
+      </span>
+    </p>
+
+    <!-- Detalles de Conflicto -->
+    <h4 class="text-xl font-bold mt-6 mb-4">Conflictos Habilitados</h4>
+    <table class="min-w-full bg-white border rounded-lg">
+      <thead>
+        <tr class="bg-blue-100 text-gray-700 uppercase text-sm leading-normal">
+          <th class="py-3 px-6 text-left font-semibold">Fecha de Conflicto</th>
+          <th class="py-3 px-6 text-left font-semibold">Motivo</th>
+          <th class="py-3 px-6 text-left font-semibold">Detalles Adicionales</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let conflicto of detalleUsuario?.detalles"
+          class="hover:bg-gray-50 border-b border-gray-200"
+        >
+          <td class="py-4 px-6 text-gray-700">{{ conflicto.fechaConflicto | date: 'dd-MM-yyyy' }}</td>
+          <td class="py-4 px-6 text-gray-700">{{ conflicto.motivo }}</td>
+          <td class="py-4 px-6 text-gray-700">{{ conflicto.detallesAdicionales }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Botón para volver -->
+    <button
+      (click)="volverATabla2()"
+      class="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+    >
+      Volver a la Tabla
+    </button>
+  </div>
+
 
     <!-- Botón de Regreso -->
     <button (click)="volverATabla()" class="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">

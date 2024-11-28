@@ -15,6 +15,7 @@ import { TableroConflictosComponent } from './tablero-conflictos/tablero-conflic
 import { TableroUsuariosComponent } from './tablero-usuarios/tablero-usuarios.component';
 import { PiboteScreenComponent } from './pibote-screen/pibote-screen.component';
 import { FormSolicitudValidacionFechasComponent } from './form-solicitud-validacion-fechas/form-solicitud-validacion-fechas.component';
+import { SolicitudPermisoComponent } from './solicitud-permiso/solicitud-permiso.component';
 
 const routes: Routes = [
 
@@ -30,6 +31,7 @@ const routes: Routes = [
   {path: 'Conflictos', component: TableroConflictosComponent, canActivate: [AuthGuard]},
   {path: 'TableroUsuarios', component: TableroUsuariosComponent, canActivate: [AuthGuard]},
   { path: 'horario', component: HorariosComponent, canActivate: [AuthGuard] },
+  {path: 'solicitudForm', component: SolicitudPermisoComponent, canActivate:[AuthGuard]},
   //{ path: 'CargarHorario', component: HorariosComponent, canActivate: [AuthGuard] },
   //{ path: 'Colaboradores', component: AgentesComponent, canActivate: [AuthGuard] },
   //{ path: 'detalle/:cedula', component: PersonaDetalleComponent, canActivate: [AuthGuard] },

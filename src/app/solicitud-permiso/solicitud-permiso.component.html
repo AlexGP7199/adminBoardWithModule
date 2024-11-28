@@ -1,0 +1,181 @@
+<div class="w-full py-16 px-6 bg-white rounded-lg shadow-lg">
+  <h2 class="text-4xl font-bold text-gray-900 mb-8 text-center">Solicitudes de Permiso</h2>
+
+  <!-- Controles principales -->
+  <div class="flex justify-between items-center mb-6">
+    <!-- Botón para Retirar Día del Trimestre -->
+    <button
+      (click)="mostrarRetirarDia()"
+      class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 shadow-md focus:ring focus:ring-red-300">
+      Retirar Día del Trimestre
+    </button>
+
+    <!-- Botón para Nueva Solicitud -->
+    <button
+      (click)="mostrarFormularioNuevaSolicitud()"
+      class="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 shadow-md focus:ring focus:ring-blue-300">
+      Nueva Solicitud
+    </button>
+  </div>
+
+  <!-- Tablero de Solicitudes Activas -->
+  <div *ngIf="tieneSolicitudesActivas && !mostrarFormulario && !mostrarRetirar && !mostrarDetalle" class="mb-8 bg-gray-50 p-6 rounded-lg shadow-md">
+    <h3 class="text-2xl font-semibold text-gray-700 mb-6">Solicitudes Activas</h3>
+    <div class="overflow-auto">
+      <table class="min-w-full bg-white border rounded-lg">
+        <thead>
+          <tr class="bg-blue-100 text-gray-700 uppercase text-sm leading-normal">
+            <th class="py-3 px-6 text-left font-semibold">Fecha Inicio</th>
+            <th class="py-3 px-6 text-left font-semibold">Fecha Fin</th>
+            <th class="py-3 px-6 text-left font-semibold">Descripción</th>
+            <th class="py-3 px-6 text-left font-semibold">Estado</th>
+            <th class="py-3 px-6 text-left font-semibold">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let solicitud of solicitudesActivas" class="hover:bg-gray-50 border-b border-gray-200">
+            <td class="py-4 px-6 text-gray-700">{{ solicitud.fechaInicio | date: 'dd-MM-yyyy' }}</td>
+            <td class="py-4 px-6 text-gray-700">{{ solicitud.fechaFin | date: 'dd-MM-yyyy' }}</td>
+            <td class="py-4 px-6 text-gray-700 truncate max-w-sm">{{ solicitud.descripcionPersonal }}</td>
+            <td class="py-4 px-6 text-gray-700">
+              <span
+                [ngClass]="{
+                  'bg-green-100 text-green-800 px-2 py-1 rounded-full': solicitud.estado === 'Aprobada',
+                  'bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full': solicitud.estado === 'Pendiente',
+                  'bg-red-100 text-red-800 px-2 py-1 rounded-full': solicitud.estado === 'Rechazada'
+                }"
+              >
+                {{ solicitud.estado }}
+              </span>
+            </td>
+            <td class="py-4 px-6 text-gray-700">
+              <button
+                (click)="verDetalleSolicitud(solicitud.id)"
+                class="text-blue-600 hover:text-blue-800 flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.5 4.5M19.5 14.5L15 19m-3-7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                </svg>
+                <span>Ver Detalle</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Formulario para Retirar Día del Trimestre -->
+  <div *ngIf="mostrarRetirar" class="bg-gray-50 p-6 rounded-lg shadow-lg">
+    <h3 class="text-2xl font-semibold text-gray-700 mb-6">Retirar Día del Trimestre</h3>
+    <div class="flex items-center space-x-4">
+      <select
+        [(ngModel)]="diaSeleccionado"
+        class="block w-1/3 p-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-300">
+        <option value="" disabled selected>Seleccione un día</option>
+        <option *ngFor="let dia of diasHabilitados" [value]="dia.valor">
+          {{ dia.nombre }}
+        </option>
+      </select>
+      <button
+        (click)="retirarDiaTrimestre()"
+        class="bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 shadow-md focus:ring focus:ring-red-300">
+        Retirar Día
+      </button>
+    </div>
+    <button
+      (click)="cerrarRetirar()"
+      class="mt-4 bg-gray-600 text-white py-2 px-6 rounded-lg hover:bg-gray-700 shadow-md focus:ring focus:ring-gray-300">
+      Cancelar
+    </button>
+  </div>
+
+  <!-- Formulario para Crear Solicitud -->
+  <div *ngIf="mostrarFormulario" class="bg-gray-50 p-6 rounded-lg shadow-lg">
+    <h3 class="text-2xl font-semibold text-gray-700 mb-6">Nueva Solicitud de Permiso</h3>
+    <form (ngSubmit)="crearSolicitudPermiso()" class="space-y-6">
+      <div>
+        <label class="block text-lg font-medium text-gray-700">Fecha Inicio</label>
+        <input
+          type="date"
+          [(ngModel)]="nuevaSolicitud.fechaInicio"
+          name="fechaInicio"
+          class="block w-full mt-2 input bg-white rounded-md border-gray-300 shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+      <div>
+        <label class="block text-lg font-medium text-gray-700">Fecha Fin</label>
+        <input
+          type="date"
+          [(ngModel)]="nuevaSolicitud.fechaFin"
+          name="fechaFin"
+          class="block w-full mt-2 input bg-white rounded-md border-gray-300 shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500"
+        />
+      </div>
+      <small class="text-gray-500">* El rango máximo permitido es de 14 días.</small>
+
+      <div>
+        <label class="block text-lg font-medium text-gray-700">Descripción Personal</label>
+        <textarea
+          [(ngModel)]="nuevaSolicitud.descripcionPersonal"
+          name="descripcionPersonal"
+          rows="4"
+          class="block w-full mt-2 input bg-white rounded-md border-gray-300 shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500">
+        </textarea>
+      </div>
+      <div class="flex justify-end space-x-4">
+        <button
+          type="submit"
+          class="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 shadow-md focus:ring focus:ring-green-300">
+          Crear
+        </button>
+        <button
+          type="button"
+          (click)="cancelarFormulario()"
+          class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 shadow-md focus:ring focus:ring-red-300">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Detalle de la Solicitud -->
+  <div *ngIf="mostrarDetalle" class="bg-gray-50 p-6 rounded-lg shadow-lg mt-8">
+    <h3 class="text-2xl font-semibold text-gray-700 mb-6">Detalle de la Solicitud</h3>
+    <div class="space-y-2">
+      <p><strong>Usuario:</strong> {{ detalleSolicitud?.nombreUsuario }}</p>
+      <p><strong>Cédula:</strong> {{ detalleSolicitud?.cedula }}</p>
+      <p><strong>Provincia:</strong> {{ detalleSolicitud?.provincia }}</p>
+      <p><strong>Equipo:</strong> {{ detalleSolicitud?.teamNombre }}</p>
+      <p><strong>Cargo:</strong> {{ detalleSolicitud?.cargo }}</p>
+      <p><strong>Fecha Inicio:</strong> {{ detalleSolicitud?.fechaInicio | date: 'dd-MM-yyyy' }}</p>
+      <p><strong>Fecha Fin:</strong> {{ detalleSolicitud?.fechaFin | date: 'dd-MM-yyyy' }}</p>
+      <p><strong>Descripción Personal:</strong> {{ detalleSolicitud?.descripcionPersonal }}</p>
+      <p><strong>Descripción Supervisor:</strong> {{ detalleSolicitud?.descripcionSupervisor }}</p>
+      <p><strong>Estado:</strong> {{ detalleSolicitud?.estado }}</p>
+    </div>
+    <h4 class="text-xl font-semibold text-gray-700 mt-4">Detalles del Conflicto:</h4>
+    <ul>
+      <li *ngFor="let detalle of detallesSeleccionados; let i = index" class="mt-2">
+        <input
+          type="checkbox"
+          [(ngModel)]="detalle.seleccionado"
+          class="mr-4"
+        />
+        <p><strong>Fecha:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
+        <p><strong>Motivo:</strong> {{ detalleSolicitud?.conflictoDetalles[i]?.motivo }}</p>
+        <p><strong>Detalles Adicionales:</strong> {{ detalleSolicitud?.conflictoDetalles[i]?.detallesAdicionales }}</p>
+      </li>
+    </ul>
+    <div class="flex justify-between mt-6">
+      <button
+        (click)="deshabilitarDetallesConflicto()"
+        class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 shadow-md focus:ring focus:ring-red-300">
+        Deshabilitar Detalles Seleccionados
+      </button>
+    <button
+      (click)="cerrarDetalle()"
+      class="mt-4 bg-gray-600 text-white py-2 px-6 rounded-lg hover:bg-gray-700 shadow-md focus:ring focus:ring-gray-300">
+      Cerrar
+    </button>
+  </div>
+</div>

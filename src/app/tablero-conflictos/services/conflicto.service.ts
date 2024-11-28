@@ -42,6 +42,26 @@ export class ConflictoService {
     return this.http.get(`${apiURL}/User/filtrar-conflictos`, { params });
   }
 
+  verificarSolicitudesActivas(usuarioId: number): Observable<any> {
+    return this.http.get(`${apiURL}/User/verificar-solicitudes-activas`, {
+      params: { usuarioId: usuarioId.toString() },
+    });
+  }
+
+  crearSolicitudPermiso(solicitud: any): Observable<any> {
+    return this.http.post(`${apiURL}/User/crear-solicitud-permiso`, solicitud);
+  }
+
+  verificarConflictosAprobados(usuarioId: number): Observable<any> {
+    return this.http.get(`${apiURL}/User/verificar-conflictos-aprobados`, {
+      params: { usuarioId: usuarioId.toString() },
+    });
+  }
+
+  obtenerDetalleSolicitud(solicitudId: any): Observable<any>{
+    return this.http.get(`${apiURL}/User/detalles-solicitud/` + solicitudId);
+  }
+
   filtrarConflictosAgrupados(params: any): Observable<TipoAmbulancia[]> {
     let httpParams = new HttpParams();
 
@@ -66,9 +86,34 @@ export class ConflictoService {
     });
   }
 
+  obtenerDetalleConflictoAsociado(conflictoId: number): Observable<any> {
+    return this.http.get(`${apiURL}/User/detalle-conflicto-asociado/${conflictoId}`);
+  }
+
+
   obtenerImagenUrl(conflictId: number, cedula: string): Observable<any> {
     return this.http.get<any>(`${apiURL}/User/conflicts/${conflictId}/user/${cedula}/image-url`);
   }
+
+  // Obtener días habilitados de un conflicto
+  obtenerDiasConflictoDetalle(conflictoId: number): Observable<any> {
+    return this.http.get(`${apiURL}/User/dias-conflicto-detalle/${conflictoId}`);
+  }
+
+  // Deshabilitar un día de la semana en un conflicto
+  deshabilitarDiaSemana(conflictoId: number, request: { diaSemana: number }): Observable<any> {
+    return this.http.put(`${apiURL}/User/deshabilitar-dia-semana/${conflictoId}`, request);
+  }
+
+  deshabilitarDetallesConflicto(conflictoId: number, request: any): Observable<any> {
+    return this.http.put(`${apiURL}/User/deshabilitar-detalles-conflicto/${conflictoId}`, request);
+  }
+
+  actualizarEstadoSolicitud(id: number, request: any): Observable<any> {
+    return this.http.put(`${apiURL}/User/actualizar-estado-solicitud/${id}`, request);
+  }
+
+
 
 
 }

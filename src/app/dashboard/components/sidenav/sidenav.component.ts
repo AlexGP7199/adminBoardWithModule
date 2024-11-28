@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
+import { ConflictoService } from '../../../tablero-conflictos/services/conflicto.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -11,14 +12,46 @@ export class SidenavComponent {
   rol: string | null = '';
   nivelUsuario: number = 0;
   team : string | null = '';
-
-  constructor(private authService: AuthService) {}
+  habilitarApartado = false;
+  usuarioId: number = 0; // ID del usuario autenticado
+  constructor(private authService: AuthService, private conflictoService: ConflictoService) {}
 
   ngOnInit(): void {
+
+
     // Obtén los valores desde el servicio de autenticación
     this.nombre = this.authService.getNombre();
     this.rol = this.authService.getRole();
     this.team = this.authService.getTeam();
     this.nivelUsuario = parseInt(localStorage.getItem('nivel') || '0', 10);
+
+    // Verificar conflictos aprobados
+    this.usuarioId = this.authService.getUsuarioId();
+    if (this.usuarioId) {
+      this.verificarConflictosAprobados(this.usuarioId);
+    }
+  }
+
+  verificarConflictosAprobados(usuarioId: number): void {
+    this.conflictoService.verificarConflictosAprobados(usuarioId).subscribe({
+      next: (conflictoResponse) => {
+        const tieneConflictoAprobado = conflictoResponse.tieneConflictoAprobado;
+
+        // Actualizar el estado del botón
+        this.habilitarApartado = tieneConflictoAprobado;
+
+        // Guardar en LocalStorage
+        localStorage.setItem(
+          'conflictoAprobado',
+          JSON.stringify({
+            tieneConflictoAprobado: tieneConflictoAprobado,
+            detalles: conflictoResponse.Detalles || [],
+          })
+        );
+      },
+      error: (error) => {
+        console.error('Error al verificar conflictos aprobados:', error);
+      },
+    });
   }
 }
