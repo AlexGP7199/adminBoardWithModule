@@ -11,6 +11,7 @@ import { UsuarioService } from '../tablero-usuarios/services/usuario.service';
 })
 export class TableroConflictosComponent implements OnInit {
   mostrarDetalleSolicitud = false; // Para manejar exclusivamente el detalle de solicitudes
+  detalleSolicitud: any = null; // Para manejar exclusivamente el detalle de la solicitud
 
   searchNombre: string = '';
   searchFecha: string = '';
@@ -225,7 +226,7 @@ alternarExpandirEquipo(team: Team): void {
       next: (response: any) => {
         console.log('Detalle de la solicitud:', response);
 
-        this.detalleUsuario = {
+        this.detalleSolicitud = {
           usuarioNombre: response.nombreUsuario,
           cedula: response.cedula,
           provincia: response.provincia,
@@ -242,8 +243,7 @@ alternarExpandirEquipo(team: Team): void {
           })),
         };
 
-        //this.mostrarDetalle = false; // Desactiva otros detalles, si estaban activos
-        this.mostrarDetalleSolicitud = true; // Activa solo el detalle de la solicitud
+        this.mostrarDetalleSolicitud = true; // Activa la vista del detalle de la solicitud
       },
       error: (error) => {
         console.error('Error al obtener el detalle de la solicitud:', error);
@@ -253,14 +253,15 @@ alternarExpandirEquipo(team: Team): void {
   }
 
 
+
   verDetalle(conflicto: any,teamName: string): void {
-    console.log("Nombre del Team");
-    console.log(teamName);
+    //console.log("Nombre del Team");
+    //console.log(teamName);
     this.detalleUsuario = {
       ...conflicto,
       teamName // Añadimos el nombre del equipo al detalle del usuario
     };
-    console.log(this.detalleUsuario.teamName);
+    //console.log(this.detalleUsuario.teamName);
     /*
     this.conflictosService.obtenerConflictosUsuario(usuarioId).subscribe(
       (data) => {
@@ -283,18 +284,18 @@ alternarExpandirEquipo(team: Team): void {
   //this.detalleUsuario = conflicto; // Asigna directamente el detalle del usuario seleccionado
   this.mostrarDetalle = true; // Muestra el detalle
 
-  console.log('hello v1');
-  console.log(conflicto.conflictoId);
+  //console.log('hello v1');
+  //console.log(conflicto.conflictoId);
   // Obtener detalles del conflicto asociado
   this.conflictosService.obtenerDetalleConflictoAsociado(conflicto.conflictoId).subscribe(
     (response: any) => {
-      console.log(response);
+      //console.log(response);
       this.detalleUsuario.detalles = response.detalles || []; // Asigna los detalles al usuario
       this.detalleUsuario.conflictoEstado = response.conflictoEstado;
       this.detalleUsuario.fechaGeneracion = response.fechaGeneracion;
     },
     (error) => {
-      console.error('Error al obtener detalles del conflicto asociado:', error);
+      //console.error('Error al obtener detalles del conflicto asociado:', error);
       Swal.fire('Error', 'No se pudieron cargar los detalles del conflicto.', 'error');
     }
   );
@@ -321,6 +322,7 @@ alternarExpandirEquipo(team: Team): void {
   volverATabla2(): void {
     //this.mostrarDetalle = false;
     this.mostrarDetalleSolicitud = false; // Oculta el detalle de la solicitud
+    this.detalleSolicitud = null;
     //this.detalleUsuario = null; // Limpiar detalles
   }
 

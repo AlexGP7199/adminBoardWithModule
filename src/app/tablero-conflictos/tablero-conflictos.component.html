@@ -217,22 +217,22 @@
     <h3 class="text-2xl font-bold mb-4">Detalle de la Solicitud</h3>
 
     <!-- Información Personal -->
-    <p><strong>Nombre:</strong> {{ detalleUsuario?.usuarioNombre }}</p>
-    <p><strong>Cédula:</strong> {{ detalleUsuario?.cedula }}</p>
-    <p><strong>Provincia:</strong> {{ detalleUsuario?.provincia }}</p>
-    <p><strong>Team:</strong> {{ detalleUsuario?.teamName }}</p>
-    <p><strong>Descripción Personal:</strong> {{ detalleUsuario?.descripcionPersonal }}</p>
-    <p><strong>Descripción Supervisor:</strong> {{ detalleUsuario?.descripcionSupervisor }}</p>
-    <p><strong>Fecha Inicio:</strong> {{ detalleUsuario?.fechaInicio | date: 'dd-MM-yyyy' }}</p>
-    <p><strong>Fecha Fin:</strong> {{ detalleUsuario?.fechaFin | date: 'dd-MM-yyyy' }}</p>
+    <p><strong>Nombre:</strong> {{ detalleSolicitud?.usuarioNombre }}</p>
+    <p><strong>Cédula:</strong> {{ detalleSolicitud?.cedula }}</p>
+    <p><strong>Provincia:</strong> {{ detalleSolicitud?.provincia }}</p>
+    <p><strong>Team:</strong> {{ detalleSolicitud?.teamName }}</p>
+    <p><strong>Descripción Personal:</strong> {{ detalleSolicitud?.descripcionPersonal }}</p>
+    <p><strong>Descripción Supervisor:</strong> {{ detalleSolicitud?.descripcionSupervisor }}</p>
+    <p><strong>Fecha Inicio:</strong> {{ detalleSolicitud?.fechaInicio | date: 'dd-MM-yyyy' }}</p>
+    <p><strong>Fecha Fin:</strong> {{ detalleSolicitud?.fechaFin | date: 'dd-MM-yyyy' }}</p>
     <p><strong>Estado:</strong>
       <span
         [ngClass]="{
-          'text-green-600': detalleUsuario?.estatus === 'Aprobado',
-          'text-red-600': detalleUsuario?.estatus !== 'Aprobado'
+          'text-green-600': detalleSolicitud?.estatus === 'Aprobado',
+          'text-red-600': detalleSolicitud?.estatus !== 'Aprobado'
         }"
       >
-        {{ detalleUsuario?.estatus }}
+        {{ detalleSolicitud?.estatus }}
       </span>
     </p>
 
@@ -248,7 +248,7 @@
       </thead>
       <tbody>
         <tr
-          *ngFor="let conflicto of detalleUsuario?.detalles"
+          *ngFor="let conflicto of detalleSolicitud?.detalles"
           class="hover:bg-gray-50 border-b border-gray-200"
         >
           <td class="py-4 px-6 text-gray-700">{{ conflicto.fechaConflicto | date: 'dd-MM-yyyy' }}</td>
@@ -266,6 +266,7 @@
       Volver a la Tabla
     </button>
   </div>
+
 
 
     <!-- Botón de Regreso -->
