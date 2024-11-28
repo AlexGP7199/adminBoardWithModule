@@ -1,50 +1,102 @@
-/* Aplicar color de fondo y centrar el componente */
 :host {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #F3F4F6; /* Color de fondo para todo el componente */
-  min-height: calc(100vh - 60px); /* Ajusta 60px según la altura de tu encabezado */
-  width: 100%;
-  margin-top: 20px; /* Ajuste adicional de margen superior */
-  padding: 20px; /* Añadir espacio alrededor del contenido */
+  display: block; /* Cambiado a block para que se comporte como un contenedor completo */
+  background-color: #F3F4F6; /* Color de fondo */
+  min-height: calc(100vh - 60px); /* Altura mínima ajustada */
+  width: 100%; /* Ancho completo */
+  margin-top: 20px; /* Ajuste de margen superior */
+  padding: 20px; /* Espaciado interno */
 }
 
-/* Fondo del body puede ser opcional si solo quieres el fondo en el componente */
+/* Fondo del body opcional si se quiere un fondo general */
 body {
-  background-color: #d3d3d3; /* Fondo gris claro para el resto de la página */
+  background-color: #d3d3d3; /* Fondo gris claro */
 }
 
-/* Ajuste del contenedor interno del componente */
+/* Ajuste del contenedor interno */
 .max-w-lg {
-  max-width: 600px; /* Ajusta el ancho máximo */
-  width: 100%;
-  background-color: white; /* Fondo blanco para el contenedor principal */
+  max-width: 100%; /* Aseguramos que use el ancho completo */
+  width: 100%; /* Ancho completo */
+  background-color: white; /* Fondo blanco */
   padding: 20px; /* Espaciado interno */
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Sombra sutil */
   border-radius: 8px; /* Bordes redondeados */
 }
 
-
 /* Estilo general para cada sección del acordeón */
 .border {
   border: 1px solid #e5e7eb; /* Color del borde */
+  width: 100%; /* Asegura que ocupe todo el ancho */
 }
 .bg-white {
   background-color: #ffffff;
 }
 .p-4 {
-  padding: 16px;
+  padding: 16px; /* Espaciado interno */
 }
 .rounded-lg {
-  border-radius: 8px;
+  border-radius: 8px; /* Bordes redondeados */
 }
 .shadow-md {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra ligera */
 }
 .text-lg {
-  font-size: 1.125rem;
+  font-size: 1.125rem; /* Tamaño del texto */
 }
 .hover\:underline:hover {
-  text-decoration: underline;
+  text-decoration: underline; /* Subrayado al pasar el mouse */
+}
+
+/* Añadir espacio entre las secciones del acordeón */
+.space-y-4 > * + * {
+  margin-top: 16px; /* Separación entre las secciones */
+}
+
+/* Ajustes para botones y encabezados del acordeón */
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Alineación centrada verticalmente */
+}
+
+.w-full {
+  width: 100%; /* Ancho completo para los contenedores */
+}
+
+.bg-yellow-100 {
+  background-color: #FEF3C7; /* Fondo amarillo claro */
+}
+.text-yellow-700 {
+  color: #D97706; /* Texto amarillo oscuro */
+}
+
+.bg-blue-100 {
+  background-color: #DBEAFE; /* Fondo azul claro */
+}
+.text-blue-700 {
+  color: #1E3A8A; /* Texto azul oscuro */
+}
+
+.bg-green-100 {
+  background-color: #D1FAE5; /* Fondo verde claro */
+}
+.text-green-700 {
+  color: #047857; /* Texto verde oscuro */
+}
+
+.bg-red-100 {
+  background-color: #FEE2E2; /* Fondo rojo claro */
+}
+.text-red-700 {
+  color: #B91C1C; /* Texto rojo oscuro */
+}
+
+/* Detalles de los elementos internos del acordeón */
+.border-b {
+  border-bottom: 1px solid #e5e7eb; /* Línea divisoria entre elementos */
+}
+.mb-2 {
+  margin-bottom: 8px; /* Margen inferior */
+}
+.p-2 {
+  padding: 8px; /* Espaciado interno para los elementos */
 }

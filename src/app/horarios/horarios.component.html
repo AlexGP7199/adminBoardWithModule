@@ -15,7 +15,7 @@
   <!-- Acordeón de Estados -->
   <div class="space-y-4">
     <!-- Estado: Pendientes -->
-    <div class="border rounded-lg shadow-md">
+    <div class="w-full border rounded-lg shadow-md">
       <div class="p-4 bg-yellow-100 flex justify-between items-center">
         <h3 class="text-lg font-semibold text-yellow-700">Pendientes</h3>
         <button (click)="toggleEstado('pendientes')" class="text-yellow-700 hover:underline">
@@ -40,7 +40,7 @@
     </div>
 
     <!-- Estado: En Proceso -->
-    <div class="border rounded-lg shadow-md">
+    <div class="w-full border rounded-lg shadow-md">
       <div class="p-4 bg-blue-100 flex justify-between items-center">
         <h3 class="text-lg font-semibold text-blue-700">En Proceso</h3>
         <button (click)="toggleEstado('enProceso')" class="text-blue-700 hover:underline">
@@ -65,7 +65,7 @@
     </div>
 
     <!-- Estado: Aprobados -->
-    <div class="border rounded-lg shadow-md">
+    <div class="w-full border rounded-lg shadow-md">
       <div class="p-4 bg-green-100 flex justify-between items-center">
         <h3 class="text-lg font-semibold text-green-700">Aprobados</h3>
         <button (click)="toggleEstado('aprobados')" class="text-green-700 hover:underline">
@@ -90,7 +90,7 @@
     </div>
 
     <!-- Estado: Rechazados -->
-    <div class="border rounded-lg shadow-md">
+    <div class="w-full border rounded-lg shadow-md">
       <div class="p-4 bg-red-100 flex justify-between items-center">
         <h3 class="text-lg font-semibold text-red-700">Rechazados</h3>
         <button (click)="toggleEstado('rechazados')" class="text-red-700 hover:underline">
