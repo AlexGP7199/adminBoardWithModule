@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  backend:
+    image: agendasdaehapi:latest # Usa la imagen local del backend
+    container_name: agenda-backendCompose
+    ports:
+      - "8080:8080"
+    networks:
+      - agendas-network
+
+  frontend:
+    image: angular-agenda:latest # Usa la imagen local del frontend
+    container_name: agenda-frontendCompose
+    ports:
+      - "4200:80"
+    networks:
+      - agendas-network
+
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest # Imagen oficial de SQL Server
+    container_name: sqlserver-container-agendaCompose
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Agend@DB_1234" # Cambia esto si tienes otro password configurado
+    ports:
+      - "1433:1433"
+    networks:
+      - agendas-network
+    volumes:
+      - sql_data:/var/opt/mssql
+
+networks:
+  agendas-network:
+    driver: bridge
+
+volumes:
+  sql_data:

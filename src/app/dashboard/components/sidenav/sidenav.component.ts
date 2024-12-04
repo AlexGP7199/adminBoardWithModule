@@ -22,8 +22,10 @@ export class SidenavComponent {
     // Obtén los valores desde el servicio de autenticación
     this.nombre = this.authService.getNombre();
     this.rol = this.authService.getRole();
+    //console.log("su rol es: " + this.rol);
     this.team = this.authService.getTeam();
-    this.nivelUsuario = parseInt(localStorage.getItem('nivel') || '0', 10);
+    console.log("su team es: " + this.team);
+    this.nivelUsuario = this.authService.getNivel();
 
     // Verificar conflictos aprobados
     this.usuarioId = this.authService.getUsuarioId();

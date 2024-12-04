@@ -5,11 +5,13 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {apiURL} from '../../ENV/env-variable'
 import { LoginResponse } from './interface/loginInterfaces';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private tokenKey = 'token';
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -31,18 +33,19 @@ export class AuthService {
       tap((response) => {
         if (response && response.token) {
           // Guarda el token y los demás datos en localStorage
-          localStorage.setItem('usuarioId', response.usuarioId.toString());
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('nombre', response.nombre);
-          localStorage.setItem('cedula', response.cedula);
-          localStorage.setItem('role', response.role);
-          localStorage.setItem('nivel', response.nivel.toString());
-          localStorage.setItem('provincia', response.provincia);
-          localStorage.setItem('provinciaId', response.provinciaId.toString());
-          localStorage.setItem('region', response.region);
-          localStorage.setItem('regionId', response.regionId.toString());
-          localStorage.setItem('teamId',response.teamId.toString());
-          localStorage.setItem('teamName', response.teamName);
+          localStorage.setItem(this.tokenKey, response.token);
+          //localStorage.setItem('usuarioId', response.usuarioId.toString());
+          //localStorage.setItem('token', response.token);
+          //localStorage.setItem('nombre', response.nombre);
+          //localStorage.setItem('cedula', response.cedula);
+          //localStorage.setItem('role', response.role);
+          //localStorage.setItem('nivel', response.nivel.toString());
+          //localStorage.setItem('provincia', response.provincia);
+          //localStorage.setItem('provinciaId', response.provinciaId.toString());
+          //localStorage.setItem('region', response.region);
+          //localStorage.setItem('regionId', response.regionId.toString());
+          //localStorage.setItem('teamId',response.teamId.toString());
+          //localStorage.setItem('teamName', response.teamName);
         }
       })
     );
@@ -51,62 +54,107 @@ export class AuthService {
   logout(): void {
     // Limpia los datos de localStorage
     localStorage.removeItem('token');
-    localStorage.removeItem('nombre');
-    localStorage.removeItem('cedula');
-    localStorage.removeItem('role');
-    localStorage.removeItem('nivel');
-    localStorage.removeItem('provincia');
-    localStorage.removeItem('provinciaId');
-    localStorage.removeItem('region');
-    localStorage.removeItem('regionId');
-    localStorage.removeItem('teamId');
-    localStorage.removeItem('teamName');
-    localStorage.removeItem('usuarioId');
-    localStorage.removeItem('conflictoAprobado');
+    //localStorage.removeItem('nombre');
+    //localStorage.removeItem('cedula');
+    //localStorage.removeItem('role');
+    //localStorage.removeItem('nivel');
+    //localStorage.removeItem('provincia');
+    //localStorage.removeItem('provinciaId');
+    //localStorage.removeItem('region');
+    //localStorage.removeItem('regionId');
+    //localStorage.removeItem('teamId');
+    //localStorage.removeItem('teamName');
+    //localStorage.removeItem('usuarioId');
+    //localStorage.removeItem('conflictoAprobado');
     this.router.navigate(['/login']);
   }
 
+  getToken(): string | null {
+    return localStorage.getItem(this.tokenKey);
+  }
+
+   // Decodificar el token
+   getDecodedToken(): any {
+    const token = this.getToken();
+    if (token) {
+      return jwtDecode(token);
+    }
+    return null;
+  }
+
+
   isLoggedIn(): boolean {
-    const token = localStorage.getItem('token');
+    const token = this.getToken();
     return !!token && !this.isTokenExpired(token);
+  }
+
+  // Métodos para obtener información desde el token decodificado
+  getUserClaim(claim: string): string | null {
+    const decodedToken = this.getDecodedToken();
+    return decodedToken && decodedToken[claim] ? decodedToken[claim] : null;
   }
 
   // Métodos para obtener la información almacenada
   getNombre(): string | null {
-    return localStorage.getItem('nombre');
+    return this.getUserClaim('nombre');
   }
 
   getCedula(): string | null {
-    return localStorage.getItem('cedula');
+    return this.getUserClaim('cedula');
   }
 
   getRole(): string | null {
-    return localStorage.getItem('role');
+    return this.getUserClaim('role');
   }
 
   getNivel(): number {
-    return parseInt(localStorage.getItem('nivel') || '0', 10);
+    const nivel = this.getUserClaim('nivel');
+    return nivel ? parseInt(nivel, 10) : 0;
   }
 
   getProvincia(): string | null {
-    return localStorage.getItem('provincia');
+    return this.getUserClaim('provincia');
   }
 
   getRegion(): string | null {
-    return localStorage.getItem('region');
+    return this.getUserClaim('region');
   }
 
   getTeam(): string | null {
-    return localStorage.getItem('teamName');
+    return this.getUserClaim('teamName');
   }
 
   getUsuarioId(): number {
-    return parseInt(localStorage.getItem('usuarioId')|| '0');
+    const usuarioId = this.getUserClaim('usuarioId');
+    return usuarioId ? parseInt(usuarioId, 10) : 0;
+  }
+
+    // Obtener ID de la provincia
+  getProvinciaId(): number {
+    const provinciaId = this.getUserClaim('provinciaId');
+    return provinciaId ? parseInt(provinciaId, 10) : 0;
+  }
+
+  // Obtener ID de la región
+  getRegionId(): number {
+    const regionId = this.getUserClaim('regionId');
+    return regionId ? parseInt(regionId, 10) : 0;
+  }
+
+  // Obtener ID del equipo
+  getTeamId(): number {
+    const teamId = this.getUserClaim('teamId');
+    return teamId ? parseInt(teamId, 10) : 0;
   }
 
   private isTokenExpired(token: string): boolean {
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const expirationDate = payload.exp * 1000;
-    return Date.now() > expirationDate;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const expirationDate = payload.exp * 1000;
+      return Date.now() > expirationDate;
+    } catch (e) {
+      return true;
+    }
+
   }
 }

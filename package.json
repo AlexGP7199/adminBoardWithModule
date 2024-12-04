@@ -21,6 +21,7 @@
     "apexcharts": "^3.49.1",
     "date-fns": "^4.1.0",
     "flowbite": "^2.3.0",
+    "jwt-decode": "^4.0.0",
     "rxjs": "~7.8.0",
     "sweetalert2": "^11.14.5",
     "tslib": "^2.3.0",

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2';
 import { ConflictoService } from '../tablero-conflictos/services/conflicto.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-solicitud-permiso',
@@ -37,7 +38,7 @@ export class SolicitudPermisoComponent implements OnInit {
     descripcionPersonal: '',
   };
 
-  constructor(private conflictoService: ConflictoService) {}
+  constructor(private conflictoService: ConflictoService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.usuarioId = this.obtenerUsuarioId();
@@ -120,8 +121,8 @@ export class SolicitudPermisoComponent implements OnInit {
 
   // Obtener usuarioId del localStorage
   obtenerUsuarioId(): number {
-    const userData = localStorage.getItem('usuarioId');
-    return userData ? JSON.parse(userData) : 0;
+    const decodedToken = this.authService.getDecodedToken();
+    return decodedToken && decodedToken.usuarioId ? parseInt(decodedToken.usuarioId, 10) : 0;
   }
 
   // Verificar conflictos aprobados

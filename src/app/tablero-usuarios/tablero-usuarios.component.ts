@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { UsuarioService } from './services/usuario.service';
 import Swal from 'sweetalert2';
 import { DayOfWeek } from './enumInterfaces.ts/enumInt';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-tablero-usuarios',
@@ -48,12 +49,36 @@ export class TableroUsuariosComponent {
   today: string = new Date().toISOString().split('T')[0];
   userData: any = {};
 
-  constructor(private usuarioService: UsuarioService) {}
+  constructor(private usuarioService: UsuarioService, private authService : AuthService) {}
 
   ngOnInit(): void {
-    this.userData = this.obtenerDatosLocalStorage();
-    this.nivelUsuario = parseInt(this.userData.nivel, 10) || 0;
+    const decodedToken = this.authService.getDecodedToken();
+    if (decodedToken) {
+      this.nivelUsuario = parseInt(decodedToken.nivel, 10) || 0;
+      this.selectedRegion = parseInt(decodedToken.regionId, 10);
+      this.selectedProvincia = parseInt(decodedToken.provinciaId, 10);
+      this.selectedTeam = parseInt(decodedToken.teamId, 10);
 
+      if (this.nivelUsuario === 1) {
+        this.cargarEquipos();
+        this.filtrarUsuarios();
+      } else if (this.nivelUsuario === 2) {
+        this.cargarProvincias(this.selectedRegion); // Cargar provincias para la región específica
+        this.cargarEquipos();
+        this.filtrarUsuarios();
+      } else if (this.nivelUsuario === 3) {
+        this.cargarRegiones();
+        this.cargarProvincias(this.selectedRegion); // Cargar provincias de la región inicial
+        this.cargarEquipos();
+        this.filtrarUsuarios();
+      }
+    } else {
+      Swal.fire('Error', 'No se pudo obtener la información del usuario. Por favor, inicie sesión nuevamente.', 'error');
+    }
+    //this.userData = this.obtenerDatosLocalStorage();
+    //this.nivelUsuario = parseInt(this.userData.nivel, 10) || 0;
+
+    /*
     if (this.nivelUsuario === 1) {
       // Nivel 1: Valores de filtros fijos desde el localStorage
       this.selectedRegion = +this.userData.regionId;
@@ -80,7 +105,7 @@ export class TableroUsuariosComponent {
       this.cargarProvincias(this.selectedRegion); // Cargar provincias de la región inicial
       this.cargarEquipos();  // Cargar opciones de equipos
       this.filtrarUsuarios(); // Filtra con los valores iniciales
-    }
+    } */
   }
 
   obtenerDatosLocalStorage(): any {

@@ -14,7 +14,16 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    const nivel = parseInt(localStorage.getItem('nivel') || '0', 10);
+    // Obtener el token decodificado
+    const decodedToken = this.authService.getDecodedToken();
+
+    if (!decodedToken) {
+      // Si el token no es válido o no existe, redirigir al login
+      this.router.navigate(['/login']);
+      return false;
+    }
+
+    const nivel = parseInt(decodedToken.nivel || '0', 10);
     const rutaSolicitada = state.url;
 
     // Redirigir según el nivel del usuario

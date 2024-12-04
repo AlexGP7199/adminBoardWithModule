@@ -3,6 +3,7 @@ import { ConflictoService } from './services/conflicto.service';
 import { Conflicto, ConflictosAgrupadosResponse, Team, TipoAmbulancia } from './interfaces/conflictosInterfaces';
 import Swal from 'sweetalert2';
 import { UsuarioService } from '../tablero-usuarios/services/usuario.service';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-tablero-conflictos',
@@ -36,7 +37,7 @@ export class TableroConflictosComponent implements OnInit {
   selectedTeam: number | null = null;
   userData: any = {};
 
-  constructor(private conflictosService: ConflictoService, private  usuarioService: UsuarioService) {
+  constructor(private conflictosService: ConflictoService, private  usuarioService: UsuarioService, private authService : AuthService) {
     const today = new Date();
     this.startDate = this.formatDate(today);
     this.endDate = this.formatDate(new Date(today.setDate(today.getDate() + 14)));
@@ -54,7 +55,10 @@ export class TableroConflictosComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.userData = this.obtenerDatosLocalStorage();
+
+    //this.userData = this.obtenerDatosLocalStorage();
+    this.userData = this.authService.getDecodedToken();
+    console.log(this.userData);
     this.nivelUsuario = parseInt(this.userData.nivel, 10) || 0;
 
     if (this.nivelUsuario === 1) {
@@ -363,6 +367,7 @@ alternarExpandirEquipo(team: Team): void {
             //this.obtenerConflictos();
           //}else{
             this.obtenerConflictosAgrupados();
+            window.location.reload();
           //}
         });
       },

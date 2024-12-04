@@ -2,6 +2,7 @@
     import Swal from 'sweetalert2';
     import * as XLSX from 'xlsx';
     import { ConflictoService } from '../tablero-conflictos/services/conflicto.service';
+import { AuthService } from '../services/auth.service';
 
     @Component({
       selector: 'app-horarios',
@@ -29,7 +30,7 @@
         aprobados: false,
         rechazados: false
       };
-      constructor(private conflictoService: ConflictoService) {}
+      constructor(private conflictoService: ConflictoService, private authService: AuthService ) {}
 
       ngOnInit(): void {
         this.obtenerInformacionUsuario();
@@ -43,13 +44,19 @@
 
 
       obtenerInformacionUsuario(): void {
-        this.cedula = localStorage.getItem('cedula') || '';
-        this.usuarioNombre = localStorage.getItem('nombre') || '';
-        this.usuarioProvincia = localStorage.getItem('provincia') || '';
-        this.usuarioRegion = localStorage.getItem('region') || '';
-        this.usuarioRol = localStorage.getItem('role') || '';
-        this.usuarioTeam = localStorage.getItem('teamName') || '';
-        this.usuarioId = parseInt(localStorage.getItem('usuarioId') || '0', 10);
+        const decodedToken = this.authService.getDecodedToken();
+        if (decodedToken) {
+          this.cedula = decodedToken.cedula || '';
+          this.usuarioNombre = decodedToken.nombre || '';
+          this.usuarioProvincia = decodedToken.provincia || '';
+          this.usuarioRegion = decodedToken.region || '';
+          this.usuarioRol = decodedToken.role || '';
+          this.usuarioTeam = decodedToken.teamName || '';
+          this.usuarioId = parseInt(decodedToken.usuarioId || '0', 10); // Convertir a número si es necesario
+        } else {
+          console.error('El token no se pudo decodificar o no existe.');
+          this.authService.logout(); // Opcional: Forzar el logout si no hay token válido
+        }
       }
 
       cargarConflictos(): void {

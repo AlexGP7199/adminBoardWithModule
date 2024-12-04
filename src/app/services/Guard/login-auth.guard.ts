@@ -10,11 +10,16 @@ export class loginAuthGuard implements CanActivate {
 
   canActivate(): boolean {
     if (this.authService.isLoggedIn()) {
-      const nivel = parseInt(localStorage.getItem('nivel') || '0', 10);
-      // Redirigir según el nivel del usuario
-      const ruta = nivel === 0 ? '/horario' : '/Conflictos';
-      this.router.navigate([ruta]);
-      return false;
+
+      const decodedToken = this.authService.getDecodedToken();
+
+      if (decodedToken && decodedToken.nivel) {
+        const nivel = parseInt(decodedToken.nivel, 10);
+        // Redirigir según el nivel del usuario
+        const ruta = nivel === 0 ? '/horario' : '/Conflictos';
+        this.router.navigate([ruta]);
+        return false;
+      }
     }
     // Permitir acceso a login si no está autenticado
     return true;
