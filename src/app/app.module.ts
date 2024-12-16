@@ -26,6 +26,8 @@ import { AuthGuard } from './services/Guard/auth.guard';
 import { PiboteScreenComponent } from './pibote-screen/pibote-screen.component';
 import { FormSolicitudValidacionFechasComponent } from './form-solicitud-validacion-fechas/form-solicitud-validacion-fechas.component';
 import { SolicitudPermisoComponent } from './solicitud-permiso/solicitud-permiso.component';
+import { NewUsuarioComponent } from './new-usuario/new-usuario.component';
+import { NewAmbulanciaComponent } from './new-ambulancia/new-ambulancia.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,9 @@ import { SolicitudPermisoComponent } from './solicitud-permiso/solicitud-permiso
     FiltroUsuarioPipe,
     PiboteScreenComponent,
     FormSolicitudValidacionFechasComponent,
-    SolicitudPermisoComponent ,
+    SolicitudPermisoComponent,
+    NewUsuarioComponent,
+    NewAmbulanciaComponent ,
 
   ],
   imports: [

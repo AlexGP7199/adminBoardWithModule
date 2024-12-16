@@ -1,0 +1,194 @@
+<div class="max-w-7xl mx-auto bg-white rounded-lg shadow-lg p-6 mt-10">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6">Gestión de Ambulancias</h2>
+
+  <!-- Filtros y Tabla -->
+  <div *ngIf="!mostrarFormulario">
+    <!-- Filtros -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <!-- Filtro de Región -->
+      <div>
+        <label for="region" class="block text-sm font-medium text-gray-700">Región</label>
+        <select
+        id="region"
+        [(ngModel)]="regionSeleccionada"
+        (change)="cargarProvincias(regionSeleccionada || 0); filtrarAmbulancias()"
+        class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      >
+        <option value="" disabled selected>Seleccione una región</option>
+        <option *ngFor="let region of regiones" [value]="region.id">{{ region.nombre }}</option>
+      </select>
+
+      </div>
+
+      <!-- Filtro de Provincia -->
+      <div>
+        <label for="provincia" class="block text-sm font-medium text-gray-700">Provincia</label>
+        <select
+          id="provincia"
+          [(ngModel)]="provinciaSeleccionada"
+          (change)="filtrarAmbulancias()"
+          class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="" disabled selected>Seleccione una provincia</option>
+          <option *ngFor="let provincia of provincias" [value]="provincia.id">{{ provincia.nombre }}</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Botón para Agregar Ambulancia -->
+    <div class="text-right mb-4">
+      <button
+        (click)="mostrarFormularioAgregar()"
+        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+      >
+        Agregar Ambulancia
+      </button>
+    </div>
+
+    <!-- Tabla -->
+    <div *ngIf="ambulancias.length > 0">
+      <table class="min-w-full table-auto border border-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Código</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Descripción</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Región</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Provincia</th>
+            <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let ambulancia of ambulancias">
+            <td class="px-4 py-2">{{ ambulancia.codigo }}</td>
+            <td class="px-4 py-2">{{ ambulancia.descripcion }}</td>
+            <td class="px-4 py-2">{{ ambulancia.region }}</td>
+            <td class="px-4 py-2">{{ ambulancia.provincia }}</td>
+            <td class="px-4 py-2">
+              <button
+                (click)="imprimirId(ambulancia.id)"
+                class="text-blue-600 hover:text-blue-800 font-medium"
+              >
+                Ver ID
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<div *ngIf="mostrarFormulario" class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6 mt-10">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6">Crear Ambulancia</h2>
+  <form [formGroup]="ambulanciaForm" (ngSubmit)="crearAmbulancia()" class="space-y-6">
+    <!-- Código -->
+    <div>
+      <label for="codigo" class="block text-sm font-medium text-gray-700">Código</label>
+      <input
+        id="codigo"
+        formControlName="codigo"
+        type="text"
+        class="form-input mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Código de la ambulancia"
+      />
+    </div>
+
+    <!-- Descripción -->
+    <div>
+      <label for="descripcion" class="block text-sm font-medium text-gray-700">Descripción</label>
+      <input
+        id="descripcion"
+        formControlName="descripcion"
+        type="text"
+        class="form-input mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Descripción de la ambulancia"
+      />
+    </div>
+
+    <!-- Base Operativa -->
+    <div>
+      <label for="baseOperativa" class="block text-sm font-medium text-gray-700">Base Operativa</label>
+      <input
+        id="baseOperativa"
+        formControlName="baseOperativa"
+        type="text"
+        class="form-input mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Ej: Base principal en zona norte"
+      />
+    </div>
+
+    <!-- Georeferencia -->
+    <div>
+      <label for="georeferencia" class="block text-sm font-medium text-gray-700">Georeferencia</label>
+      <input
+        id="georeferencia"
+        formControlName="georeferencia"
+        type="text"
+        class="form-input mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Ej: 18.4853, -69.9336"
+      />
+    </div>
+
+    <!-- Región -->
+    <div>
+      <label for="regionId" class="block text-sm font-medium text-gray-700">Región</label>
+      <select
+        id="regionId"
+        formControlName="regionId"
+        class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        (change)="onRegionChange()"
+      >
+        <option value="" disabled selected>Seleccione una región</option>
+        <option *ngFor="let region of regiones" [value]="region.id">{{ region.nombre }}</option>
+      </select>
+    </div>
+
+    <!-- Provincia -->
+    <div>
+      <label for="provinciaId" class="block text-sm font-medium text-gray-700">Provincia</label>
+      <select
+        id="provinciaId"
+        formControlName="provinciaId"
+        class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      >
+        <option value="" disabled selected>Seleccione una provincia</option>
+        <option *ngFor="let provincia of provincias" [value]="provincia.id">{{ provincia.nombre }}</option>
+      </select>
+    </div>
+
+    <!-- Tipo de Ambulancia -->
+    <div>
+      <label for="tipoId" class="block text-sm font-medium text-gray-700">Tipo</label>
+      <select
+        id="tipoId"
+        formControlName="tipoId"
+        class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      >
+        <option value="" disabled selected>Seleccione un tipo</option>
+        <option *ngFor="let tipo of tiposAmbulancia" [value]="tipo.id">
+          {{ tipo.nombre }} - {{ tipo.descripcion }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Botón Crear Ambulancia -->
+    <div class="text-right">
+      <button
+        type="submit"
+        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+      >
+        Crear Ambulancia
+      </button>
+    </div>
+  </form>
+  <!-- Botones -->
+  <div class="flex justify-between">
+    <!-- Botón Volver -->
+    <button
+      type="button"
+      (click)="cerrarFormulario()"
+      class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 bg-gray-200 rounded-lg shadow hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
+    >
+      Volver a la Tabla
+    </button>
+
+</div>

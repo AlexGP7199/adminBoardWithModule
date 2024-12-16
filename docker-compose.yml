@@ -2,15 +2,16 @@ version: "3.8"
 
 services:
   backend:
-    image: moonxz/agenda-angular-daeh:latest # Imagen del backend en Docker Hub
+    image: moonxz/agenda-daeh-api:v6 # Imagen del backend en Docker Hub
     container_name: agenda-backend-compose
     ports:
-      - "8080:8080"
+      - "4500:4500"
+      - "4123:4123"
     networks:
       - agendas-network
 
   frontend:
-    image: moonxz/agenda-angular-daeh:latest # Imagen del frontend en Docker Hub
+    image: moonxz/agenda-daeh-angular:v6 # Imagen del frontend en Docker Hub
     container_name: agenda-frontend-compose
     ports:
       - "4200:80" # Mapea el puerto 80 del contenedor al 4200 en la máquina

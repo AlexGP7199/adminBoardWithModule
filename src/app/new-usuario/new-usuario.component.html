@@ -1,0 +1,132 @@
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6 mt-10">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6">Crear Usuario</h2>
+  <form [formGroup]="usuarioForm" (ngSubmit)="crearUsuario()" class="space-y-6">
+    <!-- Cédula -->
+    <div>
+      <label for="cedula" class="block text-sm font-medium text-gray-700">Cédula</label>
+      <input
+        id="cedula"
+        formControlName="cedula"
+        type="text"
+        class="form-input mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        placeholder="00000000000"
+      />
+    </div>
+
+    <!-- Nombre -->
+    <div>
+      <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
+      <input
+        id="nombre"
+        formControlName="nombre"
+        type="text"
+        class="form-input mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Juan Pérez"
+      />
+    </div>
+
+    <!-- Contraseña -->
+    <div>
+      <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+      <input
+        id="password"
+        formControlName="password"
+        type="password"
+        class="form-input mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        placeholder="********"
+      />
+    </div>
+
+    <!-- Región -->
+    <div>
+      <label for="regionId" class="block text-sm font-medium text-gray-700">Región</label>
+      <select
+        id="regionId"
+        formControlName="regionId"
+        class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        (change)="onRegionChange()"
+      >
+        <option value="" disabled selected>Seleccione una región</option>
+        <option *ngFor="let region of regiones" [value]="region.id">{{ region.nombre }}</option>
+      </select>
+    </div>
+
+    <!-- Provincia -->
+    <div>
+      <label for="provinciaId" class="block text-sm font-medium text-gray-700">Provincia</label>
+      <select
+        id="provinciaId"
+        formControlName="provinciaId"
+        class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+        (change)="onProvinciaChange()"
+      >
+        <option value="" disabled selected>Seleccione una provincia</option>
+        <option *ngFor="let provincia of provincias" [value]="provincia.id">{{ provincia.nombre }}</option>
+      </select>
+    </div>
+
+    <!-- Ambulancia -->
+    <div>
+      <label for="ambulanciaId" class="block text-sm font-medium text-gray-700">Ambulancia</label>
+      <select
+        id="ambulanciaId"
+        formControlName="ambulanciaId"
+        class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      >
+        <option value="" disabled selected>Seleccione una ambulancia</option>
+        <option *ngFor="let ambulancia of ambulancias" [value]="ambulancia.id">
+          {{ ambulancia.codigo }} - {{ ambulancia.descripcion }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Equipo -->
+    <div>
+      <label for="teamId" class="block text-sm font-medium text-gray-700">Equipo</label>
+      <select
+        id="teamId"
+        formControlName="teamId"
+        class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      >
+        <option value="" disabled selected>Seleccione un equipo</option>
+        <option *ngFor="let equipo of equipos" [value]="equipo.id">{{ equipo.nombre }}</option>
+      </select>
+    </div>
+
+    <!-- Rol -->
+    <div>
+      <label for="userRoleId" class="block text-sm font-medium text-gray-700">Rol</label>
+      <select
+        id="userRoleId"
+        formControlName="userRoleId"
+        class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      >
+        <option value="" disabled selected>Seleccione un rol</option>
+        <option *ngFor="let rol of roles" [value]="rol.id">{{ rol.nombre }} - Nivel {{ rol.nivel }}</option>
+      </select>
+    </div>
+
+    <!-- Cargo -->
+    <div>
+      <label for="cargoId" class="block text-sm font-medium text-gray-700">Cargo</label>
+      <select
+        id="cargoId"
+        formControlName="cargoId"
+        class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      >
+        <option value="" disabled selected>Seleccione un cargo</option>
+        <option *ngFor="let cargo of cargos" [value]="cargo.id">{{ cargo.descripcion }}</option>
+      </select>
+    </div>
+
+    <!-- Botón Crear Usuario -->
+    <div class="text-right">
+      <button
+        type="submit"
+        class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+      >
+        Crear Usuario
+      </button>
+    </div>
+  </form>
+</div>
