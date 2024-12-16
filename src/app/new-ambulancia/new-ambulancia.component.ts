@@ -15,9 +15,11 @@ export class NewAmbulanciaComponent {
   provincias: any[] = [];
   tiposAmbulancia: any[] = [];
   ambulancias: any[] = [];
-  regionSeleccionada: number | undefined = undefined;
-  provinciaSeleccionada: number | undefined = undefined;
+  regionSeleccionada: number = 0; // Valor predeterminado para "sin selección"
+  provinciaSeleccionada: number = 0; // Valor predeterminado para "sin selección"
+
   mostrarFormulario: boolean = false;
+  ambulanciaEnEdicion: any | null = null; // Para distinguir entre crear y editar
 
   constructor(
     private usuarioService: UsuariosModuleService,
@@ -38,7 +40,7 @@ export class NewAmbulanciaComponent {
   ngOnInit(): void {
     this.cargarRegiones();
     this.cargarTiposAmbulancia();
-    this.filtrarAmbulancias(); // Cargar datos iniciales en la tabla
+    this.filtrarAmbulancias();
   }
 
   cargarRegiones(): void {
@@ -48,11 +50,9 @@ export class NewAmbulanciaComponent {
   }
 
   cargarProvincias(regionId: number): void {
-    this.usuarioService
-      .obtenerProvinciasPorRegion(regionId)
-      .subscribe((provincias) => {
-        this.provincias = provincias;
-      });
+    this.usuarioService.obtenerProvinciasPorRegion(regionId).subscribe((provincias) => {
+      this.provincias = provincias;
+    });
   }
 
   cargarTiposAmbulancia(): void {
@@ -62,11 +62,8 @@ export class NewAmbulanciaComponent {
   }
 
   filtrarAmbulancias(): void {
-    const regionId = this.regionSeleccionada ?? undefined;
-    const provinciaId = this.provinciaSeleccionada ?? undefined;
-
     this.ambulanciaService
-      .obtenerAmbulancias(regionId, provinciaId)
+      .obtenerAmbulancias(this.regionSeleccionada, this.provinciaSeleccionada)
       .subscribe((ambulancias) => {
         this.ambulancias = ambulancias;
       });
@@ -80,39 +77,92 @@ export class NewAmbulanciaComponent {
 
   mostrarFormularioAgregar(): void {
     this.mostrarFormulario = true;
+    this.ambulanciaEnEdicion = null; // Modo creación
+    this.ambulanciaForm.reset();
   }
 
   cerrarFormulario(): void {
     this.mostrarFormulario = false;
-    this.filtrarAmbulancias(); // Recargar la tabla al cerrar el formulario
+    this.ambulanciaEnEdicion = null; // Resetear el estado de edición
+    this.filtrarAmbulancias();
   }
 
   imprimirId(id: number): void {
-    console.log('ID de la ambulancia seleccionada:', id);
+    // Obtener los datos de la ambulancia por ID
+    this.ambulanciaService.obtenerAmbulanciaPorId(id).subscribe({
+      next: (ambulancia) => {
+        console.log(ambulancia);
+        this.mostrarFormulario = true;
+        this.ambulanciaEnEdicion = ambulancia; // Pasar al modo edición
+        this.ambulanciaForm.patchValue({
+          codigo: ambulancia.codigo,
+          descripcion: ambulancia.descripcion,
+          regionId: ambulancia.regionId,
+          provinciaId: ambulancia.provinciaId,
+          tipoId: ambulancia.tipoId,
+          baseOperativa: ambulancia.baseOperativa,
+          georeferencia: ambulancia.georeferencia,
+        });
+        this.cargarProvincias(ambulancia.regionId); // Cargar provincias asociadas
+      },
+      error: () => {
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo cargar la ambulancia.',
+          icon: 'error',
+          confirmButtonText: 'Cerrar',
+        });
+      },
+    });
   }
 
-  crearAmbulancia(): void {
+  guardarAmbulancia(): void {
     if (this.ambulanciaForm.valid) {
-      this.ambulanciaService.crearAmbulancia(this.ambulanciaForm.value).subscribe({
-        next: () => {
-          Swal.fire({
-            title: '¡Éxito!',
-            text: 'Ambulancia creada con éxito.',
-            icon: 'success',
-            confirmButtonText: 'Ok',
+      if (this.ambulanciaEnEdicion) {
+        // Modo edición
+        this.ambulanciaService
+          .editarAmbulancia(this.ambulanciaEnEdicion.id, this.ambulanciaForm.value)
+          .subscribe({
+            next: () => {
+              Swal.fire({
+                title: '¡Éxito!',
+                text: 'Ambulancia actualizada con éxito.',
+                icon: 'success',
+                confirmButtonText: 'Ok',
+              });
+              this.cerrarFormulario();
+            },
+            error: () => {
+              Swal.fire({
+                title: 'Error',
+                text: 'No se pudo actualizar la ambulancia.',
+                icon: 'error',
+                confirmButtonText: 'Cerrar',
+              });
+            },
           });
-          this.ambulanciaForm.reset();
-          this.cerrarFormulario(); // Cerrar el formulario y recargar la tabla
-        },
-        error: (error) => {
-          Swal.fire({
-            title: 'Error',
-            text: error.error || 'Ocurrió un problema al crear la ambulancia.',
-            icon: 'error',
-            confirmButtonText: 'Cerrar',
-          });
-        },
-      });
+      } else {
+        // Modo creación
+        this.ambulanciaService.crearAmbulancia(this.ambulanciaForm.value).subscribe({
+          next: () => {
+            Swal.fire({
+              title: '¡Éxito!',
+              text: 'Ambulancia creada con éxito.',
+              icon: 'success',
+              confirmButtonText: 'Ok',
+            });
+            this.cerrarFormulario();
+          },
+          error: () => {
+            Swal.fire({
+              title: 'Error',
+              text: 'No se pudo crear la ambulancia.',
+              icon: 'error',
+              confirmButtonText: 'Cerrar',
+            });
+          },
+        });
+      }
     } else {
       Swal.fire({
         title: 'Formulario incompleto',

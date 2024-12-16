@@ -77,9 +77,12 @@
     </div>
   </div>
 
+<!-- Formulario -->
 <div *ngIf="mostrarFormulario" class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-6 mt-10">
-  <h2 class="text-2xl font-semibold text-gray-800 mb-6">Crear Ambulancia</h2>
-  <form [formGroup]="ambulanciaForm" (ngSubmit)="crearAmbulancia()" class="space-y-6">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6">
+    {{ ambulanciaEnEdicion ? 'Editar Ambulancia' : 'Crear Ambulancia' }}
+  </h2>
+  <form [formGroup]="ambulanciaForm" (ngSubmit)="guardarAmbulancia()" class="space-y-6">
     <!-- Código -->
     <div>
       <label for="codigo" class="block text-sm font-medium text-gray-700">Código</label>
@@ -171,24 +174,31 @@
     </div>
 
     <!-- Botón Crear Ambulancia -->
-    <div class="text-right">
+    <div class="flex justify-between">
+      <button
+        type="button"
+        (click)="cerrarFormulario()"
+        class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 bg-gray-200 rounded-lg shadow hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
+      >
+        Volver a la Tabla
+      </button>
       <button
         type="submit"
         class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
       >
-        Crear Ambulancia
+        {{ ambulanciaEnEdicion ? 'Actualizar Ambulancia' : 'Crear Ambulancia' }}
       </button>
     </div>
   </form>
-  <!-- Botones -->
+  <!-- Botones
   <div class="flex justify-between">
-    <!-- Botón Volver -->
+
     <button
       type="button"
       (click)="cerrarFormulario()"
       class="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-600 bg-gray-200 rounded-lg shadow hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
     >
       Volver a la Tabla
-    </button>
+    </button> -->
 
 </div>

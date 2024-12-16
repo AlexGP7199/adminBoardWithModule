@@ -26,6 +26,15 @@ export class AmbulanciasService {
     return this.http.get<any[]>(`${apiURL}/Ambulancias/ambulancias`, { params });
   }
 
+    // Obtener ambulancia por ID
+    obtenerAmbulanciaPorId(id: number): Observable<any> {
+      return this.http.get<any>(`${apiURL}/Ambulancias/ambulancias/${id}`);
+    }
+
+    // Editar una ambulancia por ID
+    editarAmbulancia(id: number, ambulanciaActualizada: any): Observable<any> {
+      return this.http.put<any>(`${apiURL}/Ambulancias/editar-ambulancia/${id}`, ambulanciaActualizada);
+    }
 
 
 }
