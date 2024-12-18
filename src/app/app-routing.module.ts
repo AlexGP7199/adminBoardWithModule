@@ -18,6 +18,7 @@ import { FormSolicitudValidacionFechasComponent } from './form-solicitud-validac
 import { SolicitudPermisoComponent } from './solicitud-permiso/solicitud-permiso.component';
 import { NewUsuarioComponent } from './new-usuario/new-usuario.component';
 import { NewAmbulanciaComponent } from './new-ambulancia/new-ambulancia.component';
+import { ColaboradoresExcelCargaComponent } from './colaboradores-excel-carga/colaboradores-excel-carga.component';
 
 const routes: Routes = [
 
@@ -28,6 +29,7 @@ const routes: Routes = [
    { path: 'login', component: LoginComponent, canActivate: [loginAuthGuard] },
   { path: 'NewUsuario', component: NewUsuarioComponent, canActivate: [AuthGuard]},
   { path: 'NewAmbulancia', component: NewAmbulanciaComponent, canActivate: [AuthGuard]},
+  {path: 'excelPersonal', component: ColaboradoresExcelCargaComponent, canActivate: [AuthGuard]},
   // Rutas de Dashboard y sus subcomponentes (protegidas con AuthGuard)
   //{ path: 'Dashboard', component: ContentComponent, canActivate: [AuthGuard] },
   { path: 'ValidacionFechas', component: FormSolicitudValidacionFechasComponent, canActivate: [AuthGuard] },

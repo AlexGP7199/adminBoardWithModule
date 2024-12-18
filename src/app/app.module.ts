@@ -28,6 +28,8 @@ import { FormSolicitudValidacionFechasComponent } from './form-solicitud-validac
 import { SolicitudPermisoComponent } from './solicitud-permiso/solicitud-permiso.component';
 import { NewUsuarioComponent } from './new-usuario/new-usuario.component';
 import { NewAmbulanciaComponent } from './new-ambulancia/new-ambulancia.component';
+import { AmbulanciasExcelUploadComponent } from './ambulancias-excel-upload/ambulancias-excel-upload.component';
+import { ColaboradoresExcelCargaComponent } from './colaboradores-excel-carga/colaboradores-excel-carga.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import { NewAmbulanciaComponent } from './new-ambulancia/new-ambulancia.componen
     FormSolicitudValidacionFechasComponent,
     SolicitudPermisoComponent,
     NewUsuarioComponent,
-    NewAmbulanciaComponent ,
+    NewAmbulanciaComponent,
+    AmbulanciasExcelUploadComponent,
+    ColaboradoresExcelCargaComponent,
 
   ],
   imports: [

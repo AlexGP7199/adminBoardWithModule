@@ -1,0 +1,54 @@
+<div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg p-6 mt-10">
+  <h2 class="text-2xl font-semibold text-gray-800 mb-6">Carga Masiva de Usuarios</h2>
+
+  <!-- Carga del Archivo -->
+  <div class="mb-4">
+    <input
+      type="file"
+      accept=".xlsx, .xls"
+      (change)="onFileChange($event)"
+      class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+    />
+  </div>
+
+  <!-- Tabla de Previsualización -->
+  <div *ngIf="usuarios.length > 0" class="overflow-x-auto">
+    <table class="w-full text-sm text-left text-gray-700 shadow-md rounded-lg">
+      <thead class="text-xs text-gray-700 uppercase bg-gray-100">
+        <tr>
+          <th class="px-4 py-3">Cédula</th>
+          <th class="px-4 py-3">Nombre</th>
+          <th class="px-4 py-3">Provincia</th>
+          <th class="px-4 py-3">Ambulancia</th>
+          <th class="px-4 py-3">Equipo</th>
+          <th class="px-4 py-3">Cargo</th>
+          <th class="px-4 py-3">Rol</th>
+          <th class="px-4 py-3">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let usuario of usuarios" class="bg-white border-b hover:bg-gray-50">
+          <td class="px-4 py-3">{{ usuario.cedula }}</td>
+          <td class="px-4 py-3">{{ usuario.nombre }}</td>
+          <td class="px-4 py-3">{{ usuario.provinciaId }}</td>
+          <td class="px-4 py-3">{{ usuario.ambulanciaId }}</td>
+          <td class="px-4 py-3">{{ usuario.teamId }}</td>
+          <td class="px-4 py-3">{{ usuario.cargoId }}</td>
+          <td class="px-4 py-3">{{ usuario.userRoleId }}</td>
+          <td class="px-4 py-3">{{ usuario.estado }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Botón para Enviar JSON -->
+  <div class="text-right mt-4">
+    <button
+      (click)="enviarUsuarios()"
+      [disabled]="usuarios.length === 0"
+      class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+    >
+      Enviar Usuarios
+    </button>
+  </div>
+</div>

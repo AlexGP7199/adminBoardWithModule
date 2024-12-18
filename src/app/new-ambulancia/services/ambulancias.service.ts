@@ -11,13 +11,16 @@ export class AmbulanciasService {
   constructor(private http: HttpClient) {}
 
   crearAmbulancia(ambulancia: any): Observable<any> {
-    return this.http.post(`${apiURL}/ambulancias/crear-ambulancia`, ambulancia);
+    return this.http.post(`${apiURL}/Ambulancias/crear-ambulancia`, ambulancia);
   }
 
   obtenerTiposAmbulancia(): Observable<any[]> {
-    return this.http.get<any[]>(`${apiURL}/ambulancias/tipos-ambulancias`);
+    return this.http.get<any[]>(`${apiURL}/Ambulancias/tipos-ambulancias`);
   }
 
+  obtenerTodasAmbulancias(): Observable<any[]> {
+    return this.http.get<any[]>(`${apiURL}/Ambulancias/all-Ambulancias`);
+  }
   obtenerAmbulancias(regionId?: number, provinciaId?: number): Observable<any[]> {
     const params: any = {};
     if (regionId) params.regionId = regionId;
@@ -36,5 +39,14 @@ export class AmbulanciasService {
       return this.http.put<any>(`${apiURL}/Ambulancias/editar-ambulancia/${id}`, ambulanciaActualizada);
     }
 
+     // Obtener todas las regiones
+  obtenerRegiones(): Observable<any[]> {
+    return this.http.get<any[]>(`${apiURL}/Ambulancias/all-regions`);
+  }
+
+  // Obtener todas las provincias
+  obtenerProvincias(): Observable<any[]> {
+    return this.http.get<any[]>(`${apiURL}/Ambulancias/all-provincias`);
+  }
 
 }

@@ -32,8 +32,8 @@ export class NewAmbulanciaComponent {
       regionId: ['', Validators.required],
       provinciaId: ['', Validators.required],
       tipoId: ['', Validators.required],
-      baseOperativa: ['', Validators.maxLength(100)],
-      georeferencia: ['', Validators.maxLength(50)],
+      baseOperativa: ['', Validators.maxLength(200)],
+      georeferencia: ['', Validators.maxLength(200)],
     });
   }
 
@@ -91,19 +91,19 @@ export class NewAmbulanciaComponent {
     // Obtener los datos de la ambulancia por ID
     this.ambulanciaService.obtenerAmbulanciaPorId(id).subscribe({
       next: (ambulancia) => {
-        console.log(ambulancia);
+        console.log(ambulancia.provincia.id);
         this.mostrarFormulario = true;
         this.ambulanciaEnEdicion = ambulancia; // Pasar al modo edición
         this.ambulanciaForm.patchValue({
           codigo: ambulancia.codigo,
           descripcion: ambulancia.descripcion,
-          regionId: ambulancia.regionId,
-          provinciaId: ambulancia.provinciaId,
-          tipoId: ambulancia.tipoId,
+          regionId: ambulancia.region.id,
+          provinciaId: ambulancia.provincia.id,
+          tipoId: ambulancia.tipo.id,
           baseOperativa: ambulancia.baseOperativa,
           georeferencia: ambulancia.georeferencia,
         });
-        this.cargarProvincias(ambulancia.regionId); // Cargar provincias asociadas
+        this.cargarProvincias(ambulancia.region.id); // Cargar provincias asociadas
       },
       error: () => {
         Swal.fire({
@@ -143,8 +143,10 @@ export class NewAmbulanciaComponent {
           });
       } else {
         // Modo creación
+        console.log('Ambulancias form ' + JSON.stringify(this.ambulanciaForm.value));
         this.ambulanciaService.crearAmbulancia(this.ambulanciaForm.value).subscribe({
           next: () => {
+
             Swal.fire({
               title: '¡Éxito!',
               text: 'Ambulancia creada con éxito.',
@@ -164,6 +166,7 @@ export class NewAmbulanciaComponent {
         });
       }
     } else {
+      //console.log(this.ambulanciaForm.value);
       Swal.fire({
         title: 'Formulario incompleto',
         text: 'Por favor, complete todos los campos requeridos.',
