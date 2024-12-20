@@ -19,6 +19,7 @@ import { SolicitudPermisoComponent } from './solicitud-permiso/solicitud-permiso
 import { NewUsuarioComponent } from './new-usuario/new-usuario.component';
 import { NewAmbulanciaComponent } from './new-ambulancia/new-ambulancia.component';
 import { ColaboradoresExcelCargaComponent } from './colaboradores-excel-carga/colaboradores-excel-carga.component';
+import { AmbulanciasExcelUploadComponent } from './ambulancias-excel-upload/ambulancias-excel-upload.component';
 
 const routes: Routes = [
 
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'NewUsuario', component: NewUsuarioComponent, canActivate: [AuthGuard]},
   { path: 'NewAmbulancia', component: NewAmbulanciaComponent, canActivate: [AuthGuard]},
   {path: 'excelPersonal', component: ColaboradoresExcelCargaComponent, canActivate: [AuthGuard]},
+  {path: 'excelAmbulancias', component: AmbulanciasExcelUploadComponent, canActivate: [AuthGuard] },
   // Rutas de Dashboard y sus subcomponentes (protegidas con AuthGuard)
   //{ path: 'Dashboard', component: ContentComponent, canActivate: [AuthGuard] },
   { path: 'ValidacionFechas', component: FormSolicitudValidacionFechasComponent, canActivate: [AuthGuard] },

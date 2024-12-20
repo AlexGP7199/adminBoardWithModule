@@ -9,18 +9,28 @@ import Swal from 'sweetalert2';
   styleUrl: './ambulancias-excel-upload.component.css'
 })
 export class AmbulanciasExcelUploadComponent implements OnInit {
+
   data: any[] = []; // Datos leídos del Excel
   regiones: any[] = [];
   provincias: any[] = [];
   regionMap: { [key: string]: number } = {};
   provinciaMap: { [key: string]: number } = {};
-
+  tiposAmbulancias: any[] = []; // Almacena los tipos de ambulancias obtenidos del backend
   constructor(private ambulanciaService: AmbulanciasService) {}
 
   ngOnInit(): void {
     this.cargarRegionesYProvincias();
+    this.cargarTiposAmbulancias(); // Carga los tipos de ambulancias
   }
 
+
+// Método para cargar los tipos de ambulancias
+cargarTiposAmbulancias(): void {
+  this.ambulanciaService.obtenerTiposAmbulancia().subscribe((tipos) => {
+    //console.log('Tipos de ambulancias cargados:', tipos);
+    this.tiposAmbulancias = tipos;
+  });
+}
   // Cargar regiones y provincias
   cargarRegionesYProvincias(): void {
     this.ambulanciaService.obtenerRegiones().subscribe((regiones) => {
@@ -38,6 +48,12 @@ export class AmbulanciasExcelUploadComponent implements OnInit {
         this.provinciaMap[provincia.nombre.toUpperCase()] = provincia.provinciaId;
       });
     });
+  }
+  obtenerNombreTipo(codigo: string): string {
+    if (!codigo) return 'Sin Tipo';
+    const prefijo = codigo.split('-')[0]?.toUpperCase();
+    const tipo = this.tiposAmbulancias.find((t) => t.nombre.toUpperCase() === prefijo);
+    return tipo ? `${tipo.nombre} (${tipo.descripcion})` : 'Sin Tipo';
   }
 
   // Leer el archivo Excel
@@ -71,35 +87,75 @@ export class AmbulanciasExcelUploadComponent implements OnInit {
       return;
     }
 
+    console.log('Procesando datos...');
     const solicitudes = this.data.map((row: any) => {
-      const tipoId = row['Tipo']; // Leer directamente la columna "Tipo"
+      const codigoPreposicion = row['Codigo de la Preposición']?.toString().trim() || '';
+      const prefijo = codigoPreposicion.split('-')[0]?.toUpperCase();
+      const tipoId = this.obtenerTipoIdPorPrefijo(prefijo);
+
+      const regionId = Number(row['Región']) || 0; // Leer ID de la región desde el Excel
+      const provinciaId = Number(row['Provincia']) || 0; // Leer ID de la provincia desde el Excel
+
+      // Validar si los IDs existen en los datos cargados
+      const regionValida = this.regiones.some((r) => r.regionId === regionId);
+      const provinciaValida = this.provincias.some((p) => p.provinciaId === provinciaId);
+
+      if (!regionValida) {
+        console.error(`Región no válida: ${regionId}`);
+      }
+      if (!provinciaValida) {
+        console.error(`Provincia no válida: ${provinciaId}`);
+      }
+
       return {
-        codigo: row['Codigo de la Preposición'],
-        descripcion: row['Descripcion'] || 'Sin descripción',
-        tipoId: this.validarTipoId(tipoId), // Validar si el tipoId es numérico
-        regionId: this.regionMap[row['Región']?.toUpperCase()] || 0,
-        provinciaId: this.provinciaMap[row['Provincia']?.toUpperCase()] || 0,
-        baseOperativa: row['Base Operativa'],
-        georeferencia: row['Georeferencia'],
+        codigo: codigoPreposicion,
+        descripcion: row['Descripcion']?.toString().trim() || 'SIN DESCRIPCIÓN',
+        tipoId: tipoId,
+        regionId: regionValida ? regionId : 0, // Asigna 0 si no es válida
+        provinciaId: provinciaValida ? provinciaId : 0, // Asigna 0 si no es válida
+        baseOperativa: row['Base Operativa']?.toString().trim() || 'SIN BASE OPERATIVA DESCRITA',
+        georeferencia: row['Georeferencia']?.toString().trim() || 'SIN GEOREFERENCIA',
       };
     });
 
     // Validar y enviar solicitudes
     solicitudes.forEach((solicitud) => {
       if (solicitud.regionId === 0 || solicitud.provinciaId === 0) {
-        console.error('Región o provincia no encontrada:', solicitud);
+        console.warn('Región o provincia inválida. No se enviará esta solicitud:', solicitud);
       } else {
-        console.log(solicitud);
-        /*
+        console.log('Solicitud válida:', solicitud);
+
         this.ambulanciaService.crearAmbulancia(solicitud).subscribe({
           next: () => console.log(`Ambulancia creada: ${solicitud.codigo}`),
           error: (err) => console.error(`Error al crear ${solicitud.codigo}:`, err),
-        }); */
+        });
+
       }
     });
 
     Swal.fire('Éxito', 'Datos procesados correctamente.', 'success');
   }
+
+
+
+  // Método para obtener el tipoId dinámicamente
+  private obtenerTipoIdPorPrefijo(codigoPreposicion: string): number {
+    console.log('Codigo a parsear ' + codigoPreposicion);
+    if (!codigoPreposicion) return 0;
+
+    // Extraer el prefijo antes del "-"
+    const prefijo = codigoPreposicion.split('-')[0]?.toUpperCase();
+    console.log('prefijo' + codigoPreposicion);
+    // Buscar en la lista de tipos cargados
+    console.log('Tiposs Ambulancias');
+    console.log(this.tiposAmbulancias);
+    const tipo = this.tiposAmbulancias.find((t) => t.nombre.toUpperCase() === prefijo);
+
+    // Retornar el ID del tipo o 0 si no se encuentra
+    return tipo ? tipo.id : 0;
+  }
+
+
 
   // Validar que el tipoId sea numérico
 validarTipoId(tipoId: any): number {

@@ -46,7 +46,17 @@ export class ColaboradoresExcelCargaComponent {
   }
 
   procesarExcel(excelData: any[]): void {
-    const palabrasClave = ["DISPONIBLE", "RECEPCION", "OFICINA REGIONAL", "BASE OPERATIVA"]; // Palabras clave a verificar
+    const palabrasClave = [
+      "DISPONIBLE",
+      "RECEPCION",
+      "OFICINA REGIONAL",
+      "BASE OPERATIVA",
+      "BASE OPERATIVO",
+      "LOGISTICA",
+      "OPERACIONES",
+      "BACKUP",
+      "HJPP",
+      "CRUE" ]; // Palabras clave a verificar
 
     const usuariosProcesados = excelData.map((row: any) => {
       const preposicion = row.Preposicion?.toUpperCase(); // Normaliza para evitar problemas con mayúsculas/minúsculas

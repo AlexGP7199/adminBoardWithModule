@@ -41,12 +41,12 @@ export class AmbulanciasService {
 
      // Obtener todas las regiones
   obtenerRegiones(): Observable<any[]> {
-    return this.http.get<any[]>(`${apiURL}/Ambulancias/all-regions`);
+    return this.http.get<any[]>(`${apiURL}/Region/all-regions`);
   }
 
   // Obtener todas las provincias
   obtenerProvincias(): Observable<any[]> {
-    return this.http.get<any[]>(`${apiURL}/Ambulancias/all-provincias`);
+    return this.http.get<any[]>(`${apiURL}/Province/all-provincias`);
   }
 
 }
