@@ -21,6 +21,7 @@ export class AmbulanciasService {
   obtenerTodasAmbulancias(): Observable<any[]> {
     return this.http.get<any[]>(`${apiURL}/Ambulancias/all-Ambulancias`);
   }
+
   obtenerAmbulancias(regionId?: number, provinciaId?: number): Observable<any[]> {
     const params: any = {};
     if (regionId) params.regionId = regionId;

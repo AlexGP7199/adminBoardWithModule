@@ -23,7 +23,6 @@ export class AmbulanciasExcelUploadComponent implements OnInit {
     this.cargarTiposAmbulancias(); // Carga los tipos de ambulancias
   }
 
-
 // Método para cargar los tipos de ambulancias
 cargarTiposAmbulancias(): void {
   this.ambulanciaService.obtenerTiposAmbulancia().subscribe((tipos) => {
@@ -31,6 +30,7 @@ cargarTiposAmbulancias(): void {
     this.tiposAmbulancias = tipos;
   });
 }
+
   // Cargar regiones y provincias
   cargarRegionesYProvincias(): void {
     this.ambulanciaService.obtenerRegiones().subscribe((regiones) => {
@@ -88,54 +88,73 @@ cargarTiposAmbulancias(): void {
     }
 
     console.log('Procesando datos...');
-    const solicitudes = this.data.map((row: any) => {
-      const codigoPreposicion = row['Codigo de la Preposición']?.toString().trim() || '';
-      const prefijo = codigoPreposicion.split('-')[0]?.toUpperCase();
-      const tipoId = this.obtenerTipoIdPorPrefijo(prefijo);
+    this.ambulanciaService.obtenerTodasAmbulancias().subscribe({
+      next: (ambulancias) => {
+        // Mapa de códigos existentes
+        const codigoMap = new Map(ambulancias.map((a: any) => [a.codigo, a.id]));
 
-      const regionId = Number(row['Región']) || 0; // Leer ID de la región desde el Excel
-      const provinciaId = Number(row['Provincia']) || 0; // Leer ID de la provincia desde el Excel
+        const solicitudes = this.data.map((row: any) => {
+          const codigoPreposicion = row['Codigo de la Preposición']?.toString().trim() || '';
+          const prefijo = codigoPreposicion.split('-')[0]?.toUpperCase();
+          const tipoId = this.obtenerTipoIdPorPrefijo(prefijo);
 
-      // Validar si los IDs existen en los datos cargados
-      const regionValida = this.regiones.some((r) => r.regionId === regionId);
-      const provinciaValida = this.provincias.some((p) => p.provinciaId === provinciaId);
+          const regionId = Number(row['Región']) || 0; // Leer ID de la región desde el Excel
+          const provinciaId = Number(row['Provincia']) || 0; // Leer ID de la provincia desde el Excel
 
-      if (!regionValida) {
-        console.error(`Región no válida: ${regionId}`);
-      }
-      if (!provinciaValida) {
-        console.error(`Provincia no válida: ${provinciaId}`);
-      }
+          // Validar si los IDs existen en los datos cargados
+          const regionValida = this.regiones.some((r) => r.regionId === regionId);
+          const provinciaValida = this.provincias.some((p) => p.provinciaId === provinciaId);
 
-      return {
-        codigo: codigoPreposicion,
-        descripcion: row['Descripcion']?.toString().trim() || 'SIN DESCRIPCIÓN',
-        tipoId: tipoId,
-        regionId: regionValida ? regionId : 0, // Asigna 0 si no es válida
-        provinciaId: provinciaValida ? provinciaId : 0, // Asigna 0 si no es válida
-        baseOperativa: row['Base Operativa']?.toString().trim() || 'SIN BASE OPERATIVA DESCRITA',
-        georeferencia: row['Georeferencia']?.toString().trim() || 'SIN GEOREFERENCIA',
-      };
-    });
+          if (!regionValida) {
+            console.error(`Región no válida: ${regionId}`);
+          }
+          if (!provinciaValida) {
+            console.error(`Provincia no válida: ${provinciaId}`);
+          }
 
-    // Validar y enviar solicitudes
-    solicitudes.forEach((solicitud) => {
-      if (solicitud.regionId === 0 || solicitud.provinciaId === 0) {
-        console.warn('Región o provincia inválida. No se enviará esta solicitud:', solicitud);
-      } else {
-        console.log('Solicitud válida:', solicitud);
-
-        this.ambulanciaService.crearAmbulancia(solicitud).subscribe({
-          next: () => console.log(`Ambulancia creada: ${solicitud.codigo}`),
-          error: (err) => console.error(`Error al crear ${solicitud.codigo}:`, err),
+          return {
+            codigo: codigoPreposicion,
+            descripcion: row['Descripcion']?.toString().trim() || 'SIN DESCRIPCIÓN',
+            tipoId: tipoId,
+            regionId: regionValida ? regionId : 0, // Asigna 0 si no es válida
+            provinciaId: provinciaValida ? provinciaId : 0, // Asigna 0 si no es válida
+            baseOperativa: row['Base Operativa']?.toString().trim() || 'SIN BASE OPERATIVA DESCRITA',
+            georeferencia: row['Georeferencia']?.toString().trim() || 'SIN GEOREFERENCIA',
+          };
         });
 
-      }
+        // Validar y enviar solicitudes
+        solicitudes.forEach((solicitud) => {
+          if (solicitud.regionId === 0 || solicitud.provinciaId === 0) {
+            console.warn('Región o provincia inválida. No se enviará esta solicitud:', solicitud);
+          } else {
+            const ambulanciaId = codigoMap.get(solicitud.codigo);
+            if (ambulanciaId) {
+              // Editar ambulancia existente
+              console.log('Editando ambulancia existente:', solicitud.codigo);
+              this.ambulanciaService.editarAmbulancia(ambulanciaId, solicitud).subscribe({
+                next: () => console.log(`Ambulancia actualizada: ${solicitud.codigo}`),
+                error: (err) => console.error(`Error al actualizar ${solicitud.codigo}:`, err),
+              });
+            } else {
+              // Crear nueva ambulancia
+              console.log('Creando nueva ambulancia:', solicitud.codigo);
+              this.ambulanciaService.crearAmbulancia(solicitud).subscribe({
+                next: () => console.log(`Ambulancia creada: ${solicitud.codigo}`),
+                error: (err) => console.error(`Error al crear ${solicitud.codigo}:`, err),
+              });
+            }
+          }
+        });
+
+        Swal.fire('Éxito', 'Datos procesados correctamente.', 'success');
+      },
+      error: (err) => {
+        Swal.fire('Error', 'No se pudo cargar las ambulancias existentes.', 'error');
+        console.error('Error al cargar ambulancias existentes:', err);
+      },
     });
-
-    Swal.fire('Éxito', 'Datos procesados correctamente.', 'success');
   }
-
 
 
   // Método para obtener el tipoId dinámicamente
@@ -155,14 +174,13 @@ cargarTiposAmbulancias(): void {
     return tipo ? tipo.id : 0;
   }
 
-
-
   // Validar que el tipoId sea numérico
 validarTipoId(tipoId: any): number {
   if (typeof tipoId === 'number' && tipoId > 0) {
     return tipoId;
   }
-  console.warn('Tipo de ambulancia no válido:', tipoId);
-  return 0; // Retorna 0 si no es válido
-}
+    console.warn('Tipo de ambulancia no válido:', tipoId);
+    return 0; // Retorna 0 si no es válido
+  }
+
 }
