@@ -81,7 +81,12 @@ export class NewUsuarioComponent  implements OnInit {
       this.equipos = data.equipos;
       this.roles = data.roles;
       this.cargos = data.cargos;
+      console.log('Veamos que leemos');
+    console.log(this.roles);
+    console.log(this.equipos);
+    console.log(this.cargos);
     });
+
   }
 
   cargarUsuarios(): void {

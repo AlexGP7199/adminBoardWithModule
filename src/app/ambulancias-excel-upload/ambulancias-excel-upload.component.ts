@@ -91,7 +91,7 @@ cargarTiposAmbulancias(): void {
     this.ambulanciaService.obtenerTodasAmbulancias().subscribe({
       next: (ambulancias) => {
         // Mapa de códigos existentes
-        const codigoMap = new Map(ambulancias.map((a: any) => [a.codigo, a.id]));
+        const codigoMap = new Map(ambulancias.map((a: any) => [a.codigo.trim(), a.id]));
 
         const solicitudes = this.data.map((row: any) => {
           const codigoPreposicion = row['Codigo de la Preposición']?.toString().trim() || '';
