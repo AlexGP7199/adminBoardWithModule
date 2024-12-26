@@ -57,11 +57,11 @@ export class FormSolicitudValidacionFechasComponent implements OnInit {
     if (this.usuario && this.usuario.usuarioId) {
       this.validarFechasEstudioRequest.usuarioId = parseInt(this.usuario.usuarioId, 10); // Asignar el userId al objeto de solicitud
     } else {
-      console.warn('No se encontró el userId en el localStorage.');
+      console.warn('No se encontró el user.');
     }
 
   } else {
-    console.error('El token no se pudo decodificar o no existe.');
+    //console.error('El token no se pudo decodificar o no existe.');
     this.authService.logout(); // Redirige al login si no hay un token válido
   }
 }

@@ -24,7 +24,7 @@ export class AuthService {
 
   // Método para actualizar el conflicto aprobado
   setConflictoAprobado(data: any) {
-    localStorage.setItem('conflictoAprobado', JSON.stringify(data));
+    sessionStorage.setItem('conflictoAprobado', JSON.stringify(data));
     this.conflictoAprobadoSubject.next(data);
   }
 
@@ -33,7 +33,7 @@ export class AuthService {
       tap((response) => {
         if (response && response.token) {
           // Guarda el token y los demás datos en localStorage
-          localStorage.setItem(this.tokenKey, response.token);
+          sessionStorage.setItem(this.tokenKey, response.token);
           //localStorage.setItem('usuarioId', response.usuarioId.toString());
           //localStorage.setItem('token', response.token);
           //localStorage.setItem('nombre', response.nombre);
@@ -53,7 +53,7 @@ export class AuthService {
 
   logout(): void {
     // Limpia los datos de localStorage
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     //localStorage.removeItem('nombre');
     //localStorage.removeItem('cedula');
     //localStorage.removeItem('role');
@@ -70,7 +70,7 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+    return sessionStorage.getItem(this.tokenKey);
   }
 
    // Decodificar el token

@@ -17,6 +17,8 @@ export class HeaderComponent {
   ngOnInit(): void {
     this.nombre = this.authService.getNombre();
     this.rol = this.authService.getRole();
+
+
   }
 
   toggleDropdown() {

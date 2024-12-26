@@ -42,8 +42,8 @@ export class SidenavComponent {
         // Actualizar el estado del botón
         this.habilitarApartado = tieneConflictoAprobado;
 
-        // Guardar en LocalStorage
-        localStorage.setItem(
+        // Guardar en Session Storage
+        sessionStorage.setItem(
           'conflictoAprobado',
           JSON.stringify({
             tieneConflictoAprobado: tieneConflictoAprobado,

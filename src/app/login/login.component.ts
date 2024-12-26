@@ -76,8 +76,8 @@ export class LoginComponent implements OnInit {
       next: (conflictoResponse) => {
         const tieneConflictoAprobado = conflictoResponse.tieneConflictoAprobado;
 
-        // Guardar en LocalStorage
-        localStorage.setItem(
+        // Guardar en Session
+        sessionStorage.setItem(
           'conflictoAprobado',
           JSON.stringify({
             tieneConflictoAprobado: tieneConflictoAprobado,

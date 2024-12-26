@@ -110,10 +110,10 @@ export class TableroUsuariosComponent {
 
   obtenerDatosLocalStorage(): any {
     const userData: any = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
       if (key) {
-        userData[key] = localStorage.getItem(key);
+        userData[key] = sessionStorage.getItem(key);
       }
     }
     return userData;

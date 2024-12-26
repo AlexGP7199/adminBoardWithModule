@@ -33,13 +33,13 @@ export class UsuarioService {
     if (teamId) params = params.set('teamId', teamId.toString());
     if (nivelUsuario) params = params.set('nivelUser', nivelUsuario.toString()); // Añadir el nivel como parámetro
     // Log de los parámetros que estamos enviando
-  console.log('Parametros enviados:', {
+  /*console.log('Parametros enviados:', {
     //regionId,
     //provinciaId,
     //teamId,
     //nivelUsuario,
     params: params.toString()
-  });
+  }); */
     return this.http.get<any[]>(`${apiURL}/User/listar-usuarios-filtrados?`, { params });
   }
 
