@@ -4,6 +4,7 @@ import { Conflicto, ConflictosAgrupadosResponse, Team, TipoAmbulancia } from './
 import Swal from 'sweetalert2';
 import { UsuarioService } from '../tablero-usuarios/services/usuario.service';
 import { AuthService } from '../services/auth.service';
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-tablero-conflictos',
@@ -55,7 +56,7 @@ export class TableroConflictosComponent implements OnInit {
 
 
   ngOnInit(): void {
-
+    initFlowbite();
     //this.userData = this.obtenerDatosLocalStorage();
     this.userData = this.authService.getDecodedToken();
     //console.log(this.userData);

@@ -11,10 +11,14 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit {
   title = 'adminBoardWithModule';
 
+
+  isSidenavHidden = false; // Controla si el sidenav está oculto
+
   constructor(public authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
     initFlowbite();
+
     this.checkAuthentication();
   }
 
@@ -23,5 +27,9 @@ export class AppComponent implements OnInit {
     if (!this.authService.isLoggedIn()) {
       this.router.navigate(['/login']);
     }
+  }
+
+  toggleSidenav() {
+    this.isSidenavHidden = !this.isSidenavHidden;
   }
 }

@@ -3,6 +3,7 @@
     import * as XLSX from 'xlsx';
     import { ConflictoService } from '../tablero-conflictos/services/conflicto.service';
 import { AuthService } from '../services/auth.service';
+import { initFlowbite } from 'flowbite';
 
     @Component({
       selector: 'app-horarios',
@@ -33,6 +34,7 @@ import { AuthService } from '../services/auth.service';
       constructor(private conflictoService: ConflictoService, private authService: AuthService ) {}
 
       ngOnInit(): void {
+        initFlowbite();
         this.obtenerInformacionUsuario();
         this.cargarConflictos();
       }

@@ -12,6 +12,7 @@ export class HeaderComponent {
   rol: string | null = '';
   isDropdownVisible: boolean = false;
 
+
   constructor(public authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
