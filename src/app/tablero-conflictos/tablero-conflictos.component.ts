@@ -58,7 +58,7 @@ export class TableroConflictosComponent implements OnInit {
 
     //this.userData = this.obtenerDatosLocalStorage();
     this.userData = this.authService.getDecodedToken();
-    console.log(this.userData);
+    //console.log(this.userData);
     this.nivelUsuario = parseInt(this.userData.nivel, 10) || 0;
 
     if (this.nivelUsuario === 1) {
@@ -110,7 +110,7 @@ obtenerConflictosAgrupados(): void {
 
   this.conflictosService.filtrarConflictosAgrupados(params).subscribe(
     (response: TipoAmbulancia[]) => {
-      console.log('Datos recibidos del backend:', response);
+      //console.log('Datos recibidos del backend:', response);
 
       // Limpiar la lista antes de procesar la nueva respuesta
       this.conflictosAgrupados = [];
@@ -124,7 +124,7 @@ obtenerConflictosAgrupados(): void {
             expanded: false, // Añade la propiedad 'expanded' a cada equipo
           })),
         }));
-        console.log('Datos procesados y guardados en conflictosAgrupados:', this.conflictosAgrupados);
+        //console.log('Datos procesados y guardados en conflictosAgrupados:', this.conflictosAgrupados);
       } else {
         Swal.fire('Sin resultados', 'No se encontraron conflictos agrupados.', 'info');
       }
@@ -178,7 +178,7 @@ alternarExpandirEquipo(team: Team): void {
   }
 
   obtenerConflictos(): void {
-    //console.log(this.validarFechas());
+    ////console.log(this.validarFechas());
     if (!this.validarFechas()) return;
 
     const teamId = this.selectedTeam !== null ? this.selectedTeam : undefined;
@@ -228,7 +228,7 @@ alternarExpandirEquipo(team: Team): void {
   verDetalleSolicitud(solicitudId: number): void {
     this.conflictosService.obtenerDetalleSolicitud(solicitudId).subscribe({
       next: (response: any) => {
-        console.log('Detalle de la solicitud:', response);
+        //console.log('Detalle de la solicitud:', response);
 
         this.detalleSolicitud = {
           usuarioNombre: response.nombreUsuario,

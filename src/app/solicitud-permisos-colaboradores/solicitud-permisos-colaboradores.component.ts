@@ -106,7 +106,7 @@ export class SolicitudPermisosColaboradoresComponent {
     if (this.formulario.valid) {
       const formData = this.formulario.value;
       const jsonFormData = JSON.stringify(formData, null, 2);
-      console.log("Información a enviar (JSON):", jsonFormData);
+      //console.log("Información a enviar (JSON):", jsonFormData);
 
       Swal.fire({
         title: 'Formulario enviado',

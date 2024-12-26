@@ -49,10 +49,10 @@ export class NewUsuarioComponent  implements OnInit {
   filtrarUsuarios(): void {
     const regionId = this.regionSeleccionada || undefined;
     const provinciaId = this.provinciaSeleccionada || undefined;
-    console.log(regionId);
-    console.log(provinciaId);
+    //console.log(regionId);
+    //console.log(provinciaId);
     this.usuarioService.obtenerUsuarios(regionId, provinciaId).subscribe((response) => {
-      console.log('Usuarios filtrados:', response.Usuarios);
+      //console.log('Usuarios filtrados:', response.Usuarios);
       this.usuarios = response.Usuarios;
     });
   }
@@ -64,7 +64,7 @@ export class NewUsuarioComponent  implements OnInit {
   }
 
   cargarProvincias(regionId: number): void {
-    console.log('Cargar provincias de la region ' + regionId);
+    //console.log('Cargar provincias de la region ' + regionId);
     this.usuarioService.obtenerProvinciasPorRegion(regionId).subscribe((provincias) => {
       this.provincias = provincias;
     });
@@ -81,10 +81,10 @@ export class NewUsuarioComponent  implements OnInit {
       this.equipos = data.equipos;
       this.roles = data.roles;
       this.cargos = data.cargos;
-      console.log('Veamos que leemos');
-    console.log(this.roles);
-    console.log(this.equipos);
-    console.log(this.cargos);
+      //console.log('Veamos que leemos');
+    //console.log(this.roles);
+    //console.log(this.equipos);
+    //console.log(this.cargos);
     });
 
   }
@@ -103,8 +103,8 @@ export class NewUsuarioComponent  implements OnInit {
 
   onRegionChange(): void {
     const regionId = this.usuarioForm.value.regionId;
-    console.log('Hi')
-    console.log(regionId);
+    //console.log('Hi')
+    //console.log(regionId);
     this.cargarProvincias(regionId);
     this.provincias = [];
     this.ambulancias = [];
@@ -118,7 +118,7 @@ export class NewUsuarioComponent  implements OnInit {
 
   onFilterRegionChange(): void {
     if (this.regionSeleccionada) {
-      console.log('Cambio detectado en el filtro de región:', this.regionSeleccionada);
+      //console.log('Cambio detectado en el filtro de región:', this.regionSeleccionada);
       this.cargarProvincias(this.regionSeleccionada); // Actualiza las provincias según la región seleccionada
       this.provinciaSeleccionada = null; // Reinicia la provincia seleccionada
     }
@@ -126,7 +126,7 @@ export class NewUsuarioComponent  implements OnInit {
   }
 
   onFilterProvinciaChange(): void {
-    console.log('Cambio detectado en el filtro de provincia:', this.provinciaSeleccionada);
+    //console.log('Cambio detectado en el filtro de provincia:', this.provinciaSeleccionada);
     this.filtrarUsuarios(); // Actualiza la tabla de usuarios
   }
 

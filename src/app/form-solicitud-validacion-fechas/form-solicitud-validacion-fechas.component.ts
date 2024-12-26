@@ -129,10 +129,10 @@ enviarFormulario(): void {
   this.usuarioService.validarFechasEstudio(this.validarFechasEstudioRequest).subscribe(
     (response) => {
       Swal.fire('Éxito', response.mensaje, 'success');
-      console.log('Respuesta del servidor:', response);
+      //console.log('Respuesta del servidor:', response);
 
       const conflictoId =  response.conflictoId;
-      console.log('ID delconflicto:', conflictoId);
+      //console.log('ID delconflicto:', conflictoId);
 
       if (conflictoId) {
         this.subirImagen(conflictoId);

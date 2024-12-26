@@ -24,7 +24,7 @@ export class SidenavComponent {
     this.rol = this.authService.getRole();
     //console.log("su rol es: " + this.rol);
     this.team = this.authService.getTeam();
-    console.log("su team es: " + this.team);
+    //console.log("su team es: " + this.team);
     this.nivelUsuario = this.authService.getNivel();
 
     // Verificar conflictos aprobados

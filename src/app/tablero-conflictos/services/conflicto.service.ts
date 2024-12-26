@@ -80,7 +80,7 @@ export class ConflictoService {
   }
 
   actualizarEstatus(conflictoId: number, nuevoEstatus: string) {
-    console.log(nuevoEstatus);
+    //console.log(nuevoEstatus);
     return this.http.patch<any>(`${apiURL}/User/actualizar-estatus/${conflictoId}`, nuevoEstatus, {
       headers: { 'Content-Type': 'application/json' }
     });

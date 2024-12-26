@@ -26,7 +26,7 @@ export class AmbulanciasExcelUploadComponent implements OnInit {
 // Método para cargar los tipos de ambulancias
 cargarTiposAmbulancias(): void {
   this.ambulanciaService.obtenerTiposAmbulancia().subscribe((tipos) => {
-    //console.log('Tipos de ambulancias cargados:', tipos);
+    ////console.log('Tipos de ambulancias cargados:', tipos);
     this.tiposAmbulancias = tipos;
   });
 }
@@ -74,7 +74,7 @@ cargarTiposAmbulancias(): void {
       const ws: XLSX.WorkSheet = wb.Sheets[wsname];
 
       this.data = XLSX.utils.sheet_to_json(ws);
-      console.log('Datos del Excel:', this.data);
+      //console.log('Datos del Excel:', this.data);
     };
 
     reader.readAsBinaryString(target.files[0]);
@@ -87,7 +87,7 @@ cargarTiposAmbulancias(): void {
       return;
     }
 
-    console.log('Procesando datos...');
+   ('Procesando datos...');
     this.ambulanciaService.obtenerTodasAmbulancias().subscribe({
       next: (ambulancias) => {
         // Mapa de códigos existentes
@@ -131,17 +131,17 @@ cargarTiposAmbulancias(): void {
             const ambulanciaId = codigoMap.get(solicitud.codigo);
             if (ambulanciaId) {
               // Editar ambulancia existente
-              console.log('Editando ambulancia existente:', solicitud.codigo);
+              //console.log('Editando ambulancia existente:', solicitud.codigo);
               this.ambulanciaService.editarAmbulancia(ambulanciaId, solicitud).subscribe({
-                next: () => console.log(`Ambulancia actualizada: ${solicitud.codigo}`),
-                error: (err) => console.error(`Error al actualizar ${solicitud.codigo}:`, err),
+                next: () => console.log(),
+                error: (err) => console.error(`Error al actualizar`, err),
               });
             } else {
               // Crear nueva ambulancia
-              console.log('Creando nueva ambulancia:', solicitud.codigo);
+              //console.log('Creando nueva ambulancia:', solicitud.codigo);
               this.ambulanciaService.crearAmbulancia(solicitud).subscribe({
-                next: () => console.log(`Ambulancia creada: ${solicitud.codigo}`),
-                error: (err) => console.error(`Error al crear ${solicitud.codigo}:`, err),
+                next: () => console.log(`Ambulancia creada`),
+                error: (err) => console.error(`Error al crear`, err),
               });
             }
           }
@@ -159,15 +159,15 @@ cargarTiposAmbulancias(): void {
 
   // Método para obtener el tipoId dinámicamente
   private obtenerTipoIdPorPrefijo(codigoPreposicion: string): number {
-    console.log('Codigo a parsear ' + codigoPreposicion);
+    //console.log('Codigo a parsear ' + codigoPreposicion);
     if (!codigoPreposicion) return 0;
 
     // Extraer el prefijo antes del "-"
     const prefijo = codigoPreposicion.split('-')[0]?.toUpperCase();
-    console.log('prefijo' + codigoPreposicion);
+    //console.log('prefijo' + codigoPreposicion);
     // Buscar en la lista de tipos cargados
-    console.log('Tiposs Ambulancias');
-    console.log(this.tiposAmbulancias);
+    //console.log('Tiposs Ambulancias');
+    //console.log(this.tiposAmbulancias);
     const tipo = this.tiposAmbulancias.find((t) => t.nombre.toUpperCase() === prefijo);
 
     // Retornar el ID del tipo o 0 si no se encuentra

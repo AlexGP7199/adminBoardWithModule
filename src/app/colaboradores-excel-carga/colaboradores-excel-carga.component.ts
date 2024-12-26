@@ -94,7 +94,7 @@ export class ColaboradoresExcelCargaComponent {
     });
 
     this.usuarios = usuariosProcesados;
-    console.log('Usuarios procesados:', this.usuarios);
+    //console.log('Usuarios procesados:', this.usuarios);
   }
   // Método para generar un UID único con 11 dígitos
 private generarCedulaFicticia(): string {

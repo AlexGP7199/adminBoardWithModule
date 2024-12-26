@@ -52,7 +52,7 @@ export class SolicitudPermisoComponent implements OnInit {
   }
 
   obtenerSolicitudesActivasConValidacion(): void {
-    console.log('entre aqui 1');
+    //console.log('entre aqui 1');
     this.conflictoService.verificarSolicitudesActivas(this.usuarioId).subscribe(
       (response: any) => {
         this.tieneSolicitudesActivas = response.tieneSolicitudesActivas;
@@ -67,16 +67,16 @@ export class SolicitudPermisoComponent implements OnInit {
           this.conflictoService.obtenerDetalleSolicitud(solicitud.id).subscribe(
             (detalle: any) => {
               if (detalle && detalle.conflictoDetalles) {
-                console.log('entre aqui en el If detalle 2');
-                console.log(detalle);
+                //console.log('entre aqui en el If detalle 2');
+                //console.log(detalle);
 
                 // Si no hay detalles habilitados, conflictoDetalles estará vacío
                 const tieneDetallesHabilitados = detalle.conflictoDetalles.length > 0;
-                console.log('Detalles habilitados:', tieneDetallesHabilitados);
+                //console.log('Detalles habilitados:', tieneDetallesHabilitados);
 
                 // Verificar condiciones
                 if (!tieneDetallesHabilitados || fechaFin < hoy) {
-                  console.log('entre aqui 3');
+                  //console.log('entre aqui 3');
                   this.finalizarSolicitud(
                     solicitud.id,
                     'Finalizada',
@@ -108,7 +108,7 @@ export class SolicitudPermisoComponent implements OnInit {
 
     this.conflictoService.actualizarEstadoSolicitud(solicitudId, request).subscribe(
       (response: any) => {
-        console.log(`Solicitud ${solicitudId} finalizada automáticamente:`, response.Message);
+        //console.log(`Solicitud ${solicitudId} finalizada automáticamente:`, response.Message);
         Swal.fire('Éxito', `La solicitud ${solicitudId} se finalizó automáticamente.`, 'success');
         this.obtenerSolicitudesActivas(); // Refrescar la lista de solicitudes activas
       },

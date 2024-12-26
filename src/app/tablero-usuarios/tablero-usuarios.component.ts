@@ -203,11 +203,11 @@ export class TableroUsuariosComponent {
       (response) => {
         Swal.fire('Éxito', response.mensaje, 'success');
          // Obtener el ID del conflicto desde la respuesta
-      console.log('Respuesta del server');
-      console.log(response);
+      //console.log('Respuesta del server');
+      //console.log(response);
       const conflictoId = response.conflictoId;
-      console.log('Aqui el id dle conflico o algo')
-      console.log(conflictoId);
+      //console.log('Aqui el id dle conflico o algo')
+      //console.log(conflictoId);
       if (conflictoId && this.imagenSeleccionada) {
         // Si hay un archivo seleccionado, subirlo
         this.subirImagen(conflictoId);
@@ -305,7 +305,7 @@ export class TableroUsuariosComponent {
       this.nivelUsuario
     ).subscribe(
       (usuarios) =>{(this.usuariosFiltrados = usuarios);
-      console.log(usuarios)},
+      console.log()},
       (error) => console.error('Error al filtrar usuarios:', error)
     );
   }
