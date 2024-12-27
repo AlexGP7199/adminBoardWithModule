@@ -82,6 +82,14 @@ export class AuthService {
     return null;
   }
 
+  getHabilitarApartado(): boolean {
+    const conflictoData = sessionStorage.getItem('conflictoAprobado');
+    if (conflictoData) {
+      const parsedData = JSON.parse(conflictoData);
+      return parsedData.tieneConflictoAprobado || false;
+    }
+    return false; // Valor predeterminado si no está definido
+  }
 
   isLoggedIn(): boolean {
     const token = this.getToken();

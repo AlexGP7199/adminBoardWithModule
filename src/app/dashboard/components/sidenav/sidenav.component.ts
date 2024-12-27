@@ -38,7 +38,8 @@ export class SidenavComponent {
     this.conflictoService.verificarConflictosAprobados(usuarioId).subscribe({
       next: (conflictoResponse) => {
         const tieneConflictoAprobado = conflictoResponse.tieneConflictoAprobado;
-
+        //console.log('klk');
+        //console.log(conflictoResponse);
         // Actualizar el estado del botón
         this.habilitarApartado = tieneConflictoAprobado;
 
@@ -47,7 +48,7 @@ export class SidenavComponent {
           'conflictoAprobado',
           JSON.stringify({
             tieneConflictoAprobado: tieneConflictoAprobado,
-            detalles: conflictoResponse.Detalles || [],
+            detalles: conflictoResponse.detalles || [],
           })
         );
       },
