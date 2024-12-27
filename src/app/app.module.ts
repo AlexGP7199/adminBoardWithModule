@@ -7,7 +7,7 @@ import { DasboardModule } from './dashboard/dasboard.module';
 import { LoginComponent } from './login/login.component';
 import { AgentesComponent } from './agentes/agentes.component';
 import { HorariosComponent } from './horarios/horarios.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { CedulaFilterPipe } from './pipes/cedula-filter.pipe';
 import { NombreFilterPipe } from './pipes/nombre-filter.pipe';
 import { FormsModule } from '@angular/forms';
@@ -30,6 +30,8 @@ import { NewUsuarioComponent } from './new-usuario/new-usuario.component';
 import { NewAmbulanciaComponent } from './new-ambulancia/new-ambulancia.component';
 import { AmbulanciasExcelUploadComponent } from './ambulancias-excel-upload/ambulancias-excel-upload.component';
 import { ColaboradoresExcelCargaComponent } from './colaboradores-excel-carga/colaboradores-excel-carga.component';
+import { SpinnerComponent } from './spinner/spinner.component';
+import { HttpRequestInterceptor } from './services/interceptors/http.interceptor';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,7 @@ import { ColaboradoresExcelCargaComponent } from './colaboradores-excel-carga/co
     NewAmbulanciaComponent,
     AmbulanciasExcelUploadComponent,
     ColaboradoresExcelCargaComponent,
+    SpinnerComponent,
 
   ],
   imports: [
@@ -65,7 +68,11 @@ import { ColaboradoresExcelCargaComponent } from './colaboradores-excel-carga/co
     ReactiveFormsModule
 
   ],
-  providers: [loginAuthGuard, AuthGuard],
+  providers: [loginAuthGuard, AuthGuard,  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: HttpRequestInterceptor,
+    multi: true,
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

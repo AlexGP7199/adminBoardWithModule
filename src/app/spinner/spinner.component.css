@@ -1,0 +1,7 @@
+/* Spinner adicional si lo necesitas */
+.spinner-border {
+  border-top-color: #3498db; /* Color azul */
+  border-right-color: transparent;
+  border-bottom-color: #3498db;
+  border-left-color: transparent;
+}

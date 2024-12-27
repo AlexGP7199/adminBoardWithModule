@@ -1,0 +1,12 @@
+<div
+  *ngIf="isLoading | async"
+  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+>
+  <div class="flex items-center justify-center">
+    <div
+      class="spinner-border animate-spin inline-block w-12 h-12 border-4 rounded-full text-white"
+      role="status"
+    ></div>
+    <span class="text-white text-lg ml-4">Cargando...</span>
+  </div>
+</div>
