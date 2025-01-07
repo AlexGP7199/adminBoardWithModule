@@ -2,8 +2,8 @@
     import Swal from 'sweetalert2';
     import * as XLSX from 'xlsx';
     import { ConflictoService } from '../tablero-conflictos/services/conflicto.service';
-import { AuthService } from '../services/auth.service';
-import { initFlowbite } from 'flowbite';
+    import { AuthService } from '../services/auth.service';
+    import { initFlowbite } from 'flowbite';
 
     @Component({
       selector: 'app-horarios',
@@ -15,6 +15,7 @@ import { initFlowbite } from 'flowbite';
       conflictosEnProceso: any[] = [];
       conflictosAprobados: any[] = [];
       conflictosRechazados: any[] = [];
+      conflictosFinalizados: any[] = []; // NUEVO ESTADO
 
       // Variables para información del usuario
       cedula: string = '';
@@ -25,12 +26,18 @@ import { initFlowbite } from 'flowbite';
       usuarioTeam: string = '';
       usuarioId: number = 0;
 
-      estadosExpandibles: { [key in 'pendientes' | 'enProceso' | 'aprobados' | 'rechazados']: boolean } = {
+      estadosExpandibles: { [key in 'pendientes' | 'enProceso' | 'aprobados' | 'rechazados' | 'finalizados']: boolean } = {
         pendientes: false,
         enProceso: false,
         aprobados: false,
-        rechazados: false
+        rechazados: false,
+        finalizados: false // NUEVO ESTADO
       };
+
+      // Estado expandible por conflicto
+      detallesExpandibles: { [key: string]: boolean } = {};
+
+
       constructor(private conflictoService: ConflictoService, private authService: AuthService ) {}
 
       ngOnInit(): void {
@@ -39,11 +46,14 @@ import { initFlowbite } from 'flowbite';
         this.cargarConflictos();
       }
 
-      // La clave `estado` ahora tiene un tipo específico
-  toggleEstado(estado: 'pendientes' | 'enProceso' | 'aprobados' | 'rechazados'): void {
-    this.estadosExpandibles[estado] = !this.estadosExpandibles[estado];
-  }
+    // Manejar la expansión de los estados
+    toggleEstado(estado: 'pendientes' | 'enProceso' | 'aprobados' | 'rechazados' | 'finalizados'): void {
+      this.estadosExpandibles[estado] = !this.estadosExpandibles[estado];
+    }
 
+    toggleDetalles(conflictoId: string): void {
+      this.detallesExpandibles[conflictoId] = !this.detallesExpandibles[conflictoId];
+    }
 
       obtenerInformacionUsuario(): void {
         const decodedToken = this.authService.getDecodedToken();
@@ -69,20 +79,23 @@ import { initFlowbite } from 'flowbite';
 
         this.conflictoService.obtenerConflictosUsuario(this.usuarioId).subscribe(
           (data) => {
+            console.log(data);
             if (data && typeof data === 'object' && 'Message' in data) {
               Swal.fire('Información', data.Message, 'info');
             } else if (Array.isArray(data)) {
+              console.log(data);
               // Procesar cada conflicto y agrupar según el estatus
               this.conflictosPendientes = data.filter((c: any) => c.estatus === 'Pendiente');
               this.conflictosEnProceso = data.filter((c: any) => c.estatus === 'En Proceso');
               this.conflictosAprobados = data.filter((c: any) => c.estatus === 'Aprobado');
               this.conflictosRechazados = data.filter((c: any) => c.estatus === 'Rechazado');
+              this.conflictosFinalizados = data.filter((c: any) => c.estatus === 'Finalizado'); // NUEVO FILTRO
             } else {
               Swal.fire('Advertencia', 'La respuesta del servidor no tiene el formato esperado.', 'warning');
             }
           },
           (error) => {
-            console.error('Error al cargar conflictos:', error);
+            //console.error('Error al cargar conflictos:', error);
             Swal.fire('Error', 'Ocurrió un error al cargar los conflictos.', 'error');
           }
         );

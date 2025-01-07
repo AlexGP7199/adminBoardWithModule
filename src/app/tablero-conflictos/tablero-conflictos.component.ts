@@ -264,7 +264,8 @@ alternarExpandirEquipo(team: Team): void {
     //console.log(teamName);
     this.detalleUsuario = {
       ...conflicto,
-      teamName // Añadimos el nombre del equipo al detalle del usuario
+      teamName, // Añadimos el nombre del equipo al detalle del usuario
+      estatusInicial: conflicto.estatus,
     };
     //console.log(this.detalleUsuario.teamName);
     /*

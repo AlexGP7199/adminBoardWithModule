@@ -25,18 +25,29 @@
       <div *ngIf="estadosExpandibles.pendientes" class="p-4 bg-white">
         <ul>
           <li *ngFor="let conflicto of conflictosPendientes" class="p-2 mb-2 border-b">
-            <h4 class="font-semibold mb-2">Conflicto Generado el: {{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}</h4>
-            <ul>
-              <li *ngFor="let detalle of conflicto.detalles">
-                <p><strong>Fecha de Conflicto:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
-                <p><strong>Motivo:</strong> {{ detalle.motivo }}</p>
-                <p><strong>Detalles:</strong> {{ detalle.detallesAdicionales }}</p>
-                <hr class="my-2">
-              </li>
-            </ul>
+            <h4 class="font-semibold mb-2">
+              Conflicto Generado el: {{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}
+            </h4>
+            <button
+              class="text-blue-500 hover:underline"
+              (click)="toggleDetalles(conflicto.id)"
+            >
+              {{ detallesExpandibles[conflicto.id] ? 'Contraer' : 'Expandir' }} Detalles
+            </button>
+            <div *ngIf="detallesExpandibles[conflicto.id]" class="mt-4">
+              <ul>
+                <li *ngFor="let detalle of conflicto.detalles" class="mb-2">
+                  <p><strong>Fecha de Conflicto:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
+                  <p><strong>Motivo:</strong> {{ detalle.motivo }}</p>
+                  <p><strong>Detalles:</strong> {{ detalle.detallesAdicionales }}</p>
+                  <hr class="my-2">
+                </li>
+              </ul>
+            </div>
           </li>
         </ul>
       </div>
+
     </div>
 
     <!-- Estado: En Proceso -->
@@ -113,5 +124,31 @@
         </ul>
       </div>
     </div>
+
+    <!-- Estado: Finalizados
+<div class="w-full border rounded-lg shadow-md">
+  <div class="p-4 bg-gray-100 flex justify-between items-center">
+    <h3 class="text-lg font-semibold text-gray-700">Finalizados</h3>
+    <button (click)="toggleEstado('finalizados')" class="text-gray-700 hover:underline">
+      {{ estadosExpandibles.finalizados ? 'Contraer' : 'Expandir' }}
+    </button>
+  </div>
+  <div *ngIf="estadosExpandibles.finalizados" class="p-4 bg-white">
+    <ul>
+      <li *ngFor="let conflicto of conflictosFinalizados" class="p-2 mb-2 border-b">
+        <h4 class="font-semibold mb-2">Conflicto Generado el: {{ conflicto.fechaGeneracion | date: 'dd-MM-yyyy' }}</h4>
+        <ul>
+          <li *ngFor="let detalle of conflicto.detalles">
+            <p><strong>Fecha de Conflicto:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
+            <p><strong>Motivo:</strong> {{ detalle.motivo }}</p>
+            <p><strong>Detalles:</strong> {{ detalle.detallesAdicionales }}</p>
+            <hr class="my-2">
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+-->
   </div>
 </div>

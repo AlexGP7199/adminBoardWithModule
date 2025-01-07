@@ -148,18 +148,26 @@
       <p><strong>Provincia:</strong> {{ detalleUsuario?.provincia }}</p>
 
       <!-- Cambiar Estatus -->
-      <div class="absolute bottom-4 right-4 flex items-center space-x-2">
-        <label class="block text-sm font-medium text-gray-700">Cambiar Estatus:</label>
-        <select [(ngModel)]="detalleUsuario.estatus" class="input bg-gray-200 border border-gray-300 text-gray-700 rounded focus:ring-blue-500 focus:border-blue-500">
-          <option *ngFor="let estado of estatusList" [value]="estado">{{ estado }}</option>
-        </select>
-        <button
-          (click)="cambiarEstatus(detalleUsuario.conflictoId, detalleUsuario.estatus)"
-          class="bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-150"
-        >
-          Cambiar
-        </button>
-      </div>
+<!-- Cambiar Estatus -->
+<div class="absolute bottom-4 right-4 flex items-center space-x-2">
+  <label class="block text-sm font-medium text-gray-700">Cambiar Estatus:</label>
+  <select
+    [(ngModel)]="detalleUsuario.estatus"
+    [disabled]="detalleUsuario.estatusInicial === 'Rechazado'"
+    class="input bg-gray-200 border border-gray-300 text-gray-700 rounded focus:ring-blue-500 focus:border-blue-500"
+  >
+    <option *ngFor="let estado of estatusList" [value]="estado">{{ estado }}</option>
+  </select>
+  <button
+    (click)="cambiarEstatus(detalleUsuario.conflictoId, detalleUsuario.estatus)"
+    [disabled]="detalleUsuario.estatusInicial === 'Rechazado'"
+    class="bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-150"
+  >
+    Cambiar
+  </button>
+</div>
+
+
 
     </div>
     <div *ngIf="imageUrlAbal" class="mb-8">
