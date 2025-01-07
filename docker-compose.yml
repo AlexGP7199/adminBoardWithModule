@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   backend:
-    image: moonxz/agenda-daeh-api:v6 # Imagen del backend en Docker Hub
+    image: moonxz/agenda-daeh-api:v7 # Imagen del backend en Docker Hub
     container_name: agenda-backend-compose
     ports:
       - "4500:4500"
