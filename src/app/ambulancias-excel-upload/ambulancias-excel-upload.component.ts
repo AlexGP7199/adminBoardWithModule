@@ -131,14 +131,14 @@ cargarTiposAmbulancias(): void {
             const ambulanciaId = codigoMap.get(solicitud.codigo);
             if (ambulanciaId) {
               // Editar ambulancia existente
-              console.log('Editando ambulancia existente:', solicitud.codigo);
+              //console.log('Editando ambulancia existente:', solicitud.codigo);
               this.ambulanciaService.editarAmbulancia(ambulanciaId, solicitud).subscribe({
                 next: () => console.log(),
                 error: (err) => console.error(`Error al actualizar`, err),
               });
             } else {
               // Crear nueva ambulancia
-              console.log('Creando nueva ambulancia:', solicitud.codigo);
+              //console.log('Creando nueva ambulancia:', solicitud.codigo);
               this.ambulanciaService.crearAmbulancia(solicitud).subscribe({
                 next: () => console.log(`Ambulancia creada`),
                 error: (err) => console.error(`Error al crear`, err),

@@ -111,7 +111,7 @@ obtenerConflictosAgrupados(): void {
 
   this.conflictosService.filtrarConflictosAgrupados(params).subscribe(
     (response: TipoAmbulancia[]) => {
-      console.log('Datos recibidos del backend:', response);
+      //console.log('Datos recibidos del backend:', response);
 
       // Limpiar la lista antes de procesar la nueva respuesta
       this.conflictosAgrupados = [];

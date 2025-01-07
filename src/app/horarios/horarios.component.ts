@@ -79,11 +79,11 @@
 
         this.conflictoService.obtenerConflictosUsuario(this.usuarioId).subscribe(
           (data) => {
-            console.log(data);
+            //console.log(data);
             if (data && typeof data === 'object' && 'Message' in data) {
               Swal.fire('Información', data.Message, 'info');
             } else if (Array.isArray(data)) {
-              console.log(data);
+              //console.log(data);
               // Procesar cada conflicto y agrupar según el estatus
               this.conflictosPendientes = data.filter((c: any) => c.estatus === 'Pendiente');
               this.conflictosEnProceso = data.filter((c: any) => c.estatus === 'En Proceso');

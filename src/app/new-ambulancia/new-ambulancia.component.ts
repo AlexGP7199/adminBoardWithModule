@@ -91,7 +91,7 @@ export class NewAmbulanciaComponent {
     // Obtener los datos de la ambulancia por ID
     this.ambulanciaService.obtenerAmbulanciaPorId(id).subscribe({
       next: (ambulancia) => {
-        console.log(ambulancia.provincia.id);
+        //console.log(ambulancia.provincia.id);
         this.mostrarFormulario = true;
         this.ambulanciaEnEdicion = ambulancia; // Pasar al modo edición
         this.ambulanciaForm.patchValue({
@@ -143,7 +143,7 @@ export class NewAmbulanciaComponent {
           });
       } else {
         // Modo creación
-        console.log('Ambulancias form ' + JSON.stringify(this.ambulanciaForm.value));
+        //console.log('Ambulancias form ' + JSON.stringify(this.ambulanciaForm.value));
         this.ambulanciaService.crearAmbulancia(this.ambulanciaForm.value).subscribe({
           next: () => {
 

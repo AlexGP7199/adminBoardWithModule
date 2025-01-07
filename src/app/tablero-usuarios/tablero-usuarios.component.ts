@@ -305,7 +305,8 @@ export class TableroUsuariosComponent {
       this.nivelUsuario
     ).subscribe(
       (usuarios) =>{(this.usuariosFiltrados = usuarios);
-      console.log()},
+      //console.log()
+    },
       (error) => console.error('Error al filtrar usuarios:', error)
     );
   }
