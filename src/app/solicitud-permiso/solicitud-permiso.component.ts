@@ -12,6 +12,8 @@ export class SolicitudPermisoComponent implements OnInit {
 
   detallesSeleccionados: { fechaConflicto: string; seleccionado: boolean }[] = [];
 
+
+
   usuarioId: number = 0; // Se obtiene del localStorage
   solicitudesActivas: any[] = [];
   tieneSolicitudesActivas: boolean = false;
@@ -23,8 +25,10 @@ export class SolicitudPermisoComponent implements OnInit {
   mostrarRetirar: boolean = false;
 
   //
+
   diasHabilitados: { nombre: string; valor: string }[] = []; // Lista de días habilitados
   diaSeleccionado: string = ''; // Día seleccionado por el usuario para deshabilitar
+
 
   nuevaSolicitud = {
     usuarioId: 0,
@@ -95,6 +99,7 @@ export class SolicitudPermisoComponent implements OnInit {
     );
   }
 
+
   finalizarSolicitud(solicitudId: number, estado: string, descripcion: string): void {
     const request = {
       Estado: estado,
@@ -112,6 +117,7 @@ export class SolicitudPermisoComponent implements OnInit {
       }
     );
   }
+
 
   // Obtener usuarioId del localStorage
   obtenerUsuarioId(): number {
@@ -163,6 +169,7 @@ export class SolicitudPermisoComponent implements OnInit {
       Swal.fire('Error', 'Debe tener un conflicto aprobado para crear una solicitud.', 'error');
     }
   }
+
 
   // Crear nueva solicitud
   crearSolicitudPermiso(): void {
@@ -245,6 +252,8 @@ export class SolicitudPermisoComponent implements OnInit {
       }
     );
   }
+
+
 
   obtenerDiasHabilitados(): void {
     if (!this.conflictoId) {
