@@ -62,7 +62,7 @@
           this.usuarioNombre = decodedToken.nombre || '';
           this.usuarioProvincia = decodedToken.provincia || '';
           this.usuarioRegion = decodedToken.region || '';
-          this.usuarioRol = decodedToken.role || '';
+          this.usuarioRol = decodedToken.cargo || '';
           this.usuarioTeam = decodedToken.teamName || '';
           this.usuarioId = parseInt(decodedToken.usuarioId || '0', 10); // Convertir a número si es necesario
         } else {
@@ -91,7 +91,7 @@
               this.conflictosRechazados = data.filter((c: any) => c.estatus === 'Rechazado');
               this.conflictosFinalizados = data.filter((c: any) => c.estatus === 'Finalizado'); // NUEVO FILTRO
             } else {
-              Swal.fire('Advertencia', 'La respuesta del servidor no tiene el formato esperado.', 'warning');
+              //Swal.fire('Advertencia', 'La respuesta del servidor no tiene el formato esperado.', 'warning');
             }
           },
           (error) => {

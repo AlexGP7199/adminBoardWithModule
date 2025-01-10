@@ -20,6 +20,7 @@ export class ColaboradoresExcelCargaComponent {
     this.cargarAmbulancias(); // Cargar mapeo de preposiciones (Ambulancias)
   }
 
+
   cargarAmbulancias(): void {
     this.ambulanciasService.obtenerTodasAmbulancias().subscribe((ambulancias) => {
       this.ambulancias = ambulancias;
@@ -59,6 +60,8 @@ export class ColaboradoresExcelCargaComponent {
       "CRUE" ]; // Palabras clave a verificar
 
     const usuariosProcesados = excelData.map((row: any) => {
+      //console.log('Claves del objeto row:', Object.keys(row));
+
       const preposicion = row.Preposicion?.toUpperCase(); // Normaliza para evitar problemas con mayúsculas/minúsculas
       let estado = row.Estado || 'Activo';
       let ambulanciaId = null;
@@ -80,10 +83,11 @@ export class ColaboradoresExcelCargaComponent {
         ambulanciaId = ambulancia ? ambulancia.id : null;
       }
 
+
       return {
         cedula: cedula, // Incluye la cédula procesada sin guiones
         nombre: row.Nombre,
-        password: row.Password,
+        password: cedula,
         provinciaId: row.Provincia,
         teamId: teamId, // Usa el valor por defecto si no existe
         userRoleId: row.UserRole,
@@ -105,20 +109,75 @@ private generarCedulaFicticia(): string {
   return `${prefix}${base}${suffix}`; // Resultado en formato de 11 dígitos
 }
 
-  enviarUsuarios(): void {
-    if (this.usuarios.length === 0) {
-      Swal.fire('Error', 'No hay usuarios para enviar.', 'error');
-      return;
-    }
+enviarUsuarios(): void {
+  if (this.usuarios.length === 0) {
+    Swal.fire('Error', 'No hay usuarios para enviar.', 'error');
+    return;
+  }
 
-    this.usuarioService.crearUsuario(this.usuarios).subscribe({
-      next: () => {
-        Swal.fire('¡Éxito!', 'Usuarios enviados con éxito.', 'success');
-        this.usuarios = [];
+  let existentes = 0;
+  let enviados = 0;
+  const totalUsuarios = this.usuarios.length;
+  let errores = 0;
+
+  this.usuarios.forEach((usuario) => {
+    // Llama al servicio para verificar si el usuario ya existe
+    this.usuarioService.obtenerUsuarioPorCedula(usuario.cedula).subscribe({
+      next: (existe: boolean) => {
+        if (existe) {
+          // Si el usuario ya existe, actualízalo
+          this.usuarioService.actualizarUsuario(usuario.cedula, usuario).subscribe({
+            next: () => {
+              existentes++;
+              this.verificarFinalizacion(enviados, totalUsuarios, errores,existentes);
+            },
+            error: () => {
+              errores++;
+              console.error(`Error al actualizar el usuario:`, usuario);
+              Swal.fire('Error', `Error al actualizar el usuario con cédula ${usuario.cedula}.`, 'error');
+              this.verificarFinalizacion(enviados, totalUsuarios, errores,existentes);
+            },
+          });
+        } else {
+          // Si no existe, crea el usuario
+          this.usuarioService.crearUsuario(usuario).subscribe({
+            next: () => {
+              enviados++;
+              this.verificarFinalizacion(enviados, totalUsuarios, errores,existentes);
+            },
+            error: () => {
+              errores++;
+              console.error(`Error al enviar el usuario:`, usuario);
+              Swal.fire('Error', `Error al crear el usuario con cédula ${usuario.cedula}.`, 'error');
+              this.verificarFinalizacion(enviados, totalUsuarios, errores,existentes);
+            },
+          });
+        }
       },
-      error: (error) => {
-        Swal.fire('Error', error.error || 'Hubo un problema al enviar los usuarios.', 'error');
+      error: () => {
+        errores++;
+        console.error(`Error al verificar la cédula ${usuario.cedula}. Usuario:`, usuario);
+        Swal.fire('Error', `Error al verificar la cédula ${usuario.cedula}.`, 'error');
+        this.verificarFinalizacion(enviados, totalUsuarios, errores,existentes);
       },
     });
+  });
+}
+
+
+private verificarFinalizacion(enviados: number, total: number, errores: number, existentes: number): void {
+  if (enviados + errores + existentes === total) {
+    if (errores > 0) {
+      Swal.fire(
+        'Completado con Errores',
+        `${enviados} usuarios enviados con éxito. ${errores} errores. ${existentes} usuarios existentes`,
+        'warning'
+      );
+    } else {
+      Swal.fire('¡Éxito!', `${enviados} usuarios enviados con éxito. ${errores} errores. ${existentes} usuarios existentes`, 'success');
+    }
+    this.usuarios = [];
   }
+}
+
 }

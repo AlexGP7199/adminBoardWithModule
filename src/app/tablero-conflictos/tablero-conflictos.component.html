@@ -25,7 +25,7 @@
 
     <!-- Filtros específicos de región, provincia y equipo según el nivel de usuario -->
     <div class="flex flex-col md:flex-row md:space-x-6 mb-4">
-      <div *ngIf="nivelUsuario === 3" class="w-full md:w-1/3">
+      <div *ngIf="nivelUsuario >= 3 && nivelUsuario != 5" class="w-full md:w-1/3">
         <label class="block text-sm font-medium text-gray-700">Región</label>
         <select [(ngModel)]="selectedRegion" (change)="onRegionChange()" class="input w-full mt-1">
           <option value="" disabled selected>Seleccione una región</option>
@@ -144,28 +144,82 @@
     <div class="p-6 bg-gray-100 rounded-lg shadow-md relative">
       <h3 class="text-2xl font-bold mb-4">Información del Usuario</h3>
       <p><strong>Nombre:</strong> {{ detalleUsuario?.usuarioNombre }}</p>
-      <p><strong>Rol:</strong> {{ detalleUsuario?.cargo }}</p>
+      <p><strong>Cargo:</strong> {{ detalleUsuario?.cargo }}</p>
       <p><strong>Provincia:</strong> {{ detalleUsuario?.provincia }}</p>
+      <p><strong>Observaciones:</strong> {{ detalleUsuario?.nota }}</p>
 
-      <!-- Cambiar Estatus -->
+
 <!-- Cambiar Estatus -->
 <div class="absolute bottom-4 right-4 flex items-center space-x-2">
   <label class="block text-sm font-medium text-gray-700">Cambiar Estatus:</label>
   <select
     [(ngModel)]="detalleUsuario.estatus"
-    [disabled]="detalleUsuario.estatusInicial === 'Rechazado'"
+    [disabled]="
+      nivelUsuario === 6 ||
+      (nivelUsuario < 4 && (detalleUsuario.estatusInicial === 'Rechazado' || detalleUsuario.estatusInicial === 'Aprobado')) ||
+      ((nivelUsuario === 5 || nivelUsuario === 7) && detalleUsuario.estatusInicial === 'Rechazado')
+    "
     class="input bg-gray-200 border border-gray-300 text-gray-700 rounded focus:ring-blue-500 focus:border-blue-500"
   >
-    <option *ngFor="let estado of estatusList" [value]="estado">{{ estado }}</option>
+    <option
+      *ngFor="let estado of filtrarEstatus()"
+      [value]="estado"
+      [disabled]="
+        (nivelUsuario === 5 && (estado !== 'Aprobado' && estado !== 'Rechazado')) ||
+        (nivelUsuario < 4 && (estado === 'Aprobado' || estado === 'Rechazado'))
+      "
+    >
+      {{ estado }}
+    </option>
   </select>
   <button
-    (click)="cambiarEstatus(detalleUsuario.conflictoId, detalleUsuario.estatus)"
-    [disabled]="detalleUsuario.estatusInicial === 'Rechazado'"
-    class="bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-150"
-  >
-    Cambiar
-  </button>
+  *ngIf="nivelUsuario !== 6"
+  (click)="abrirModalSiEsNecesario(detalleUsuario.estatus)"
+  [disabled]="
+    (nivelUsuario === 5 && detalleUsuario.estatusInicial === 'Rechazado') ||
+    (nivelUsuario < 4 && (detalleUsuario.estatusInicial === 'Aprobado' || detalleUsuario.estatusInicial === 'Rechazado'))
+  "
+  class="bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-150"
+>
+  Cambiar
+</button>
 </div>
+
+<!-- Modal -->
+<div
+  *ngIf="mostrarModal"
+  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+>
+  <div class="bg-white rounded-lg shadow-lg w-1/3 p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Agregar Observaciones</h2>
+    <textarea
+      [(ngModel)]="notaCambio"
+      class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      rows="4"
+      placeholder="Escribe aquí una nota o comentario..."
+    ></textarea>
+    <div class="mt-4 flex justify-end space-x-2">
+      <button
+        (click)="cerrarModal()"
+        class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition"
+      >
+        Cancelar
+      </button>
+      <button
+        (click)="guardarNotaYCambiarEstatus()"
+        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+      >
+        Guardar
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
 
 
 

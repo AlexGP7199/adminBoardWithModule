@@ -20,6 +20,13 @@ obtenerUsuarios(regionId?: number, provinciaId?: number, pageNumber = 1, pageSiz
 
   return this.http.get<any>(`${apiURL}/User/usuarios`, { params });
 }
+actualizarUsuario(cedula: string, usuario: any): Observable<any> {
+  return this.http.put(`${apiURL}/User/actualizar-usuario/${cedula}`, usuario);
+}
+
+obtenerUsuarioPorCedula(cedula: string) {
+  return this.http.get<boolean>(`${apiURL}/User/GetUserByCedula?cedula=${cedula}`);
+}
 
 // Obtener usuario por ID
 obtenerUsuarioPorId(id: number): Observable<any> {

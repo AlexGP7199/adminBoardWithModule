@@ -13,6 +13,8 @@ export class SidenavComponent {
   nivelUsuario: number = 0;
   team : string | null = '';
   habilitarApartado = false;
+  region : string | null= '';
+  provincia : string | null = '';
   usuarioId: number = 0; // ID del usuario autenticado
   constructor(private authService: AuthService, private conflictoService: ConflictoService) {}
 
@@ -22,6 +24,8 @@ export class SidenavComponent {
     // Obtén los valores desde el servicio de autenticación
     this.nombre = this.authService.getNombre();
     this.rol = this.authService.getRole();
+    this.region = this.authService.getRegion();
+    this.provincia = this.authService.getProvincia();
     //console.log("su rol es: " + this.rol);
     this.team = this.authService.getTeam();
     //console.log("su team es: " + this.team);

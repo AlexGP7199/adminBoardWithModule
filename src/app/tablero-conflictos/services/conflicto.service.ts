@@ -62,6 +62,10 @@ export class ConflictoService {
     return this.http.get(`${apiURL}/User/detalles-solicitud/` + solicitudId);
   }
 
+  obtenerDetalleSolicitudInforme(solicitudId: any): Observable<any>{
+    return this.http.get(`${apiURL}/User/detalles-solicitudInforme/` + solicitudId);
+  }
+
   filtrarConflictosAgrupados(params: any): Observable<TipoAmbulancia[]> {
     let httpParams = new HttpParams();
 

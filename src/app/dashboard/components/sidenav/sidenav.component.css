@@ -20,22 +20,23 @@ aside #logo-sidebar .flex img {
 
 #logo-sidebar img {
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 #logo-sidebar h2 {
+  font-size: 0.875rem; /* Reduce tamaño de texto */
+  font-weight: 600; /* Semi-bold */
   color: #ffffff;
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-top: 10px;
+  text-align: center;
+  margin-top: 4px;
 }
 
+
 #logo-sidebar p {
+  font-size: 0.75rem; /* Tamaño más pequeño para rol y equipo */
   color: #cbd5e1;
-  font-size: 0.875rem;
   margin-top: 2px;
+  text-align: center;
 }
 
 /* Links de las opciones */

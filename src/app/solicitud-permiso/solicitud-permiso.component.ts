@@ -55,6 +55,9 @@ export class SolicitudPermisoComponent implements OnInit {
     //console.log('entre aqui 1');
     this.conflictoService.verificarSolicitudesActivas(this.usuarioId).subscribe(
       (response: any) => {
+
+        //console.log('solicitudActiva');
+        //console.log(response);
         this.tieneSolicitudesActivas = response.tieneSolicitudesActivas;
         this.solicitudesActivas = response.solicitudes || [];
 
@@ -210,6 +213,8 @@ export class SolicitudPermisoComponent implements OnInit {
     this.solicitudId = solicitudId;
     this.conflictoService.obtenerDetalleSolicitud(solicitudId).subscribe(
       (response: any) => {
+        //console.log('Detalle de la solicitud');
+        //console.log(response);
         this.detalleSolicitud = response; // Guardar detalle de la solicitud
         this.detallesSeleccionados = response.conflictoDetalles.map((detalle: any) => ({
           fechaConflicto: detalle.fechaConflicto,
@@ -264,12 +269,20 @@ export class SolicitudPermisoComponent implements OnInit {
     //console.log(this.conflictoId);
     this.conflictoService.obtenerDiasConflictoDetalle(this.conflictoId).subscribe(
       (response: any) => {
-        //console.log(' lo que trae de data el server de dias');
-        //console.log(response)
         if (response.diasSemana) {
+          const diasTraducidos: { [key: string]: string } = {
+            Sunday: 'Domingo',
+            Monday: 'Lunes',
+            Tuesday: 'Martes',
+            Wednesday: 'Miércoles',
+            Thursday: 'Jueves',
+            Friday: 'Viernes',
+            Saturday: 'Sábado'
+          };
+
           this.diasHabilitados = response.diasSemana.map((dia: any) => ({
-            nombre: dia.nombre, // Nombre legible del día (e.g., "Monday")
-            valor: dia.dia // Valor del día (e.g., "0" para Sunday)
+            nombre: diasTraducidos[dia.nombre] || dia.nombre, // Traduce el nombre si existe
+            valor: dia.dia // Conserva el valor del día
           }));
         } else {
           this.diasHabilitados = [];

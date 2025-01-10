@@ -51,7 +51,7 @@ export class FormSolicitudValidacionFechasComponent implements OnInit {
       nombre: decodedToken.nombre,
       provincia: decodedToken.provincia,
       region: decodedToken.region,
-      role: decodedToken.role,
+      role: decodedToken.cargo,
       teamName: decodedToken.teamName,
     };
     if (this.usuario && this.usuario.usuarioId) {

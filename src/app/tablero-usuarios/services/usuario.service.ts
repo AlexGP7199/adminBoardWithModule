@@ -13,6 +13,14 @@ export class UsuarioService {
     return this.http.get<any[]>(`${apiURL}/Region/all-regions`);
   }
 
+  actualizarNota(conflictoId: number, nuevaNota: string): Observable<any> {
+    const url = `${apiURL}/User/actualizar-notaDAEH/${conflictoId}`;
+    return this.http.patch(url, `"${nuevaNota}"`, { headers: { 'Content-Type': 'application/json' } });
+  }
+
+
+
+
   validarFechasEstudio(request: any): Observable<any> {
     return this.http.post(`${apiURL}/User/validarConflictos`, request);
   }

@@ -110,7 +110,9 @@ export class AuthService {
   getCedula(): string | null {
     return this.getUserClaim('cedula');
   }
-
+  getCargo(): string | null {
+    return this.getUserClaim('cargo');
+  }
   getRole(): string | null {
     return this.getUserClaim('role');
   }

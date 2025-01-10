@@ -38,6 +38,9 @@ export class TableroConflictosComponent implements OnInit {
   selectedTeam: number | null = null;
   userData: any = {};
 
+  mostrarModal = false; // Controla si el modal está visible
+  notaCambio: string = ''; // Almacena la nota ingresada
+
   constructor(private conflictosService: ConflictoService, private  usuarioService: UsuarioService, private authService : AuthService) {
     const today = new Date();
     this.startDate = this.formatDate(today);
@@ -54,6 +57,47 @@ export class TableroConflictosComponent implements OnInit {
 
   }
 
+  abrirModal(): void {
+    this.mostrarModal = true; // Muestra el modal
+  }
+
+  cerrarModal(): void {
+    this.mostrarModal = false; // Oculta el modal
+    this.notaCambio = ''; // Limpia la nota al cerrar
+  }
+
+  abrirModalSiEsNecesario(nuevoEstatus: string): void {
+    if (nuevoEstatus === 'Aprobado' || nuevoEstatus === 'Rechazado') {
+      this.mostrarModal = true;
+    } else {
+      this.cambiarEstatus(this.detalleUsuario.conflictoId, nuevoEstatus);
+    }
+  }
+
+
+// Llama al servicio para actualizar la nota
+guardarNotaYCambiarEstatus(): void {
+  if (!this.notaCambio.trim()) {
+    Swal.fire('Error', 'Debes incluir una nota o comentario.', 'error');
+    return;
+  }
+
+  this.usuarioService.actualizarNota(this.detalleUsuario.conflictoId, this.notaCambio).subscribe({
+    next: (response: any) => {
+      //console.log(`Nota actualizada: ${response.Nota}`); // Muestra la respuesta en consola
+      this.cambiarEstatus(this.detalleUsuario.conflictoId, this.detalleUsuario.estatus); // Cambia el estatus después de actualizar la nota
+      Swal.fire('Éxito', 'Nota agregada y estatus actualizado con éxito.', 'success');
+      this.cerrarModal(); // Cierra el modal
+    },
+    error: (error) => {
+      //console.error('Error al actualizar la nota:', error);
+      Swal.fire('Error', 'No se pudo actualizar la nota. Inténtalo de nuevo más tarde.', 'error');
+    },
+  });
+}
+
+
+
 
   ngOnInit(): void {
     initFlowbite();
@@ -61,7 +105,8 @@ export class TableroConflictosComponent implements OnInit {
     this.userData = this.authService.getDecodedToken();
     //console.log(this.userData);
     this.nivelUsuario = parseInt(this.userData.nivel, 10) || 0;
-
+    //console.log('klk');
+    //console.log(this.nivelUsuario);
     if (this.nivelUsuario === 1) {
         // Nivel 1: Cargar conflictos solo de la región, provincia y equipo asignados
         this.selectedRegion = this.userData.regionId;
@@ -95,7 +140,43 @@ export class TableroConflictosComponent implements OnInit {
         //this.obtenerConflictos();
         this.obtenerConflictosAgrupados(); // Llama a esta función si es nivel 2
     }
+    else if (this.nivelUsuario >=4) {
+      // Nivel 3: Cargar todas las opciones de región, provincia y equipo
+      this.cargarRegiones();
+      this.cargarEquipos(); // Cargar equipo
+      this.selectedRegion = this.userData.regionId;
+
+      // Cargar provincias si la región está definida
+      if (this.selectedRegion) {
+          this.cargarProvincias(this.selectedRegion);
+      }
+
+      this.selectedProvincia = this.userData.provinciaId;
+      this.selectedTeam = this.userData.teamId;
+      //this.obtenerConflictos();
+      this.obtenerConflictosAgrupados(); // Llama a esta función si es nivel 2
+  }
 }
+
+/*
+filtrarEstatus(estatusList: string[]): string[] {
+  if (this.nivelUsuario === 5) {
+    // Nivel 5 admin: Puede realizar cualquier acción (mostrar todos los estatus)
+    return estatusList;
+  } else if (this.nivelUsuario === 6) {
+    // Nivel 6: Solo puede Aprobar o Rechazar Focal RRHH
+    return estatusList.filter((estatus) => estatus === 'Aprobado' || estatus === 'Rechazado');
+  } else {
+    // Otros niveles (excepto 5 y 6): Solo pueden Pendiente o En Proceso
+    return estatusList.filter((estatus) => estatus === 'Pendiente' || estatus === 'En Proceso');
+  }
+} */
+
+  filtrarEstatus(): string[] {
+    return this.estatusList; // Siempre mostrar todos los estatus
+  }
+
+
 
 obtenerConflictosAgrupados(): void {
   if (!this.validarFechas()) return;
@@ -227,7 +308,7 @@ alternarExpandirEquipo(team: Team): void {
 
 
   verDetalleSolicitud(solicitudId: number): void {
-    this.conflictosService.obtenerDetalleSolicitud(solicitudId).subscribe({
+    this.conflictosService.obtenerDetalleSolicitudInforme(solicitudId).subscribe({
       next: (response: any) => {
         //console.log('Detalle de la solicitud:', response);
 
@@ -262,6 +343,7 @@ alternarExpandirEquipo(team: Team): void {
   verDetalle(conflicto: any,teamName: string): void {
     //console.log("Nombre del Team");
     //console.log(teamName);
+
     this.detalleUsuario = {
       ...conflicto,
       teamName, // Añadimos el nombre del equipo al detalle del usuario
@@ -289,7 +371,7 @@ alternarExpandirEquipo(team: Team): void {
   //console.log(conflicto);
   //this.detalleUsuario = conflicto; // Asigna directamente el detalle del usuario seleccionado
   this.mostrarDetalle = true; // Muestra el detalle
-
+  console.log(this.detalleUsuario)
   //console.log('hello v1');
   //console.log(conflicto.conflictoId);
   // Obtener detalles del conflicto asociado
