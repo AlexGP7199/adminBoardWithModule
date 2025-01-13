@@ -146,11 +146,16 @@
       <p><strong>Nombre:</strong> {{ detalleUsuario?.usuarioNombre }}</p>
       <p><strong>Cargo:</strong> {{ detalleUsuario?.cargo }}</p>
       <p><strong>Provincia:</strong> {{ detalleUsuario?.provincia }}</p>
-      <p><strong>Observaciones:</strong> {{ detalleUsuario?.nota }}</p>
+      <div class="mb-16">
+        <p><strong>Observaciones:</strong></p>
+        <p class="observaciones bg-white p-3 rounded border border-gray-300 shadow-sm">
+          {{ detalleUsuario?.nota }}
+        </p>
+      </div>
 
 
-<!-- Cambiar Estatus -->
-<div class="absolute bottom-4 right-4 flex items-center space-x-2">
+ <!-- Cambiar Estatus -->
+ <div class="absolute bottom-4 right-4 flex items-center space-x-2">
   <label class="block text-sm font-medium text-gray-700">Cambiar Estatus:</label>
   <select
     [(ngModel)]="detalleUsuario.estatus"
@@ -173,16 +178,16 @@
     </option>
   </select>
   <button
-  *ngIf="nivelUsuario !== 6"
-  (click)="abrirModalSiEsNecesario(detalleUsuario.estatus)"
-  [disabled]="
-    (nivelUsuario === 5 && detalleUsuario.estatusInicial === 'Rechazado') ||
-    (nivelUsuario < 4 && (detalleUsuario.estatusInicial === 'Aprobado' || detalleUsuario.estatusInicial === 'Rechazado'))
-  "
-  class="bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-150"
->
-  Cambiar
-</button>
+    *ngIf="nivelUsuario !== 6"
+    (click)="abrirModalSiEsNecesario(detalleUsuario.estatus)"
+    [disabled]="
+      (nivelUsuario === 5 && detalleUsuario.estatusInicial === 'Rechazado') ||
+      (nivelUsuario < 4 && (detalleUsuario.estatusInicial === 'Aprobado' || detalleUsuario.estatusInicial === 'Rechazado'))
+    "
+    class="bg-green-600 text-white px-3 py-1 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-150"
+  >
+    Cambiar
+  </button>
 </div>
 
 <!-- Modal -->
@@ -190,38 +195,32 @@
   *ngIf="mostrarModal"
   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
 >
-  <div class="bg-white rounded-lg shadow-lg w-1/3 p-6">
-    <h2 class="text-lg font-semibold text-gray-800 mb-4">Agregar Observaciones</h2>
+  <div class="bg-white rounded-lg shadow-lg w-2/3 p-8 max-w-4xl">
+    <h2 class="text-xl font-semibold text-gray-800 mb-6 text-center">
+      Agregar Observaciones
+    </h2>
     <textarea
       [(ngModel)]="notaCambio"
-      class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-      rows="4"
+      class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      rows="8"
       placeholder="Escribe aquí una nota o comentario..."
     ></textarea>
-    <div class="mt-4 flex justify-end space-x-2">
+    <div class="mt-6 flex justify-end space-x-4">
       <button
         (click)="cerrarModal()"
-        class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition"
+        class="bg-gray-300 text-gray-800 px-5 py-3 rounded-lg hover:bg-gray-400 transition"
       >
         Cancelar
       </button>
       <button
         (click)="guardarNotaYCambiarEstatus()"
-        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        class="bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700 transition"
       >
         Guardar
       </button>
     </div>
   </div>
 </div>
-
-
-
-
-
-
-
-
 
     </div>
     <div *ngIf="imageUrlAbal" class="mb-8">

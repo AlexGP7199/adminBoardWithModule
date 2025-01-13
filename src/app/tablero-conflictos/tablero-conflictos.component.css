@@ -151,3 +151,28 @@ button:active {
 .details-container th {
   border-bottom: 1px solid #e5e7eb;
 }
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.bottom-4 {
+  bottom: 1rem; /* Ajusta según el espacio que quieras del borde inferior */
+}
+
+.right-4 {
+  right: 1rem; /* Ajusta según el espacio que quieras del borde derecho */
+}
+
+.mb-16 {
+  margin-bottom: 4rem; /* Espacio extra para evitar solapamiento con el botón */
+}
+
+.observaciones {
+  white-space: pre-wrap;
+  word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+}

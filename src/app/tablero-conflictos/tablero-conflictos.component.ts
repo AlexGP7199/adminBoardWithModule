@@ -77,12 +77,17 @@ export class TableroConflictosComponent implements OnInit {
 
 // Llama al servicio para actualizar la nota
 guardarNotaYCambiarEstatus(): void {
+  //console.log('Nota normal');
+  //console.log(this.notaCambio);
   if (!this.notaCambio.trim()) {
     Swal.fire('Error', 'Debes incluir una nota o comentario.', 'error');
     return;
   }
 
-  this.usuarioService.actualizarNota(this.detalleUsuario.conflictoId, this.notaCambio).subscribe({
+  const notaEscapada = this.notaCambio.replace(/\n/g, '\\n');
+  //console.log('nota escapada')
+  //console.log(notaEscapada);
+  this.usuarioService.actualizarNota(this.detalleUsuario.conflictoId, notaEscapada).subscribe({
     next: (response: any) => {
       //console.log(`Nota actualizada: ${response.Nota}`); // Muestra la respuesta en consola
       this.cambiarEstatus(this.detalleUsuario.conflictoId, this.detalleUsuario.estatus); // Cambia el estatus después de actualizar la nota

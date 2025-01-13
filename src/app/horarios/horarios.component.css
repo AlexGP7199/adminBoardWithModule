@@ -100,3 +100,8 @@ body {
 .p-2 {
   padding: 8px; /* Espaciado interno para los elementos */
 }
+
+.observaciones {
+  white-space: pre-wrap;
+  word-wrap: break-word; /* Asegura que el texto largo se ajuste */
+}

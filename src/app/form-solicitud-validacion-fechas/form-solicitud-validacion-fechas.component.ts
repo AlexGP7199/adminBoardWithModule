@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { UsuarioService } from '../tablero-usuarios/services/usuario.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { takeLast } from 'rxjs';
 
 @Component({
   selector: 'app-form-solicitud-validacion-fechas',
@@ -106,6 +107,7 @@ export class FormSolicitudValidacionFechasComponent implements OnInit {
   }
 
 enviarFormulario(): void {
+  const team = this.authService.getTeamId();
   if (!this.validarFechasEstudioRequest.imagen) {
     this.mostrarErrorImagen = true;
     Swal.fire('Error', 'Debe cargar una imagen antes de enviar el formulario.', 'error');
@@ -125,6 +127,28 @@ enviarFormulario(): void {
     return;
   }
 
+  if(team == 5){
+     //console.log('Datos enviados al backend:', this.validarFechasEstudioRequest);
+  this.usuarioService.validarFechasEstudioTeamSinAsignar(this.validarFechasEstudioRequest).subscribe(
+    (response) => {
+      Swal.fire('Éxito', response.mensaje, 'success');
+      //console.log('Respuesta del servidor:', response);
+
+      const conflictoId =  response.conflictoId;
+      //console.log('ID delconflicto:', conflictoId);
+
+      if (conflictoId) {
+        this.subirImagen(conflictoId);
+      } else {
+        this.limpiarFormulario();
+      }
+    },
+    (error) =>
+      {
+        this.manejarError(error);
+      }
+    );
+  }else{
   //console.log('Datos enviados al backend:', this.validarFechasEstudioRequest);
   this.usuarioService.validarFechasEstudio(this.validarFechasEstudioRequest).subscribe(
     (response) => {
@@ -140,10 +164,13 @@ enviarFormulario(): void {
         this.limpiarFormulario();
       }
     },
-    (error) => {
-      this.manejarError(error);
-    }
-  );
+    (error) =>
+      {
+        this.manejarError(error);
+      }
+    );
+  }
+
 }
 
   subirImagen(conflictoId: number): void {

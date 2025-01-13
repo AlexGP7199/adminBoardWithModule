@@ -15,10 +15,13 @@ export class UsuarioService {
 
   actualizarNota(conflictoId: number, nuevaNota: string): Observable<any> {
     const url = `${apiURL}/User/actualizar-notaDAEH/${conflictoId}`;
-    return this.http.patch(url, `"${nuevaNota}"`, { headers: { 'Content-Type': 'application/json' } });
+    const notaProcesada = JSON.stringify(nuevaNota); // Garantiza una cadena JSON válida
+    return this.http.patch(url, notaProcesada, { headers: { 'Content-Type': 'application/json' } });
   }
 
-
+  validarFechasEstudioTeamSinAsignar(request: any): Observable<any> {
+    return this.http.post(`${apiURL}/User/validarConflictosTeamSinAsignar`, request);
+  }
 
 
   validarFechasEstudio(request: any): Observable<any> {
