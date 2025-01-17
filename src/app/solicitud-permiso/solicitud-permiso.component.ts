@@ -11,9 +11,9 @@ import { AuthService } from '../services/auth.service';
 export class SolicitudPermisoComponent implements OnInit {
 
   detallesSeleccionados: { fechaConflicto: string; seleccionado: boolean }[] = [];
+  selectedImage: File | null = null;
 
-
-
+  previewUrl: string | null = null; // Variable para almacenar la URL de la imagen
   usuarioId: number = 0; // Se obtiene del localStorage
   solicitudesActivas: any[] = [];
   tieneSolicitudesActivas: boolean = false;
@@ -36,6 +36,7 @@ export class SolicitudPermisoComponent implements OnInit {
     fechaInicio: '',
     fechaFin: '',
     descripcionPersonal: '',
+    file: null as File | null, // Nuevo campo para el archivo
   };
 
   constructor(private conflictoService: ConflictoService, private authService: AuthService) {}
@@ -50,6 +51,32 @@ export class SolicitudPermisoComponent implements OnInit {
       Swal.fire('Error', 'No se pudo obtener el usuario.', 'error');
     }
   }
+
+  onFileSelected(event: any): void {
+    const file: File = event.target.files[0];
+
+    if (file) {
+      // Validar que el archivo sea una imagen
+      const validImageTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      if (!validImageTypes.includes(file.type)) {
+        Swal.fire('Error', 'Solo se permiten imágenes en formato JPG, PNG o GIF.', 'error');
+        this.nuevaSolicitud.file = null; // Reiniciar el archivo
+        this.previewUrl = null; // Eliminar la previsualización
+        return;
+      }
+
+      // Generar la URL para previsualizar la imagen
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+
+      this.nuevaSolicitud.file = file;
+    }
+  }
+
+
 
   obtenerSolicitudesActivasConValidacion(): void {
     //console.log('entre aqui 1');
@@ -176,8 +203,8 @@ export class SolicitudPermisoComponent implements OnInit {
 
   // Crear nueva solicitud
   crearSolicitudPermiso(): void {
-    if (!this.nuevaSolicitud.fechaInicio || !this.nuevaSolicitud.fechaFin || !this.nuevaSolicitud.descripcionPersonal) {
-      Swal.fire('Error', 'Todos los campos son obligatorios.', 'error');
+    if (!this.nuevaSolicitud.fechaInicio || !this.nuevaSolicitud.fechaFin || !this.nuevaSolicitud.descripcionPersonal || !this.nuevaSolicitud.file) {
+      Swal.fire('Error', 'Todos los campos son obligatorios, incluido el archivo.', 'error');
       return;
     }
 
@@ -196,7 +223,16 @@ export class SolicitudPermisoComponent implements OnInit {
       return;
     }
 
-    this.conflictoService.crearSolicitudPermiso(this.nuevaSolicitud).subscribe(
+    // Crear un FormData para enviar la solicitud con el archivo
+    const formData = new FormData();
+    formData.append('usuarioId', this.nuevaSolicitud.usuarioId.toString());
+    formData.append('conflictoId', this.nuevaSolicitud.conflictoId.toString());
+    formData.append('fechaInicio', this.nuevaSolicitud.fechaInicio);
+    formData.append('fechaFin', this.nuevaSolicitud.fechaFin);
+    formData.append('descripcionPersonal', this.nuevaSolicitud.descripcionPersonal);
+    formData.append('file', this.nuevaSolicitud.file!); // El archivo es obligatorio
+
+    this.conflictoService.crearSolicitudPermiso(formData).subscribe(
       (response: any) => {
         Swal.fire('Éxito', 'Solicitud creada exitosamente.', 'success');
         this.mostrarFormulario = false;
@@ -208,18 +244,51 @@ export class SolicitudPermisoComponent implements OnInit {
     );
   }
 
+// Manejar el archivo seleccionado
+onImageSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files.length > 0) {
+    this.selectedImage = input.files[0];
+  } else {
+    this.selectedImage = null;
+  }
+}
+
+// Actualizar la imagen de la solicitud
+actualizarImagenSolicitud(): void {
+  if (!this.selectedImage || !this.detalleSolicitud) {
+    Swal.fire('Error', 'Debes seleccionar una imagen antes de proceder.', 'error');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('File', this.selectedImage);
+
+  this.conflictoService.actualizarImagenSolicitud(this.detalleSolicitud.id, formData).subscribe({
+    next: (response: any) => {
+      Swal.fire('Éxito', response.Message, 'success');
+      this.detalleSolicitud.imagenUrl = response.NuevaImagenRuta;
+      this.detalleSolicitud.estatus = response.NuevoEstatus;
+    },
+    error: (error) => {
+      Swal.fire('Error', error.error?.message || 'No se pudo actualizar la imagen.', 'error');
+    },
+  });
+}
   // Ver detalle de solicitud
   verDetalleSolicitud(solicitudId: number): void {
     this.solicitudId = solicitudId;
     this.conflictoService.obtenerDetalleSolicitud(solicitudId).subscribe(
       (response: any) => {
-        //console.log('Detalle de la solicitud');
-        //console.log(response);
         this.detalleSolicitud = response; // Guardar detalle de la solicitud
         this.detallesSeleccionados = response.conflictoDetalles.map((detalle: any) => ({
           fechaConflicto: detalle.fechaConflicto,
-          seleccionado: false
+          seleccionado: false,
         }));
+
+        // Llamar al endpoint para obtener la URL de la imagen
+        this.obtenerImagenUrl(solicitudId, response.cedula);
+
         this.mostrarDetalle = true; // Mostrar la vista de detalle
         this.mostrarFormulario = false; // Ocultar el formulario de nueva solicitud
         this.obtenerDiasHabilitados(); // Obtener los días habilitados para deshabilitar
@@ -229,6 +298,21 @@ export class SolicitudPermisoComponent implements OnInit {
       }
     );
   }
+
+    // Método para obtener la URL de la imagen
+  obtenerImagenUrl(permissionId: number, cedula: string): void {
+    this.conflictoService.obtenerImagenUrlPermission(permissionId, cedula).subscribe(
+      (response: any) => {
+        console.log(response);
+        this.detalleSolicitud.imagenUrl = response.imageUrl; // Asignar la URL de la imagen
+      },
+      (error) => {
+        Swal.fire('Error', 'No se pudo obtener la URL de la imagen asociada.', 'error');
+        this.detalleSolicitud.imagenUrl = null; // Asegurarse de que no haya datos incorrectos
+      }
+    );
+  }
+
 
   deshabilitarDetallesConflicto(): void {
     const diasQuitar = this.detallesSeleccionados
@@ -369,6 +453,7 @@ cerrarRetirar(): void {
       fechaInicio: '',
       fechaFin: '',
       descripcionPersonal: '',
+      file: null as File | null,
     };
   }
 

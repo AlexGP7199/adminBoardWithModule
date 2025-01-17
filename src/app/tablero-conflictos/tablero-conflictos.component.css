@@ -176,3 +176,31 @@ button:active {
   white-space: pre-wrap;
   word-wrap: break-word; /* Asegura que el texto largo se ajuste */
 }
+
+/* Contenedor de detalles */
+.details-container {
+  background-color: #f9fafb;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+/* Estilo para tablas */
+.details-container table {
+  margin-top: 1rem;
+  border-spacing: 0;
+  width: 100%;
+}
+
+/* Imagen con borde */
+.details-container img {
+  border: 1px solid #e5e7eb;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.details-container img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+

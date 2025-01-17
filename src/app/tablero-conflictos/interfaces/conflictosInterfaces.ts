@@ -50,3 +50,10 @@ export interface ConflictosAgrupadosResponse {
   Message?: string; // Para el caso en que no haya resultados
   agrupados?: TipoAmbulancia[]; // Para los datos agrupados
 }
+
+export interface Provincia {
+  provinciaNombre: string;
+  tiposAmbulancia: TipoAmbulancia[];
+  expanded?: boolean;
+}
+

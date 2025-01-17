@@ -122,6 +122,24 @@
           class="block w-full mt-2 input bg-white rounded-md border-gray-300 shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500">
         </textarea>
       </div>
+
+      <!-- Campo para subir imagen -->
+      <div>
+        <label class="block text-lg font-medium text-gray-700">Subir Imagen</label>
+        <input
+          type="file"
+          accept="image/*"
+          (change)="onFileSelected($event)"
+          class="block w-full mt-2 input bg-white rounded-md border-gray-300 shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500"
+        />
+        <!-- Previsualización de la imagen -->
+        <div *ngIf="previewUrl" class="mt-4">
+          <p class="text-sm text-gray-600">Previsualización de la imagen:</p>
+          <img [src]="previewUrl" alt="Previsualización de la imagen" class="mt-2 max-w-full rounded-lg shadow-md" />
+        </div>
+      </div>
+
+
       <div class="flex justify-end space-x-4">
         <button
           type="submit"
@@ -138,6 +156,8 @@
     </form>
   </div>
 
+
+
   <!-- Detalle de la Solicitud -->
   <div *ngIf="mostrarDetalle" class="bg-gray-50 p-6 rounded-lg shadow-lg mt-8">
     <h3 class="text-2xl font-semibold text-gray-700 mb-6">Detalle de la Solicitud</h3>
@@ -152,7 +172,43 @@
       <p><strong>Descripción Personal:</strong> {{ detalleSolicitud?.descripcionPersonal }}</p>
       <p><strong>Descripción Supervisor:</strong> {{ detalleSolicitud?.descripcionSupervisor }}</p>
       <p><strong>Estado:</strong> {{ detalleSolicitud?.estado }}</p>
+      <p><strong>Estatus:</strong> {{ detalleSolicitud?.estatus }}</p>
+
+      <!-- Mostrar la imagen -->
+<div *ngIf="detalleSolicitud?.imagenUrl" class="mt-4">
+  <h4 class="text-lg font-semibold text-gray-700">Imagen Adjunta:</h4>
+  <img
+    [src]="detalleSolicitud.imagenUrl"
+    alt="Imagen de la Solicitud"
+    class="mt-2 max-w-full rounded-lg shadow-md"
+  />
+
+  <!-- Edición de la imagen si el estado es Rechazado -->
+  <div *ngIf="detalleSolicitud?.estatus === 'Rechazado'" class="mt-4">
+    <h4 class="text-lg font-semibold text-gray-700">Actualizar Imagen:</h4>
+    <input
+      type="file"
+      (change)="onImageSelected($event)"
+      accept="image/*"
+      class="mt-2 block w-full p-2 border-gray-300 rounded-lg shadow-sm"
+    />
+    <button
+      class="mt-2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+      (click)="actualizarImagenSolicitud()"
+      [disabled]="!selectedImage"
+    >
+      Actualizar Imagen
+    </button>
+  </div>
+
+  <!-- Mensaje si la edición no está permitida -->
+  <div *ngIf="detalleSolicitud?.estatus === 'Aprobado'" class="mt-4 text-gray-500">
+    <p>No puedes editar la imagen de una solicitud aprobada.</p>
+  </div>
+</div>
+
     </div>
+
     <h4 class="text-xl font-semibold text-gray-700 mt-4">Detalles del Conflicto:</h4>
     <ul>
       <li *ngFor="let detalle of detallesSeleccionados; let i = index" class="mt-2">
@@ -172,10 +228,12 @@
         class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 shadow-md focus:ring focus:ring-red-300">
         Deshabilitar Detalles Seleccionados
       </button>
-    <button
-      (click)="cerrarDetalle()"
-      class="mt-4 bg-gray-600 text-white py-2 px-6 rounded-lg hover:bg-gray-700 shadow-md focus:ring focus:ring-gray-300">
-      Cerrar
-    </button>
+      <button
+        (click)="cerrarDetalle()"
+        class="mt-4 bg-gray-600 text-white py-2 px-6 rounded-lg hover:bg-gray-700 shadow-md focus:ring focus:ring-gray-300">
+        Cerrar
+      </button>
+    </div>
   </div>
-</div>
+
+

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConflictoService } from './services/conflicto.service';
-import { Conflicto, ConflictosAgrupadosResponse, Team, TipoAmbulancia } from './interfaces/conflictosInterfaces';
+import { Conflicto, ConflictosAgrupadosResponse, Provincia, Team, TipoAmbulancia } from './interfaces/conflictosInterfaces';
 import Swal from 'sweetalert2';
 import { UsuarioService } from '../tablero-usuarios/services/usuario.service';
 import { AuthService } from '../services/auth.service';
@@ -14,11 +14,11 @@ import { initFlowbite } from 'flowbite';
 export class TableroConflictosComponent implements OnInit {
   mostrarDetalleSolicitud = false; // Para manejar exclusivamente el detalle de solicitudes
   detalleSolicitud: any = null; // Para manejar exclusivamente el detalle de la solicitud
-
+  nuevoEstatus: string = ''; // Valor inicial del estatus
   searchNombre: string = '';
   searchFecha: string = '';
   conflictos: Conflicto[] = [];
-  conflictosAgrupados: TipoAmbulancia[] = []; // Usar la interfaz para tipar la variable
+  conflictosAgrupados: (TipoAmbulancia | Provincia)[] = [];
   detalleUsuario: any = null;
   mostrarDetalle = false;
   startDate: string;
@@ -27,7 +27,7 @@ export class TableroConflictosComponent implements OnInit {
   estatusList = ['Pendiente', 'En Proceso', 'Aprobado', 'Rechazado'];
   primeraCarga = true;
   imageUrlAbal = '';
-
+  solicitudPermisoId : number = 0;
   // Nuevas propiedades
   nivelUsuario: number = 0;
   regiones: any[] = [];
@@ -183,58 +183,114 @@ filtrarEstatus(estatusList: string[]): string[] {
 
 
 
-obtenerConflictosAgrupados(): void {
-  if (!this.validarFechas()) return;
+  obtenerConflictosAgrupados(): void {
+    if (!this.validarFechas()) return;
 
-  const params = {
-    regionId: this.selectedRegion ?? undefined,
-    provinciaId: this.selectedProvincia ?? undefined,
-    estatus: this.estatus ?? undefined,
-    startDate: this.startDate ?? undefined,
-    endDate: this.endDate ?? undefined,
-    nivel: this.nivelUsuario ?? undefined,
-  };
+    const params = {
+      regionId: this.selectedRegion ?? undefined,
+      provinciaId: this.selectedProvincia ?? undefined,
+      estatus: this.estatus ?? undefined,
+      startDate: this.startDate ?? undefined,
+      endDate: this.endDate ?? undefined,
+      nivel: this.nivelUsuario ?? undefined,
+    };
 
-  this.conflictosService.filtrarConflictosAgrupados(params).subscribe(
-    (response: TipoAmbulancia[]) => {
-      //console.log('Datos recibidos del backend:', response);
+    this.conflictosService.filtrarConflictosAgrupados(params).subscribe(
+      (response: TipoAmbulancia[]) => {
+        this.conflictosAgrupados = []; // Limpiar la lista antes de procesar
 
-      // Limpiar la lista antes de procesar la nueva respuesta
-      this.conflictosAgrupados = [];
+        if (Array.isArray(response) && response.length > 0) {
+          if (params.provinciaId === undefined) {
+            // Agrupar por Provincia
+            const conflictosPorProvincia: Record<string, Provincia> = {};
 
-      if (Array.isArray(response) && response.length > 0) {
-        this.conflictosAgrupados = response.map((tipoAmbulancia) => ({
-          ...tipoAmbulancia,
-          expanded: false, // Añade la propiedad 'expanded'
-          teams: tipoAmbulancia.teams.map((team) => ({
-            ...team,
-            expanded: false, // Añade la propiedad 'expanded' a cada equipo
-          })),
-        }));
-        //console.log('Datos procesados y guardados en conflictosAgrupados:', this.conflictosAgrupados);
-      } else {
-        Swal.fire('Sin resultados', 'No se encontraron conflictos agrupados.', 'info');
+            response.forEach((tipoAmbulancia) => {
+              tipoAmbulancia.teams.forEach((team) => {
+                team.conflictos.forEach((conflicto) => {
+                  const provinciaNombre = conflicto.provincia;
+
+                  if (!conflictosPorProvincia[provinciaNombre]) {
+                    conflictosPorProvincia[provinciaNombre] = {
+                      provinciaNombre,
+                      tiposAmbulancia: [],
+                      expanded: false,
+                    };
+                  }
+
+                  const provincia = conflictosPorProvincia[provinciaNombre];
+
+                  let tipoAmbulanciaGroup = provincia.tiposAmbulancia.find(
+                    (tipo) => tipo.tipoAmbulanciaId === tipoAmbulancia.tipoAmbulanciaId
+                  );
+
+                  if (!tipoAmbulanciaGroup) {
+                    tipoAmbulanciaGroup = {
+                      tipoAmbulanciaId: tipoAmbulancia.tipoAmbulanciaId,
+                      tipoAmbulanciaNombre: tipoAmbulancia.tipoAmbulanciaNombre,
+                      teams: [],
+                      expanded: false,
+                    };
+                    provincia.tiposAmbulancia.push(tipoAmbulanciaGroup);
+                  }
+
+                  let teamGroup = tipoAmbulanciaGroup.teams.find(
+                    (t) => t.teamId === team.teamId
+                  );
+
+                  if (!teamGroup) {
+                    teamGroup = {
+                      teamId: team.teamId,
+                      teamNombre: team.teamNombre,
+                      conflictos: [],
+                      expanded: false,
+                    };
+                    tipoAmbulanciaGroup.teams.push(teamGroup);
+                  }
+
+                  teamGroup.conflictos.push(conflicto);
+                });
+              });
+            });
+
+            // Convertir el objeto agrupado en un array
+            this.conflictosAgrupados = Object.values(conflictosPorProvincia);
+          } else {
+            // Agrupamiento original
+            this.conflictosAgrupados = response.map((tipoAmbulancia) => ({
+              ...tipoAmbulancia,
+              expanded: false,
+              teams: tipoAmbulancia.teams.map((team) => ({
+                ...team,
+                expanded: false,
+              })),
+            }));
+          }
+        } else {
+          Swal.fire('Sin resultados', 'No se encontraron conflictos agrupados.', 'info');
+        }
+      },
+      (error) => {
+        console.error('Error al obtener conflictos agrupados:', error);
+        this.conflictosAgrupados = [];
+        Swal.fire('Error', 'Ocurrió un error al obtener los conflictos agrupados.', 'error');
       }
-    },
-    (error) => {
-      // Limpiar conflictos agrupados en caso de error también
-      this.conflictosAgrupados = [];
-      console.error('Error al obtener conflictos agrupados:', error);
-      Swal.fire('Error', 'Ocurrió un error al obtener los conflictos agrupados.', 'error');
+    );
+  }
+
+
+
+
+  alternarExpandir(item: TipoAmbulancia | Provincia): void {
+    if (this.isProvincia(item)) {
+      item.expanded = !item.expanded;
+    } else {
+      item.expanded = !item.expanded;
     }
-  );
-}
+  }
 
-
-
-alternarExpandir(tipoAmbulancia: TipoAmbulancia): void {
-  tipoAmbulancia.expanded = !tipoAmbulancia.expanded;
-}
-
-alternarExpandirEquipo(team: Team): void {
-  team.expanded = !team.expanded;
-}
-
+  alternarExpandirEquipo(team: Team): void {
+    team.expanded = !team.expanded;
+  }
 
 
   obtenerDatosLocalStorage(): any {
@@ -313,9 +369,11 @@ alternarExpandirEquipo(team: Team): void {
 
 
   verDetalleSolicitud(solicitudId: number): void {
+    //console.log('a mostrar el aval');
+    this.solicitudPermisoId = solicitudId;
     this.conflictosService.obtenerDetalleSolicitudInforme(solicitudId).subscribe({
       next: (response: any) => {
-        //console.log('Detalle de la solicitud:', response);
+        console.log('Detalle de la solicitud:', response.estatus);
 
         this.detalleSolicitud = {
           usuarioNombre: response.nombreUsuario,
@@ -327,12 +385,20 @@ alternarExpandirEquipo(team: Team): void {
           fechaInicio: response.fechaInicio,
           fechaFin: response.fechaFin,
           estatus: response.estado,
+          estadoSolicitud: response.estatus,
           detalles: response.conflictoDetalles.map((detalle: any) => ({
             fechaConflicto: detalle.fechaConflicto,
             motivo: detalle.motivo,
             detallesAdicionales: detalle.detallesAdicionales,
           })),
+          imagenUrl: null, // Placeholder para la URL de la imagen
         };
+
+        // Asignar el estatus inicial desde el endpoint
+        // Asignar el valor inicial al dropdown
+      this.nuevoEstatus = response.estatus || response.estadoSolicitud;
+        // Llamar al endpoint para obtener la URL de la imagen
+        this.obtenerImagenUrl(solicitudId, response.cedula);
 
         this.mostrarDetalleSolicitud = true; // Activa la vista del detalle de la solicitud
       },
@@ -343,17 +409,103 @@ alternarExpandirEquipo(team: Team): void {
     });
   }
 
+  cambiarEstatusSolicitud(): void {
+    const estatusValido = ['Aprobado', 'Rechazado'];
+
+    // Validar que no se intente enviar "Pendiente" como cambio
+    if (this.nuevoEstatus === 'Pendiente') {
+      Swal.fire('Error', 'No puedes cambiar el estatus a "Pendiente".', 'error');
+      return;
+    }
+
+    if (!estatusValido.includes(this.nuevoEstatus)) {
+      Swal.fire('Error', 'Debes seleccionar un estatus válido antes de proceder.', 'error');
+      return;
+    }
+
+    // Solicitar el comentario del supervisor
+    Swal.fire({
+      title: 'Comentario del Supervisor',
+      input: 'textarea',
+      inputLabel: 'Escribe un comentario o nota para este cambio de estatus:',
+      inputPlaceholder: 'Escribe tu comentario aquí...',
+      inputAttributes: {
+        'aria-label': 'Escribe tu comentario aquí'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Enviar',
+      cancelButtonText: 'Cancelar',
+      preConfirm: (nota) => {
+        if (!nota || nota.trim() === '') {
+          Swal.showValidationMessage('Debes escribir un comentario.');
+        }
+        return nota.trim();
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        const payload = {
+          Estatus: this.nuevoEstatus,
+          DescripcionSupervisor: result.value // Comentario ingresado
+        };
+
+        // Llamada al servicio para actualizar el estatus y la descripción
+        this.conflictosService.actualizarEstatusSolicitud(this.solicitudPermisoId, payload).subscribe(
+          (response: any) => {
+            Swal.fire('Éxito', `El estatus ha sido cambiado a: ${this.nuevoEstatus}.`, 'success');
+            this.detalleSolicitud.estatus = this.nuevoEstatus; // Actualizar en la UI
+            this.detalleSolicitud.descripcionSupervisor = payload.DescripcionSupervisor; // Actualizar la descripción en la UI
+          },
+          (error) => {
+            console.error('Error al actualizar el estatus:', error);
+            Swal.fire('Error', error.error || 'No se pudo actualizar el estatus. Inténtalo de nuevo.', 'error');
+          }
+        );
+      }
+    });
+  }
+
+
+
+
+  // Método para obtener la URL de la imagen
+  obtenerImagenUrl(permissionId: number, cedula: string): void {
+    this.conflictosService.obtenerImagenUrlPermission(permissionId, cedula).subscribe(
+      (response: any) => {
+        if (this.detalleSolicitud) {
+          this.detalleSolicitud.imagenUrl = response.imageUrl; // Asignar la URL de la imagen
+        }
+      },
+      (error) => {
+        console.error('Error al obtener la URL de la imagen:', error);
+        if (this.detalleSolicitud) {
+          this.detalleSolicitud.imagenUrl = null; // Si hay error, asegurar que la URL sea null
+        }
+      }
+    );
+  }
+
+
+  abrirImagenEnNuevaPestana(url: string): void {
+    if (url) {
+      window.open(url, '_blank');
+    } else {
+      Swal.fire('Error', 'No se encontró una URL válida para la imagen.', 'error');
+    }
+  }
 
 
   verDetalle(conflicto: any,teamName: string): void {
     //console.log("Nombre del Team");
     //console.log(teamName);
 
+
     this.detalleUsuario = {
       ...conflicto,
       teamName, // Añadimos el nombre del equipo al detalle del usuario
       estatusInicial: conflicto.estatus,
     };
+    console.log('Data ');
+    console.log(this.detalleUsuario);
     //console.log(this.detalleUsuario.teamName);
     /*
     this.conflictosService.obtenerConflictosUsuario(usuarioId).subscribe(
@@ -376,7 +528,7 @@ alternarExpandirEquipo(team: Team): void {
   //console.log(conflicto);
   //this.detalleUsuario = conflicto; // Asigna directamente el detalle del usuario seleccionado
   this.mostrarDetalle = true; // Muestra el detalle
-  console.log(this.detalleUsuario)
+  //console.log(this.detalleUsuario)
   //console.log('hello v1');
   //console.log(conflicto.conflictoId);
   // Obtener detalles del conflicto asociado
@@ -492,6 +644,20 @@ alternarExpandirEquipo(team: Team): void {
       this.obtenerConflictosAgrupados();
     //}
   }
+
+  isProvincia(item: TipoAmbulancia | Provincia): item is Provincia {
+    return (item as Provincia).provinciaNombre !== undefined;
+  }
+
+  isTipoAmbulancia(item: TipoAmbulancia | Provincia): item is TipoAmbulancia {
+    return (item as TipoAmbulancia).tipoAmbulanciaId !== undefined;
+  }
+
+  alternarExpandirProvincia(provincia: Provincia): void {
+    provincia.expanded = !provincia.expanded;
+  }
+
+
 
   cargarRegiones(): void {
     this.usuarioService.obtenerRegiones().subscribe(

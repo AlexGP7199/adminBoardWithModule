@@ -48,8 +48,24 @@ export class ConflictoService {
     });
   }
 
+   // Actualizar estatus de la solicitud
+  // Actualizar estatus de la solicitud con comentario del supervisor
+  actualizarEstatusSolicitud(
+    id: number,
+    payload: { Estatus: string; DescripcionSupervisor: string }
+  ): Observable<any> {
+    const url = `${apiURL}/User/actualizar-estatus-solicitud/${id}`;
+    return this.http.patch(url, payload);
+  }
+
+
+
   crearSolicitudPermiso(solicitud: any): Observable<any> {
     return this.http.post(`${apiURL}/User/crear-solicitud-permiso`, solicitud);
+  }
+  actualizarImagenSolicitud(solicitudId: number, formData: FormData): Observable<any> {
+    const url = `${apiURL}/User/actualizar-imagen-solicitud/${solicitudId}`;
+    return this.http.patch(url, formData);
   }
 
   verificarConflictosAprobados(usuarioId: number): Observable<any> {
@@ -98,6 +114,12 @@ export class ConflictoService {
   obtenerImagenUrl(conflictId: number, cedula: string): Observable<any> {
     return this.http.get<any>(`${apiURL}/User/conflicts/${conflictId}/user/${cedula}/image-url`);
   }
+
+  obtenerImagenUrlPermission(permissionId: number, cedula: string): Observable<any> {
+    const url = `${apiURL}/User/permissions/${permissionId}/user/${cedula}/image-url`;
+    return this.http.get<any>(url);
+  }
+
 
   // Obtener días habilitados de un conflicto
   obtenerDiasConflictoDetalle(conflictoId: number): Observable<any> {
