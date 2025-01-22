@@ -59,10 +59,27 @@ export class ConflictoService {
   }
 
 
+  // Nueva solicitud Permiso
+  obtenerDiasDisponibles(usuarioId: number, conflictoId: number, fechaInicio: string, fechaFin: string): Observable<any> {
+    return this.http.get(`${apiURL}/User/obtener-dias-disponibles`, {
+      params: {
+        usuarioId: usuarioId.toString(),
+        conflictoId: conflictoId.toString(),
+        fechaInicio,
+        fechaFin
+      }
+    });
+  }
 
+  crearSolicitudPermisoV2(formData: FormData): Observable<any> {
+    return this.http.post(`${apiURL}/User/crear-solicitud-permisoV2`, formData);
+  }
+
+  //
   crearSolicitudPermiso(solicitud: any): Observable<any> {
     return this.http.post(`${apiURL}/User/crear-solicitud-permiso`, solicitud);
   }
+
   actualizarImagenSolicitud(solicitudId: number, formData: FormData): Observable<any> {
     const url = `${apiURL}/User/actualizar-imagen-solicitud/${solicitudId}`;
     return this.http.patch(url, formData);
@@ -138,6 +155,7 @@ export class ConflictoService {
   actualizarEstadoSolicitud(id: number, request: any): Observable<any> {
     return this.http.put(`${apiURL}/User/actualizar-estado-solicitud/${id}`, request);
   }
+
 
 
 

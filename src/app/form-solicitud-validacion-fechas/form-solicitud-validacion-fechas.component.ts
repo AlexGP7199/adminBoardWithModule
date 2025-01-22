@@ -111,7 +111,7 @@ enviarFormulario(): void {
   if (!this.validarFechasEstudioRequest.imagen) {
     this.mostrarErrorImagen = true;
     Swal.fire('Error', 'Debe cargar una imagen antes de enviar el formulario.', 'error');
-    this.authService.logout();
+    //this.authService.logout();
     return;
   }
 
@@ -123,7 +123,7 @@ enviarFormulario(): void {
 
   if (this.validarFechasEstudioRequest.diasEstudio.length === 0) {
     Swal.fire('Error', 'Debe seleccionar al menos un día de estudio.', 'error');
-    this.authService.logout();
+    //this.authService.logout();
     return;
   }
 

@@ -89,151 +89,210 @@
     </button>
   </div>
 
-  <!-- Formulario para Crear Solicitud -->
-  <div *ngIf="mostrarFormulario" class="bg-gray-50 p-6 rounded-lg shadow-lg">
-    <h3 class="text-2xl font-semibold text-gray-700 mb-6">Nueva Solicitud de Permiso</h3>
-    <form (ngSubmit)="crearSolicitudPermiso()" class="space-y-6">
-      <div>
-        <label class="block text-lg font-medium text-gray-700">Fecha Inicio</label>
-        <input
-          type="date"
-          [(ngModel)]="nuevaSolicitud.fechaInicio"
-          name="fechaInicio"
-          class="block w-full mt-2 input bg-white rounded-md border-gray-300 shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500"
-        />
-      </div>
-      <div>
-        <label class="block text-lg font-medium text-gray-700">Fecha Fin</label>
-        <input
-          type="date"
-          [(ngModel)]="nuevaSolicitud.fechaFin"
-          name="fechaFin"
-          class="block w-full mt-2 input bg-white rounded-md border-gray-300 shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500"
-        />
-      </div>
-      <small class="text-gray-500">* El rango máximo permitido es de 14 días.</small>
+<!-- Formulario para Crear Solicitud -->
+<div *ngIf="mostrarFormulario" class="bg-gray-50 p-6 rounded-lg shadow-lg">
+  <h3 class="text-2xl font-semibold text-gray-700 mb-6">Nueva Solicitud de Permiso</h3>
 
-      <div>
-        <label class="block text-lg font-medium text-gray-700">Descripción Personal</label>
-        <textarea
-          [(ngModel)]="nuevaSolicitud.descripcionPersonal"
-          name="descripcionPersonal"
-          rows="4"
-          class="block w-full mt-2 input bg-white rounded-md border-gray-300 shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500">
-        </textarea>
-      </div>
-
-      <!-- Campo para subir imagen -->
-      <div>
-        <label class="block text-lg font-medium text-gray-700">Subir Imagen</label>
-        <input
-          type="file"
-          accept="image/*"
-          (change)="onFileSelected($event)"
-          class="block w-full mt-2 input bg-white rounded-md border-gray-300 shadow-sm focus:ring focus:ring-blue-500 focus:border-blue-500"
-        />
-        <!-- Previsualización de la imagen -->
-        <div *ngIf="previewUrl" class="mt-4">
-          <p class="text-sm text-gray-600">Previsualización de la imagen:</p>
-          <img [src]="previewUrl" alt="Previsualización de la imagen" class="mt-2 max-w-full rounded-lg shadow-md" />
-        </div>
-      </div>
-
-
-      <div class="flex justify-end space-x-4">
-        <button
-          type="submit"
-          class="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 shadow-md focus:ring focus:ring-green-300">
-          Crear
-        </button>
-        <button
-          type="button"
-          (click)="cancelarFormulario()"
-          class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 shadow-md focus:ring focus:ring-red-300">
-          Cancelar
-        </button>
-      </div>
-    </form>
+  <!-- Paso 1: Selección de Fechas -->
+  <div *ngIf="pasoActual === 1" class="space-y-4">
+    <div>
+      <label class="block text-lg font-medium text-gray-700">Fecha Inicio</label>
+      <input
+        type="date"
+        [(ngModel)]="nuevaSolicitud.fechaInicio"
+        name="fechaInicio"
+        class="block w-full mt-2 input bg-white rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      />
+    </div>
+    <div>
+      <label class="block text-lg font-medium text-gray-700">Fecha Fin</label>
+      <input
+        type="date"
+        [(ngModel)]="nuevaSolicitud.fechaFin"
+        name="fechaFin"
+        class="block w-full mt-2 input bg-white rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+      />
+    </div>
+    <button
+      (click)="buscarDiasDisponibles()"
+      class="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 shadow-md focus:ring focus:ring-blue-300 w-full"
+    >
+      Buscar Días Disponibles
+    </button>
+    <small class="text-gray-500">* El rango máximo permitido es de 14 días.</small>
   </div>
 
+  <!-- Paso 2: Selección de Días -->
+  <div *ngIf="pasoActual === 2" class="mt-6 bg-white p-4 rounded-lg shadow-sm">
+    <h4 class="text-xl font-medium text-gray-700 mb-4">Seleccione los días habilitados:</h4>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div *ngFor="let dia of diasDisponibles" class="flex items-center space-x-2">
+        <input type="checkbox" [(ngModel)]="dia.seleccionado" (change)="actualizarDiasSeleccionados()" />
+        <label>{{ dia.fechaConflicto | date: 'dd-MM-yyyy' }}</label>
+      </div>
+    </div>
+    <div class="flex justify-between mt-4">
+      <button
+        (click)="volverPaso()"
+        *ngIf="pasoActual > 1"
+        class="bg-gray-500 text-white py-2 px-6 rounded-lg hover:bg-gray-600 shadow-md focus:ring focus:ring-gray-300"
+      >
+        Volver
+      </button>
+      <button
+        (click)="guardarDiasYContinuar()"
+        class="bg-green-500 text-white py-2 px-6 rounded-lg hover:bg-green-600 shadow-md focus:ring focus:ring-green-300"
+      >
+        Guardar y Continuar
+      </button>
+    </div>
+  </div>
 
+  <!-- Paso 3: Descripción e Imagen -->
+  <div *ngIf="pasoActual === 3">
+    <label class="block text-lg font-medium text-gray-700 mt-6">Descripción Personal</label>
+    <textarea
+      [(ngModel)]="nuevaSolicitud.descripcionPersonal"
+      name="descripcionPersonal"
+      rows="4"
+      class="block w-full mt-2 input bg-white rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+    ></textarea>
 
-  <!-- Detalle de la Solicitud -->
-  <div *ngIf="mostrarDetalle" class="bg-gray-50 p-6 rounded-lg shadow-lg mt-8">
-    <h3 class="text-2xl font-semibold text-gray-700 mb-6">Detalle de la Solicitud</h3>
-    <div class="space-y-2">
-      <p><strong>Usuario:</strong> {{ detalleSolicitud?.nombreUsuario }}</p>
-      <p><strong>Cédula:</strong> {{ detalleSolicitud?.cedula }}</p>
-      <p><strong>Provincia:</strong> {{ detalleSolicitud?.provincia }}</p>
-      <p><strong>Equipo:</strong> {{ detalleSolicitud?.teamNombre }}</p>
-      <p><strong>Cargo:</strong> {{ detalleSolicitud?.cargo }}</p>
-      <p><strong>Fecha Inicio:</strong> {{ detalleSolicitud?.fechaInicio | date: 'dd-MM-yyyy' }}</p>
-      <p><strong>Fecha Fin:</strong> {{ detalleSolicitud?.fechaFin | date: 'dd-MM-yyyy' }}</p>
-      <p><strong>Descripción Personal:</strong> {{ detalleSolicitud?.descripcionPersonal }}</p>
-      <p><strong>Descripción Supervisor:</strong> {{ detalleSolicitud?.descripcionSupervisor }}</p>
-      <p><strong>Estado:</strong> {{ detalleSolicitud?.estado }}</p>
-      <p><strong>Estatus:</strong> {{ detalleSolicitud?.estatus }}</p>
-
-      <!-- Mostrar la imagen -->
-<div *ngIf="detalleSolicitud?.imagenUrl" class="mt-4">
-  <h4 class="text-lg font-semibold text-gray-700">Imagen Adjunta:</h4>
-  <img
-    [src]="detalleSolicitud.imagenUrl"
-    alt="Imagen de la Solicitud"
-    class="mt-2 max-w-full rounded-lg shadow-md"
-  />
-
-  <!-- Edición de la imagen si el estado es Rechazado -->
-  <div *ngIf="detalleSolicitud?.estatus === 'Rechazado'" class="mt-4">
-    <h4 class="text-lg font-semibold text-gray-700">Actualizar Imagen:</h4>
+    <label class="block text-lg font-medium text-gray-700 mt-6">Subir Imagen</label>
     <input
       type="file"
-      (change)="onImageSelected($event)"
       accept="image/*"
-      class="mt-2 block w-full p-2 border-gray-300 rounded-lg shadow-sm"
+      (change)="onFileSelected($event)"
+      class="block w-full mt-2 input bg-white rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
     />
-    <button
-      class="mt-2 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-      (click)="actualizarImagenSolicitud()"
-      [disabled]="!selectedImage"
-    >
-      Actualizar Imagen
-    </button>
+    <div *ngIf="previewUrl" class="mt-4">
+      <p class="text-sm text-gray-600">Previsualización de la imagen:</p>
+      <img [src]="previewUrl" alt="Previsualización de la imagen" class="mt-2 max-w-full rounded-lg shadow-md" />
+    </div>
+
+    <div class="flex justify-between mt-4">
+      <button
+        (click)="volverPaso()"
+        class="bg-gray-500 text-white py-2 px-6 rounded-lg hover:bg-gray-600 shadow-md focus:ring focus:ring-gray-300"
+      >
+        Volver
+      </button>
+    </div>
   </div>
 
-  <!-- Mensaje si la edición no está permitida -->
-  <div *ngIf="detalleSolicitud?.estatus === 'Aprobado'" class="mt-4 text-gray-500">
-    <p>No puedes editar la imagen de una solicitud aprobada.</p>
+  <!-- Botones de Acción Final -->
+  <div *ngIf="pasoActual === 3" class="flex justify-end space-x-4 mt-6">
+    <button
+      type="submit"
+      (click)="crearSolicitudPermisoV2()"
+      class="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 shadow-md focus:ring-green-300"
+    >
+      Crear
+    </button>
+    <button
+      type="button"
+      (click)="cancelarFormulario()"
+      class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 shadow-md focus:ring-red-300"
+    >
+      Cancelar
+    </button>
   </div>
 </div>
 
-    </div>
 
-    <h4 class="text-xl font-semibold text-gray-700 mt-4">Detalles del Conflicto:</h4>
-    <ul>
-      <li *ngFor="let detalle of detallesSeleccionados; let i = index" class="mt-2">
+
+
+
+
+<!-- Detalle de la Solicitud -->
+<div *ngIf="mostrarDetalle" class="bg-gray-50 p-8 rounded-lg shadow-lg mt-8">
+  <h3 class="text-3xl font-bold text-gray-800 mb-8 border-b pb-2">Detalle de la Solicitud</h3>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <p class="text-lg text-gray-700"><strong>Usuario:</strong> {{ detalleSolicitud?.nombreUsuario }}</p>
+    <p class="text-lg text-gray-700"><strong>Cédula:</strong> {{ detalleSolicitud?.cedula }}</p>
+    <p class="text-lg text-gray-700"><strong>Provincia:</strong> {{ detalleSolicitud?.provincia }}</p>
+    <p class="text-lg text-gray-700"><strong>Equipo:</strong> {{ detalleSolicitud?.teamNombre }}</p>
+    <p class="text-lg text-gray-700"><strong>Cargo:</strong> {{ detalleSolicitud?.cargo }}</p>
+    <p class="text-lg text-gray-700"><strong>Fecha Inicio:</strong> {{ detalleSolicitud?.fechaInicio | date: 'dd-MM-yyyy' }}</p>
+    <p class="text-lg text-gray-700"><strong>Fecha Fin:</strong> {{ detalleSolicitud?.fechaFin | date: 'dd-MM-yyyy' }}</p>
+    <p class="text-lg text-gray-700 col-span-2"><strong>Descripción Personal:</strong></p>
+    <div class="bg-white p-4 rounded-lg shadow-sm text-gray-700 col-span-2">{{ detalleSolicitud?.descripcionPersonal }}</div>
+    <p class="text-lg text-gray-700 col-span-2"><strong>Descripción Supervisor:</strong></p>
+    <div class="bg-white p-4 rounded-lg shadow-sm text-gray-700 col-span-2">{{ detalleSolicitud?.descripcionSupervisor }}</div>
+    <p class="text-lg text-gray-700"><strong>Estado:</strong> <span class="font-semibold text-blue-600">{{ detalleSolicitud?.estado }}</span></p>
+    <p class="text-lg text-gray-700"><strong>Estatus:</strong> <span class="font-semibold text-blue-600">{{ detalleSolicitud?.estatus }}</span></p>
+  </div>
+
+  <!-- Mostrar la imagen -->
+  <div *ngIf="detalleSolicitud?.imagenUrl" class="mt-8">
+    <h4 class="text-xl font-semibold text-gray-800">Imagen Adjunta:</h4>
+    <div class="flex items-center space-x-6 mt-4">
+      <img
+        [src]="detalleSolicitud.imagenUrl"
+        alt="Imagen de la Solicitud"
+        class="rounded-lg shadow-md border max-w-md"
+      />
+      <button
+        class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 shadow-md"
+        (click)="abrirImagenEnNuevaPestana(detalleSolicitud.imagenUrl)"
+      >
+        Ver Imagen
+      </button>
+      <!-- Edición de la imagen si el estado es Rechazado -->
+      <div *ngIf="detalleSolicitud?.estatus === 'Rechazado'" class="flex flex-col space-y-4">
         <input
-          type="checkbox"
-          [(ngModel)]="detalle.seleccionado"
-          class="mr-4"
+          type="file"
+          (change)="onImageSelected($event)"
+          accept="image/*"
+          class="p-2 border-gray-300 rounded-lg shadow-sm"
         />
-        <p><strong>Fecha:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
-        <p><strong>Motivo:</strong> {{ detalleSolicitud?.conflictoDetalles[i]?.motivo }}</p>
-        <p><strong>Detalles Adicionales:</strong> {{ detalleSolicitud?.conflictoDetalles[i]?.detallesAdicionales }}</p>
-      </li>
-    </ul>
-    <div class="flex justify-between mt-6">
-      <button
-        (click)="deshabilitarDetallesConflicto()"
-        class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 shadow-md focus:ring focus:ring-red-300">
-        Deshabilitar Detalles Seleccionados
-      </button>
-      <button
-        (click)="cerrarDetalle()"
-        class="mt-4 bg-gray-600 text-white py-2 px-6 rounded-lg hover:bg-gray-700 shadow-md focus:ring focus:ring-gray-300">
-        Cerrar
-      </button>
+        <button
+          class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 shadow-md"
+          (click)="actualizarImagenSolicitud()"
+          [disabled]="!selectedImage"
+        >
+          Actualizar Imagen
+        </button>
+      </div>
+      <!-- Mensaje si la edición no está permitida -->
+      <p *ngIf="detalleSolicitud?.estatus === 'Aprobado'" class="text-gray-500">No puedes editar la imagen de una solicitud aprobada.</p>
     </div>
   </div>
+
+  <h4 class="text-2xl font-bold text-gray-800 mt-8 border-b pb-3">Detalles del Conflicto</h4>
+  <div class="mt-6 bg-white p-6 rounded-lg shadow-md">
+    <ul class="divide-y divide-gray-200">
+      <li *ngFor="let detalle of detallesSeleccionados; let i = index" class="py-4">
+        <div class="flex items-center space-x-4">
+          <input type="checkbox" [(ngModel)]="detalle.seleccionado" class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+          <div class="flex-1">
+            <p class="text-lg text-gray-700 font-medium"><strong>Fecha:</strong> {{ detalle.fechaConflicto | date: 'dd-MM-yyyy' }}</p>
+            <p class="text-md text-gray-600"><strong>Motivo:</strong> {{ detalleSolicitud?.conflictoDetalles[i]?.motivo }}</p>
+            <p class="text-md text-gray-600"><strong>Detalles Adicionales:</strong> {{ detalleSolicitud?.conflictoDetalles[i]?.detallesAdicionales }}</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+
+  <div class="flex justify-end mt-8 space-x-4">
+    <button
+      (click)="deshabilitarDetallesConflicto()"
+      class="bg-red-600 text-white py-2 px-6 rounded-lg hover:bg-red-700 shadow-md focus:ring focus:ring-red-300"
+    >
+      Deshabilitar Detalles Seleccionados
+    </button>
+    <button
+      (click)="cerrarDetalle()"
+      class="bg-gray-600 text-white py-2 px-6 rounded-lg hover:bg-gray-700 shadow-md focus:ring focus:ring-gray-300"
+    >
+      Cerrar
+    </button>
+  </div>
+</div>
+
+
+
 
 

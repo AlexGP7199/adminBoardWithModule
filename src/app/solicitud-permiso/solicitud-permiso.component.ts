@@ -23,22 +23,28 @@ export class SolicitudPermisoComponent implements OnInit {
   detalleSolicitud: any = null; // Almacenar los datos del detalle de la solicitud
   solicitudId : any = 0;
   mostrarRetirar: boolean = false;
+  fechaInicioFormateada: string = '';
+  fechaFinFormateada: string = '';
 
   //
 
   diasHabilitados: { nombre: string; valor: string }[] = []; // Lista de días habilitados
   diaSeleccionado: string = ''; // Día seleccionado por el usuario para deshabilitar
 
-
+  pasoActual: number = 1; // Control de pasos del formulario
+  mostrarDescripcionYImagen: boolean = false;
   nuevaSolicitud = {
-    usuarioId: 0,
-    conflictoId: 0,
+    usuarioId: 1,  // Simulación de usuario
+    conflictoId: 2, // Simulación de conflicto aprobado
     fechaInicio: '',
     fechaFin: '',
     descripcionPersonal: '',
     file: null as File | null, // Nuevo campo para el archivo
+    diasSeleccionados: [] as Date[]
   };
 
+  diasDisponibles: any[] = [];
+  //
   constructor(private conflictoService: ConflictoService, private authService: AuthService) {}
 
   ngOnInit(): void {
@@ -51,6 +57,123 @@ export class SolicitudPermisoComponent implements OnInit {
       Swal.fire('Error', 'No se pudo obtener el usuario.', 'error');
     }
   }
+
+
+  // Buscar días disponibles
+  buscarDiasDisponibles(): void {
+    if (!this.nuevaSolicitud.fechaInicio || !this.nuevaSolicitud.fechaFin) {
+      Swal.fire('Error', 'Debe seleccionar un rango de fechas.', 'error');
+      return;
+    }
+
+    const fechaInicio = new Date(this.nuevaSolicitud.fechaInicio);
+    const fechaFin = new Date(this.nuevaSolicitud.fechaFin);
+    const diferenciaDias = (fechaFin.getTime() - fechaInicio.getTime()) / (1000 * 60 * 60 * 24);
+
+    if (diferenciaDias > 14) {
+      Swal.fire('Error', 'El rango máximo permitido es de 14 días.', 'error');
+      return;
+    }
+
+    this.conflictoService.obtenerDiasDisponibles(
+      this.nuevaSolicitud.usuarioId,
+      this.nuevaSolicitud.conflictoId,
+      this.nuevaSolicitud.fechaInicio,
+      this.nuevaSolicitud.fechaFin
+    ).subscribe((response: any) => {
+      if (response.diasDisponibles) {
+        this.diasDisponibles = response.diasDisponibles.map((d: any) => ({ ...d, seleccionado: false }));
+        this.pasoActual = 2; // Avanzar al siguiente paso después de la búsqueda
+      } else {
+        Swal.fire('Info', response.Message || 'No hay días disponibles.', 'info');
+      }
+    }, (error) => {
+      Swal.fire('Error', 'No se pudieron obtener los días disponibles.', 'error');
+    });
+  }
+
+// Actualizar la lista de días seleccionados cuando se cambia un checkbox
+actualizarDiasSeleccionados(): void {
+  this.nuevaSolicitud.diasSeleccionados = this.diasDisponibles
+    .filter(d => d.seleccionado)
+    .map(d => new Date(d.fechaConflicto)); // Convertir a objeto Date
+}
+
+ // Guardar días y continuar al siguiente paso
+ guardarDiasYContinuar(): void {
+  if (this.nuevaSolicitud.diasSeleccionados.length === 0) {
+    Swal.fire('Error', 'Debe seleccionar al menos un día.', 'error');
+    return;
+  }
+  this.pasoActual = 3; // Avanzar al paso de descripción e imagen
+}
+
+
+// Guardar los días seleccionados y mostrar los apartados adicionales
+salvarDiasSeleccionados(): void {
+  if (this.nuevaSolicitud.diasSeleccionados.length > 0) {
+    Swal.fire('Éxito', 'Días seleccionados guardados correctamente.', 'success');
+    this.mostrarDescripcionYImagen = true;
+  } else {
+    Swal.fire('Error', 'Debe seleccionar al menos un día.', 'error');
+  }
+}
+
+
+// Crear nueva solicitud
+crearSolicitudPermisoV2(): void {
+  const seleccionados = this.diasDisponibles.filter(d => d.seleccionado).map(d => d.fechaConflicto);
+
+  if (!this.nuevaSolicitud.fechaInicio || !this.nuevaSolicitud.fechaFin || !this.nuevaSolicitud.descripcionPersonal || !this.nuevaSolicitud.file || seleccionados.length === 0) {
+    Swal.fire('Error', 'Todos los campos son obligatorios, incluidos los días seleccionados y la imagen.', 'error');
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('usuarioId', this.nuevaSolicitud.usuarioId.toString());
+  formData.append('conflictoId', this.nuevaSolicitud.conflictoId.toString());
+  formData.append('fechaInicio', this.nuevaSolicitud.fechaInicio);
+  formData.append('fechaFin', this.nuevaSolicitud.fechaFin);
+  formData.append('descripcionPersonal', this.nuevaSolicitud.descripcionPersonal);
+  formData.append('file', this.nuevaSolicitud.file);
+  seleccionados.forEach(d => formData.append('diasSeleccionados', d));
+  console.log('Contenido de formData:');
+  const formDataObject: any = {};
+  formData.forEach((value, key) => {
+    formDataObject[key] = value;
+  });
+  console.log('FormData como objeto JSON:', formDataObject);
+
+  this.conflictoService.crearSolicitudPermisoV2(formData).subscribe(
+    (response: any) => {
+      Swal.fire('Éxito', 'Solicitud creada exitosamente.', 'success');
+      this.cancelarFormulario()
+      this.obtenerSolicitudesActivas();
+      //this.mostrarFormulario = false;
+
+    },
+    (error) => {
+      Swal.fire('Error', error.error || 'No se pudo crear la solicitud.', 'error');
+    }
+  );
+}
+
+// Función para retroceder un paso, asegurando que no vaya más atrás del paso 1
+volverPaso(): void {
+  if (this.pasoActual > 1) {
+    this.pasoActual -= 1;
+  }
+}
+
+
+  abrirImagenEnNuevaPestana(url: string): void {
+    if (url) {
+      window.open(url, '_blank');
+    } else {
+      console.error('No se pudo abrir la imagen porque la URL es inválida.');
+    }
+  }
+
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
@@ -193,6 +316,7 @@ export class SolicitudPermisoComponent implements OnInit {
   // Mostrar formulario para nueva solicitud
   mostrarFormularioNuevaSolicitud(): void {
     if (this.conflictoId) {
+      this.mostrarRetirar = false;
       this.mostrarFormulario = true;
       this.mostrarDetalle = false; // Oculta el detalle en caso de estar visible
     } else {
@@ -269,6 +393,7 @@ actualizarImagenSolicitud(): void {
       Swal.fire('Éxito', response.Message, 'success');
       this.detalleSolicitud.imagenUrl = response.NuevaImagenRuta;
       this.detalleSolicitud.estatus = response.NuevoEstatus;
+      window.location.reload();
     },
     error: (error) => {
       Swal.fire('Error', error.error?.message || 'No se pudo actualizar la imagen.', 'error');
@@ -454,7 +579,12 @@ cerrarRetirar(): void {
       fechaFin: '',
       descripcionPersonal: '',
       file: null as File | null,
+      diasSeleccionados: [],
     };
+
+    this.diasDisponibles = [];
+    this.previewUrl = null;
+    this.pasoActual = 1; // Volver al paso inicial
   }
 
 }

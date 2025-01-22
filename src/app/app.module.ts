@@ -32,6 +32,7 @@ import { AmbulanciasExcelUploadComponent } from './ambulancias-excel-upload/ambu
 import { ColaboradoresExcelCargaComponent } from './colaboradores-excel-carga/colaboradores-excel-carga.component';
 import { SpinnerComponent } from './spinner/spinner.component';
 import { HttpRequestInterceptor } from './services/interceptors/http.interceptor';
+import { FechaFormatPipe } from './pipes/fecha-format.pipe';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { HttpRequestInterceptor } from './services/interceptors/http.interceptor
     AmbulanciasExcelUploadComponent,
     ColaboradoresExcelCargaComponent,
     SpinnerComponent,
+    FechaFormatPipe,
 
   ],
   imports: [
