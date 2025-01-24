@@ -177,6 +177,12 @@ filtrarEstatus(estatusList: string[]): string[] {
   }
 } */
 
+  // Método para obtener solo los estatus permitidos (sin "En Proceso")
+obtenerEstatusPermitidos(): string[] {
+  return ['Pendiente', 'Aprobado', 'Rechazado'];
+}
+
+
   filtrarEstatus(): string[] {
     return this.estatusList; // Siempre mostrar todos los estatus
   }
@@ -373,7 +379,7 @@ filtrarEstatus(estatusList: string[]): string[] {
     this.solicitudPermisoId = solicitudId;
     this.conflictosService.obtenerDetalleSolicitudInforme(solicitudId).subscribe({
       next: (response: any) => {
-        console.log('Detalle de la solicitud:', response.estatus);
+        //console.log('Detalle de la solicitud:', response.estatus);
 
         this.detalleSolicitud = {
           usuarioNombre: response.nombreUsuario,
@@ -504,8 +510,8 @@ filtrarEstatus(estatusList: string[]): string[] {
       teamName, // Añadimos el nombre del equipo al detalle del usuario
       estatusInicial: conflicto.estatus,
     };
-    console.log('Data ');
-    console.log(this.detalleUsuario);
+    //console.log('Data ');
+    //console.log(this.detalleUsuario);
     //console.log(this.detalleUsuario.teamName);
     /*
     this.conflictosService.obtenerConflictosUsuario(usuarioId).subscribe(

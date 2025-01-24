@@ -28,6 +28,7 @@
             <th class="py-3 px-6 text-left font-semibold">Fecha Inicio</th>
             <th class="py-3 px-6 text-left font-semibold">Fecha Fin</th>
             <th class="py-3 px-6 text-left font-semibold">Descripción</th>
+            <th class="py-3 px-6 text-left font-semibold">Estatus</th>
             <th class="py-3 px-6 text-left font-semibold">Estado</th>
             <th class="py-3 px-6 text-left font-semibold">Acciones</th>
           </tr>
@@ -40,14 +41,15 @@
             <td class="py-4 px-6 text-gray-700">
               <span
                 [ngClass]="{
-                  'bg-green-100 text-green-800 px-2 py-1 rounded-full': solicitud.estado === 'Aprobada',
-                  'bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full': solicitud.estado === 'Pendiente',
-                  'bg-red-100 text-red-800 px-2 py-1 rounded-full': solicitud.estado === 'Rechazada'
+                  'bg-green-100 text-green-800 px-2 py-1 rounded-full': solicitud.estatus === 'Aprobada',
+                  'bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full': solicitud.estatus === 'Pendiente',
+                  'bg-red-100 text-red-800 px-2 py-1 rounded-full': solicitud.estatus === 'Rechazado'
                 }"
               >
-                {{ solicitud.estado }}
+                {{ solicitud.estatus }}
               </span>
             </td>
+            <td class="py-4 px-6 text-gray-700">{{ solicitud.estado}}</td>
             <td class="py-4 px-6 text-gray-700">
               <button
                 (click)="verDetalleSolicitud(solicitud.id)"
@@ -216,9 +218,9 @@
     <p class="text-lg text-gray-700"><strong>Fecha Inicio:</strong> {{ detalleSolicitud?.fechaInicio | date: 'dd-MM-yyyy' }}</p>
     <p class="text-lg text-gray-700"><strong>Fecha Fin:</strong> {{ detalleSolicitud?.fechaFin | date: 'dd-MM-yyyy' }}</p>
     <p class="text-lg text-gray-700 col-span-2"><strong>Descripción Personal:</strong></p>
-    <div class="bg-white p-4 rounded-lg shadow-sm text-gray-700 col-span-2">{{ detalleSolicitud?.descripcionPersonal }}</div>
+    <div class="bg-white p-4 rounded-lg shadow-sm text-gray-700 whitespace-pre-line col-span-2">{{ detalleSolicitud?.descripcionPersonal }}</div>
     <p class="text-lg text-gray-700 col-span-2"><strong>Descripción Supervisor:</strong></p>
-    <div class="bg-white p-4 rounded-lg shadow-sm text-gray-700 col-span-2">{{ detalleSolicitud?.descripcionSupervisor }}</div>
+    <div class="bg-white p-4 rounded-lg shadow-sm text-gray-700 whitespace-pre-line col-span-2">{{ detalleSolicitud?.descripcionSupervisor }}</div>
     <p class="text-lg text-gray-700"><strong>Estado:</strong> <span class="font-semibold text-blue-600">{{ detalleSolicitud?.estado }}</span></p>
     <p class="text-lg text-gray-700"><strong>Estatus:</strong> <span class="font-semibold text-blue-600">{{ detalleSolicitud?.estatus }}</span></p>
   </div>

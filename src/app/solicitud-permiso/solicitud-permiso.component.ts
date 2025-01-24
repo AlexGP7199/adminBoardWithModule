@@ -137,7 +137,7 @@ crearSolicitudPermisoV2(): void {
   formData.append('descripcionPersonal', this.nuevaSolicitud.descripcionPersonal);
   formData.append('file', this.nuevaSolicitud.file);
   seleccionados.forEach(d => formData.append('diasSeleccionados', d));
-  console.log('Contenido de formData:');
+  //console.log('Contenido de formData:');
   const formDataObject: any = {};
   formData.forEach((value, key) => {
     formDataObject[key] = value;
@@ -428,7 +428,7 @@ actualizarImagenSolicitud(): void {
   obtenerImagenUrl(permissionId: number, cedula: string): void {
     this.conflictoService.obtenerImagenUrlPermission(permissionId, cedula).subscribe(
       (response: any) => {
-        console.log(response);
+        //console.log(response);
         this.detalleSolicitud.imagenUrl = response.imageUrl; // Asignar la URL de la imagen
       },
       (error) => {
