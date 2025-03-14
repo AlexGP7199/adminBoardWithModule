@@ -1,0 +1,87 @@
+<div class="max-w-7xl mx-auto py-16 px-8 bg-white rounded-lg shadow-lg">
+  <h1 class="text-3xl font-bold text-center text-gray-900 mb-8">Formulario Recepción Licencia Médica</h1>
+
+  <!-- Datos del Colaborador -->
+  <div class="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
+    <h2 class="text-xl font-bold text-gray-700">Datos del Colaborador</h2>
+    <label class="block text-sm font-medium text-gray-700">Nombre del Colaborador</label>
+    <input type="text" [(ngModel)]="solicitudLicencia.nombreColaborador" class="input mb-4" />
+
+    <label class="block text-sm font-medium text-gray-700">Cédula del Colaborador</label>
+    <input type="text" [(ngModel)]="solicitudLicencia.cedulaColaborador" class="input mb-4" />
+  </div>
+
+  <!-- Comprobación de Requisitos para Licencias -->
+  <div class="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
+    <h2 class="text-xl font-bold text-gray-700">Comprobación de Requisitos para Licencias</h2>
+
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+      <label class="flex items-center">
+        <input type="checkbox" [(ngModel)]="solicitudLicencia.requisitos.nombreMedico" class="mr-2" />
+        Nombre del médico que emite la licencia
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" [(ngModel)]="solicitudLicencia.requisitos.registroMedico" class="mr-2" />
+        Número de registro del médico
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" [(ngModel)]="solicitudLicencia.requisitos.especialidadMedico" class="mr-2" />
+        Especialidad del médico
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" [(ngModel)]="solicitudLicencia.requisitos.diagnostico" class="mr-2" />
+        Diagnóstico
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" [(ngModel)]="solicitudLicencia.requisitos.tiempoDuracion" class="mr-2" />
+        Tiempo de duración de la licencia
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" [(ngModel)]="solicitudLicencia.requisitos.selloMedico" class="mr-2" />
+        Sello del médico
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" [(ngModel)]="solicitudLicencia.requisitos.hojaTimbrada" class="mr-2" />
+        Hoja timbrada
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" [(ngModel)]="solicitudLicencia.requisitos.recomendacionDiagnostico" class="mr-2" />
+        Recomendación del diagnóstico
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" [(ngModel)]="solicitudLicencia.requisitos.cedulaColaboradorAdjunta" class="mr-2" />
+        Copia de cédula adjunta
+      </label>
+      <label class="flex items-center">
+        <input type="checkbox" [(ngModel)]="solicitudLicencia.requisitos.anexosLicencia" class="mr-2" />
+        Anexos a la licencia
+      </label>
+    </div>
+
+    <label class="block text-sm font-medium text-gray-700 mt-4">Observaciones</label>
+    <textarea [(ngModel)]="solicitudLicencia.observaciones" class="input mb-4" rows="3"></textarea>
+  </div>
+
+  <!-- Declaración Jurada del Colaborador -->
+  <div class="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
+    <h2 class="text-xl font-bold text-gray-700 text-center">Declaración Jurada del Colaborador</h2>
+    <p class="text-gray-700 text-sm mb-4 leading-relaxed">
+      Yo, <input type="text" [(ngModel)]="solicitudLicencia.nombreColaborador" class="input inline-input" placeholder="Nombre completo" />, dominicano, mayor de edad, portador de la Cédula de Identificación Personal No.
+      <input type="text" [(ngModel)]="solicitudLicencia.cedulaColaborador" class="input inline-input" placeholder="Cédula" />, declaro libre y voluntariamente, bajo la fe de juramento PRIMERO: Que los documentos entregados por mí al Depto. de RRHH de la DAEH mediante el presente formulario, son originales, que no han sido adulterados en su contenido y los mismos fueron expedidos por el Médico correspondiente, conforme a mis condiciones de salud y;
+      SEGUNDO: Que autorizo al Depto. de RRHH de la DAEH a investigar su veracidad y que en caso de que dichas informaciones no se correspondan a la verdad, sé que puedo ser pasible de ser sometido a la acción de la justicia por "uso de documento falso" y "falsedad en escritura", delitos sancionados en los artículos 147, 150, 151, 159 y 160 del Código Penal Dominicano.
+    </p>
+
+    <p class="text-gray-700 text-sm mb-4">
+      La presente declaración la realizo, en la ciudad
+      <input type="text" [(ngModel)]="solicitudLicencia.ciudadDeclaracion" class="input inline-input" placeholder="Ciudad" />, República Dominicana, a los
+      <input type="number" [(ngModel)]="solicitudLicencia.diaDeclaracion" class="input inline-input" placeholder="Día" /> días del mes de
+      <input type="text" [(ngModel)]="solicitudLicencia.mesDeclaracion" class="input inline-input" placeholder="Mes" /> del año dos mil
+      <input type="number" [(ngModel)]="solicitudLicencia.anioDeclaracion" class="input inline-input" placeholder="Año" /> (20____).
+    </p>
+  </div>
+
+  <!-- Botón de Envío -->
+  <button (click)="enviarSolicitud()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">
+    Enviar Solicitud
+  </button>
+</div>

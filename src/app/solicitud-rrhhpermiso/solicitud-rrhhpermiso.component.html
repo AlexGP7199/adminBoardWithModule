@@ -1,0 +1,71 @@
+<div class="max-w-7xl mx-auto py-16 px-8 bg-white rounded-lg shadow-lg">
+  <h1 class="text-3xl font-bold text-center text-gray-900 mb-8">Formulario de Solicitud de Permiso</h1>
+
+  <!-- Información del Solicitante -->
+  <div class="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
+    <h2 class="text-xl font-bold text-gray-700">Datos del Solicitante</h2>
+    <label class="block text-sm font-medium text-gray-700">Nombre y Apellidos</label>
+    <input type="text" [(ngModel)]="solicitudPermiso.nombre" class="input mb-4" />
+
+    <label class="block text-sm font-medium text-gray-700">Cédula</label>
+    <input type="text" [(ngModel)]="solicitudPermiso.cedula" class="input mb-4" />
+
+    <label class="block text-sm font-medium text-gray-700">Cargo</label>
+    <input type="text" [(ngModel)]="solicitudPermiso.cargo" class="input mb-4" />
+
+    <label class="block text-sm font-medium text-gray-700">Departamento</label>
+    <input type="text" [(ngModel)]="solicitudPermiso.departamento" class="input mb-4" />
+  </div>
+
+  <!-- Motivo del Permiso -->
+  <div class="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
+    <h2 class="text-xl font-bold text-gray-700">Motivo del Permiso</h2>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+      <label *ngFor="let motivo of ['Cita Médica', 'Familiar', 'Enfermo', 'Fallecimiento de un Familiar', 'Académico', 'Trámite de Documentos', 'Paternidad', 'Maternidad', 'Cita Consulta', 'Día Libre por Cumpleaños', 'Otro']" class="flex items-center">
+        <input type="radio" name="motivo" [(ngModel)]="solicitudPermiso.motivo" [value]="motivo" class="mr-2" /> {{ motivo }}
+      </label>
+    </div>
+    <input *ngIf="solicitudPermiso.motivo === 'Otro'" type="text" [(ngModel)]="solicitudPermiso.otroMotivo" class="input mt-2" placeholder="Especifique otro motivo" />
+  </div>
+
+  <!-- Tipo de Permiso -->
+  <div class="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
+    <h2 class="text-xl font-bold text-gray-700">Tipo de Permiso</h2>
+    <div class="flex gap-4">
+      <label class="flex items-center">
+        <input type="radio" name="tipoPermiso" [(ngModel)]="solicitudPermiso.tipoPermiso" value="Día Parcial" class="mr-2" /> Día Parcial
+      </label>
+      <label class="flex items-center">
+        <input type="radio" name="tipoPermiso" [(ngModel)]="solicitudPermiso.tipoPermiso" value="Día Completo" class="mr-2" /> Día Completo
+      </label>
+    </div>
+
+    <label class="block text-sm font-medium text-gray-700 mt-4">Fecha del Permiso</label>
+    <input type="date" [(ngModel)]="solicitudPermiso.fechaPermiso" class="input mb-4" />
+
+    <div *ngIf="solicitudPermiso.tipoPermiso === 'Día Parcial'">
+      <label class="block text-sm font-medium text-gray-700">Desde</label>
+      <div class="flex gap-2 mb-4">
+        <input type="time" [(ngModel)]="solicitudPermiso.desdeHora" class="input" />
+        <select [(ngModel)]="solicitudPermiso.desdeAMPM" class="input">
+          <option value="AM">AM</option>
+          <option value="PM">PM</option>
+        </select>
+      </div>
+
+      <label class="block text-sm font-medium text-gray-700">Hasta</label>
+      <div class="flex gap-2 mb-4">
+        <input type="time" [(ngModel)]="solicitudPermiso.hastaHora" class="input" />
+        <select [(ngModel)]="solicitudPermiso.hastaAMPM" class="input">
+          <option value="AM">AM</option>
+          <option value="PM">PM</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón de Envío -->
+  <button (click)="enviarSolicitud()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">
+    Enviar Solicitud
+  </button>
+</div>

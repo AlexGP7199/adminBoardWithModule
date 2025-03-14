@@ -20,6 +20,10 @@ import { NewUsuarioComponent } from './new-usuario/new-usuario.component';
 import { NewAmbulanciaComponent } from './new-ambulancia/new-ambulancia.component';
 import { ColaboradoresExcelCargaComponent } from './colaboradores-excel-carga/colaboradores-excel-carga.component';
 import { AmbulanciasExcelUploadComponent } from './ambulancias-excel-upload/ambulancias-excel-upload.component';
+import { SolicitudVacacionesComponent } from './solicitud-vacaciones/solicitud-vacaciones.component';
+import { SolicitudRRHHPermisoComponent } from './solicitud-rrhhpermiso/solicitud-rrhhpermiso.component';
+import { SolicitudLicenciaMedicaComponent } from './solicitud-licencia-medica/solicitud-licencia-medica.component';
+import { SolicitudAmonestacionComponent } from './solicitud-amonestacion/solicitud-amonestacion.component';
 
 const routes: Routes = [
 
@@ -28,17 +32,21 @@ const routes: Routes = [
   { path: '', component: PiboteScreenComponent, canActivate: [AuthGuard] },
    // Ruta de login
    { path: 'login', component: LoginComponent, canActivate: [loginAuthGuard] },
-  { path: 'NewUsuario', component: NewUsuarioComponent, canActivate: [AuthGuard]},
-  { path: 'NewAmbulancia', component: NewAmbulanciaComponent, canActivate: [AuthGuard]},
-  {path: 'excelPersonal', component: ColaboradoresExcelCargaComponent, canActivate: [AuthGuard]},
-  {path: 'excelAmbulancias', component: AmbulanciasExcelUploadComponent, canActivate: [AuthGuard] },
+    { path: 'NewUsuario', component: NewUsuarioComponent, canActivate: [AuthGuard]},
+    { path: 'NewAmbulancia', component: NewAmbulanciaComponent, canActivate: [AuthGuard]},
+    {path: 'excelPersonal', component: ColaboradoresExcelCargaComponent, canActivate: [AuthGuard]},
+    {path: 'excelAmbulancias', component: AmbulanciasExcelUploadComponent, canActivate: [AuthGuard] },
   // Rutas de Dashboard y sus subcomponentes (protegidas con AuthGuard)
   //{ path: 'Dashboard', component: ContentComponent, canActivate: [AuthGuard] },
-  { path: 'ValidacionFechas', component: FormSolicitudValidacionFechasComponent, canActivate: [AuthGuard] },
-  {path: 'Conflictos', component: TableroConflictosComponent, canActivate: [AuthGuard]},
-  {path: 'TableroUsuarios', component: TableroUsuariosComponent, canActivate: [AuthGuard]},
-  { path: 'horario', component: HorariosComponent, canActivate: [AuthGuard] },
-  {path: 'solicitudForm', component: SolicitudPermisoComponent, canActivate:[AuthGuard]},
+    { path: 'ValidacionFechas', component: FormSolicitudValidacionFechasComponent, canActivate: [AuthGuard] },
+    {path: 'Conflictos', component: TableroConflictosComponent, canActivate: [AuthGuard]},
+    {path: 'TableroUsuarios', component: TableroUsuariosComponent, canActivate: [AuthGuard]},
+    { path: 'horario', component: HorariosComponent, canActivate: [AuthGuard] },
+    {path: 'solicitudForm', component: SolicitudPermisoComponent, canActivate:[AuthGuard]},
+    {path: 'solicitudCVacaciones', component: SolicitudVacacionesComponent, canActivate:[AuthGuard]},
+    {path: 'solicitudRRHHPermiso', component: SolicitudRRHHPermisoComponent, canActivate:[AuthGuard]},
+    {path: 'solicitudLicenciaMedica', component: SolicitudLicenciaMedicaComponent, canActivate:[AuthGuard]},
+    {path: 'solicitudAmonestacion', component: SolicitudAmonestacionComponent, canActivate:[AuthGuard]},
   //{ path: 'CargarHorario', component: HorariosComponent, canActivate: [AuthGuard] },
   //{ path: 'Colaboradores', component: AgentesComponent, canActivate: [AuthGuard] },
   //{ path: 'detalle/:cedula', component: PersonaDetalleComponent, canActivate: [AuthGuard] },

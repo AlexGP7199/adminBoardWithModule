@@ -40,7 +40,7 @@ export class AuthGuard implements CanActivate {
   }
 
     // Nivel 0: Solo acceso a "horario" y "ValidacionFechas"
-    if (nivel === 0 && !['/horario', '/ValidacionFechas'].includes(rutaSolicitada)) {
+    if (nivel === 0 && !['/horario', '/ValidacionFechas','/solicitudCVacaciones','/solicitudRRHHPermiso','/solicitudLicenciaMedica'].includes(rutaSolicitada)) {
       this.router.navigate(['/horario']);
       return false;
     }

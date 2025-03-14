@@ -33,6 +33,16 @@ import { ColaboradoresExcelCargaComponent } from './colaboradores-excel-carga/co
 import { SpinnerComponent } from './spinner/spinner.component';
 import { HttpRequestInterceptor } from './services/interceptors/http.interceptor';
 import { FechaFormatPipe } from './pipes/fecha-format.pipe';
+import { SolicitudVacacionesComponent } from './solicitud-vacaciones/solicitud-vacaciones.component';
+import { SolicitudRRHHPermisoComponent } from './solicitud-rrhhpermiso/solicitud-rrhhpermiso.component';
+import { SolicitudLicenciaMedicaComponent } from './solicitud-licencia-medica/solicitud-licencia-medica.component';
+import { SolicitudAmonestacionComponent } from './solicitud-amonestacion/solicitud-amonestacion.component';
+
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 
 @NgModule({
   declarations: [
@@ -59,6 +69,10 @@ import { FechaFormatPipe } from './pipes/fecha-format.pipe';
     ColaboradoresExcelCargaComponent,
     SpinnerComponent,
     FechaFormatPipe,
+    SolicitudVacacionesComponent,
+    SolicitudRRHHPermisoComponent,
+    SolicitudLicenciaMedicaComponent,
+    SolicitudAmonestacionComponent,
 
   ],
   imports: [
@@ -67,7 +81,11 @@ import { FechaFormatPipe } from './pipes/fecha-format.pipe';
     DasboardModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule,  // 👈 Necesario para Angular Material
+    MatAutocompleteModule,    // 👈 Autocompletado
+    MatFormFieldModule,       // 👈 Campos de formulario
+    MatInputModule
 
   ],
   providers: [loginAuthGuard, AuthGuard,  {

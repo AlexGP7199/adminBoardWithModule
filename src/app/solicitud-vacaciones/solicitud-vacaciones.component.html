@@ -1,0 +1,62 @@
+<div class="max-w-7xl mx-auto py-16 px-8 bg-white rounded-lg shadow-lg">
+  <h1 class="text-3xl font-bold text-center text-gray-900 mb-8">Formulario para Solicitud de Vacaciones</h1>
+
+  <!-- Información del Solicitante -->
+  <div class="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
+    <h2 class="text-xl font-bold text-gray-700">Datos del Solicitante</h2>
+    <label class="block text-sm font-medium text-gray-700">Nombre y Apellidos</label>
+    <input type="text" [(ngModel)]="solicitudVacaciones.nombre" class="input mb-4" />
+
+    <label class="block text-sm font-medium text-gray-700">Cédula</label>
+    <input type="text" [(ngModel)]="solicitudVacaciones.cedula" class="input mb-4" />
+
+    <label class="block text-sm font-medium text-gray-700">Cargo</label>
+    <input type="text" [(ngModel)]="solicitudVacaciones.cargo" class="input mb-4" />
+
+    <label class="block text-sm font-medium text-gray-700">Departamento</label>
+    <input type="text" [(ngModel)]="solicitudVacaciones.departamento" class="input mb-4" />
+
+    <label class="block text-sm font-medium text-gray-700">Años en la Administración Pública</label>
+    <input type="number" [(ngModel)]="solicitudVacaciones.aniosAdministracionPublica" class="input mb-4" />
+  </div>
+
+  <!-- Sección de Solicitud -->
+  <div class="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
+    <h2 class="text-xl font-bold text-gray-700">Solicitud</h2>
+    <label class="block text-sm font-medium text-gray-700">Vacaciones desde</label>
+    <input type="date" [(ngModel)]="solicitudVacaciones.vacacionesDesde" class="input mb-4" />
+
+    <label class="block text-sm font-medium text-gray-700">Hasta</label>
+    <input type="date" [(ngModel)]="solicitudVacaciones.vacacionesHasta" class="input mb-4" />
+
+    <label class="block text-sm font-medium text-gray-700">Cantidad de días</label>
+    <input type="number" [(ngModel)]="solicitudVacaciones.cantidadDias" class="input mb-4" />
+
+    <div class="flex items-center mb-4">
+      <input type="checkbox" [(ngModel)]="solicitudVacaciones.fraccionarVacaciones" />
+      <span class="ml-2 text-gray-700">Fraccionar Vacaciones</span>
+    </div>
+
+    <label class="block text-sm font-medium text-gray-700">Justificación</label>
+    <textarea [(ngModel)]="solicitudVacaciones.justificacionFraccionamiento" class="input mb-4" rows="3"></textarea>
+  </div>
+
+  <!-- Pregunta Adicional -->
+  <div class="bg-gray-50 p-6 rounded-lg shadow-md mb-8">
+    <h2 class="text-xl font-bold text-gray-700">Información Adicional</h2>
+    <label class="block text-sm font-medium text-gray-700">¿Trabajó en otra Institución del Estado?</label>
+    <div class="flex gap-4">
+      <label class="flex items-center">
+        <input type="radio" [(ngModel)]="solicitudVacaciones.trabajoOtraInstitucion" value="Si" class="mr-2" /> Sí
+      </label>
+      <label class="flex items-center">
+        <input type="radio" [(ngModel)]="solicitudVacaciones.trabajoOtraInstitucion" value="No" class="mr-2" /> No
+      </label>
+    </div>
+  </div>
+
+  <!-- Botón de Envío -->
+  <button (click)="enviarSolicitud()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">
+    Enviar Solicitud
+  </button>
+</div>
